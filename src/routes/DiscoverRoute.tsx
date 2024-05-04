@@ -1,8 +1,8 @@
 import { IonRouterOutlet } from '@ionic/react'
 import { Route } from 'react-router'
-import Discover from '../pages/Discover'
-import SearchPage from '../pages/Discover/Search'
+import SearchPage from '../pages/Search'
 import Inbox from '../pages/Inbox'
+import Discover from '../pages/Discover'
 
 export default function DiscoverRoute() {
   return (

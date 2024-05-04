@@ -11,7 +11,6 @@ export default function Threads() {
             </IonTitle>
           </IonToolbar>
         </IonHeader>
-
       </IonContent>
     </IonPage>
   )

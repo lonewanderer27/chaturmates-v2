@@ -9,7 +9,7 @@ export default function Discover() {
         <IonHeader collapse='condense'>
           <IonToolbar>
             <IonText slot="start" className="page-title font-poppins font-bold">
-              Chat-ur-Meyts
+              Chat-Ur-Meyts
             </IonText>
             <IonButtons slot="end">
               <NavBtn

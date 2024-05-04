@@ -13,11 +13,11 @@ export default function Home() {
             </IonText>
             <IonButtons slot="end">
               <NavBtn
-                route="/search"
+                route="/home/search"
                 icon={searchOutline}
               />
               <NavBtn
-                route="/notifications"
+                route="/home/inbox"
                 icon={notificationsOutline}
               />
             </IonButtons>

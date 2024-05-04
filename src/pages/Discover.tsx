@@ -1,12 +1,12 @@
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonText, IonToolbar } from '@ionic/react'
+import { IonButtons, IonContent, IonFooter, IonHeader, IonIcon, IonLabel, IonMenuButton, IonPage, IonTabBar, IonTabButton, IonTabs, IonText, IonToolbar } from '@ionic/react'
 import NavBtn from '../components/NavBtn'
-import { notificationsOutline, searchOutline } from 'ionicons/icons'
+import { chatboxEllipsesOutline, homeOutline, newspaperOutline, notificationsOutline, searchOutline } from 'ionicons/icons'
 import Sidebar from '../components/Sidebar'
 
 export default function Discover() {
   return (
     <>
-      <Sidebar/>
+      <Sidebar />
       <IonPage id="sidebar-content">
         <IonContent className='ion-padding'>
           <IonHeader collapse='condense'>
@@ -19,18 +19,18 @@ export default function Discover() {
               </IonText> */}
               <IonButtons slot="end">
                 <NavBtn
-                  route="/search"
+                  route="/discover/search"
                   icon={searchOutline}
                 />
                 <NavBtn
-                  route="/notifications"
+                  route="/discover/inbox"
                   icon={notificationsOutline}
                 />
               </IonButtons>
             </IonToolbar>
           </IonHeader>
         </IonContent>
-      </IonPage>
+      </IonPage >
     </>
   )
 }

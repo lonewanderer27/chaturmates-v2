@@ -14,7 +14,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import { chatboxEllipsesOutline, homeOutline, newspaperOutline } from 'ionicons/icons';
 import Discover from './pages/Discover';
 import Home from './pages/Home';
-import Notifications from './pages/Notifications';
+import Inbox from './pages/Inbox';
 import Threads from './pages/Threads';
 
 /* Core CSS required for Ionic components to work properly */
@@ -46,6 +46,8 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import DiscoverRoute from './routes/DiscoverRoute';
+import HomeRoute from './routes/HomeRoute';
 
 setupIonicReact({
   mode: 'ios'
@@ -57,9 +59,9 @@ const App = () => {
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            <Route path="/discover" component={Discover} exact />
-            <Route path="/home" component={Home} exact />
-            <Route path="/notifications" component={Notifications} exact />
+            <Route path="/discover" component={DiscoverRoute} />
+            <Route path="/home" component={HomeRoute} />
+            <Route path="/inbox" component={Inbox} exact />
             <Route path="/threads" component={Threads} exact />
             <Route path="/" component={() => <Redirect to="/home" />} exact />
           </IonRouterOutlet>

@@ -1,6 +1,4 @@
-import { IonPage, IonContent, IonHeader, IonToolbar, IonText, IonButtons, IonTitle } from "@ionic/react";
-import { searchOutline, notificationsOutline } from "ionicons/icons";
-import NavBtn from "../components/NavBtn";
+import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 
 export default function Threads() {
   return (
@@ -8,7 +6,7 @@ export default function Threads() {
       <IonContent fullscreen className='ion-padding'>
         <IonHeader collapse='condense'>
           <IonToolbar>
-            <IonTitle size="large">
+            <IonTitle>
               Threads
             </IonTitle>
           </IonToolbar>

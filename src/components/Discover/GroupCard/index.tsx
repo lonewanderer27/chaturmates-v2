@@ -12,7 +12,7 @@ interface GroupCardProps {
   icon?: string;
 }
 
-GroupCard.defaultProps = {
+GroupCard.default = {
   icon: peopleCircleOutline
 }
 

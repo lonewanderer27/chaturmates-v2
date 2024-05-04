@@ -3,10 +3,17 @@ import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle } from "@ionic/rea
 export default function Threads() {
   return (
     <IonPage>
+      <IonHeader translucent>
+          <IonToolbar>
+            <IonTitle>
+              Threads
+            </IonTitle>
+          </IonToolbar>
+        </IonHeader>
       <IonContent fullscreen className='ion-padding'>
         <IonHeader collapse='condense'>
           <IonToolbar>
-            <IonTitle>
+            <IonTitle size="large">
               Threads
             </IonTitle>
           </IonToolbar>

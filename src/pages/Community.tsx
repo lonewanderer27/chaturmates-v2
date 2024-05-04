@@ -1,6 +1,6 @@
-import { IonButtons, IonContent, IonFooter, IonHeader, IonIcon, IonLabel, IonMenuButton, IonPage, IonTabBar, IonTabButton, IonTabs, IonText, IonToolbar } from '@ionic/react'
+import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar } from '@ionic/react'
 import NavBtn from '../components/NavBtn'
-import { chatboxEllipsesOutline, homeOutline, newspaperOutline, notificationsOutline, searchOutline } from 'ionicons/icons'
+import { notificationsOutline, personOutline, searchOutline } from 'ionicons/icons'
 import Sidebar from '../components/Sidebar'
 
 export default function Community() {
@@ -15,6 +15,10 @@ export default function Community() {
                 <IonMenuButton></IonMenuButton>
               </IonButtons>
               <IonButtons slot="end">
+                <NavBtn
+                  route="/community/me"
+                  icon={personOutline}  
+                />
                 <NavBtn
                   route="/community/search"
                   icon={searchOutline}

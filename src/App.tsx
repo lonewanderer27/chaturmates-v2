@@ -48,6 +48,8 @@ import '@ionic/react/css/palettes/dark.system.css';
 import './theme/variables.css';
 import CommunityRoute from './routes/CommunityRoute';
 import DiscoverRoute from './routes/DiscoverRoute';
+import ThreadsRoute from './routes/ThreadsRoute';
+import LoginRoute from './routes/LoginRoute';
 
 setupIonicReact({
   mode: 'ios'
@@ -61,7 +63,8 @@ const App = () => {
           <IonRouterOutlet>
             <Route path="/discover" component={DiscoverRoute} />
             <Route path="/community" component={CommunityRoute} />
-            <Route path="/threads" component={Threads} exact />
+            <Route path="/threads" component={ThreadsRoute} />
+            <Route path="/login" component={LoginRoute} />
             <Route path="/" component={() => <Redirect to="/discover" />} exact />
           </IonRouterOutlet>
           <IonTabBar slot="bottom">

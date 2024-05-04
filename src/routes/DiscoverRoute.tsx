@@ -1,10 +1,13 @@
 import { IonRouterOutlet } from '@ionic/react'
-import { Route } from 'react-router'
+import { Route, RouteComponentProps } from 'react-router'
 import SearchPage from '../pages/Search'
 import Inbox from '../pages/Inbox'
 import Discover from '../pages/Discover'
+import React from 'react'
 
-export default function DiscoverRoute() {
+const DiscoverRoute: React.FC<RouteComponentProps> = ({ match }) => {
+  console.log(match);
+
   return (
     <IonRouterOutlet id="discover">
       <Route path="/discover" component={Discover} exact />
@@ -13,3 +16,5 @@ export default function DiscoverRoute() {
     </IonRouterOutlet>
   )
 }
+
+export default DiscoverRoute;

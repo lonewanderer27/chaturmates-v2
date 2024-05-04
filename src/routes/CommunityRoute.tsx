@@ -1,10 +1,13 @@
 import { IonRouterOutlet } from '@ionic/react'
-import { Route } from 'react-router'
+import { Route, RouteComponentProps } from 'react-router'
 import Community from '../pages/Community'
 import SearchPage from '../pages/Search'
 import Inbox from '../pages/Inbox'
+import React from 'react'
 
-export default function CommunityRoute() {
+const CommunityRoute: React.FC<RouteComponentProps> = ({ match }) => {
+  console.log(match);
+
   return (
     <IonRouterOutlet id="community">
       <Route path="/community" component={Community} exact />
@@ -13,3 +16,5 @@ export default function CommunityRoute() {
     </IonRouterOutlet>
   )
 }
+
+export default CommunityRoute;

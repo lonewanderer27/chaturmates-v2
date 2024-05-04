@@ -1,6 +1,14 @@
-import { IonContent, IonFooter, IonHeader, IonMenu, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonContent, IonFooter, IonHeader, IonMenu, IonTitle, IonToolbar, useIonRouter } from "@ionic/react";
 
 export default function Sidebar() {
+  const rt = useIonRouter();
+
+  const handleLogout = () => {
+    // TODO: Implement logout
+
+    rt.push('/login', 'root');
+  }
+
   return (
     <IonMenu contentId="sidebar-content" type="reveal">
       <IonHeader>
@@ -12,8 +20,10 @@ export default function Sidebar() {
         Sidebar Content
       </IonContent>
       <IonFooter>
-        <IonToolbar>
-          <IonTitle>Sidebar Footer</IonTitle>
+        <IonToolbar className="p-2">
+          <IonButton color="danger" expand="block" onClick={handleLogout}>
+            Logout
+          </IonButton>
         </IonToolbar>
       </IonFooter>
     </IonMenu>

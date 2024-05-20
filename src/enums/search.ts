@@ -1,0 +1,3 @@
+export enum SEARCH_CATEGORY {
+  ALL, POST, GROUPS, KLASMEYTS
+}

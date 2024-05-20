@@ -1,9 +1,13 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar } from '@ionic/react'
-import NavBtn from '../components/NavBtn'
 import { notificationsOutline, personOutline, searchOutline } from 'ionicons/icons'
+
+import NavBtn from '../components/NavBtn'
 import Sidebar from '../components/Sidebar'
+import useSession from '../hooks/auth/useSession'
 
 export default function Community() {
+  const { session } = useSession();
+
   return (
     <>
       <Sidebar />
@@ -16,15 +20,15 @@ export default function Community() {
               </IonButtons>
               <IonButtons slot="end">
                 <NavBtn
-                  route="/community/me"
-                  icon={personOutline}  
+                  route="community/me"
+                  icon={personOutline}
                 />
                 <NavBtn
-                  route="/community/search"
+                  route="community/search"
                   icon={searchOutline}
                 />
                 <NavBtn
-                  route="/community/inbox"
+                  route="community/inbox"
                   icon={notificationsOutline}
                 />
               </IonButtons>

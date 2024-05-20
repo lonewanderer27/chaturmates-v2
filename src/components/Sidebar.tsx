@@ -1,12 +1,19 @@
-import { IonButton, IonContent, IonFooter, IonHeader, IonMenu, IonTitle, IonToolbar, useIonRouter } from "@ionic/react";
+import { IonButton, IonContent, IonFooter, IonHeader, IonMenu, IonSpinner, IonTitle, IonToolbar, useIonRouter } from "@ionic/react";
+
+import client from "../client";
+import useSession from "../hooks/auth/useSession";
 
 export default function Sidebar() {
   const rt = useIonRouter();
+  const { session, logout, processing } = useSession();
 
-  const handleLogout = () => {
-    // TODO: Implement logout
+  const handleLogout = async () => {
+    await logout();
+    rt.push('/continue', 'root');
+  }
 
-    rt.push('/login', 'root');
+  const handleLogin = async () => {
+    rt.push('/continue', 'root');
   }
 
   return (
@@ -21,9 +28,13 @@ export default function Sidebar() {
       </IonContent>
       <IonFooter>
         <IonToolbar className="p-2">
-          <IonButton color="danger" expand="block" onClick={handleLogout}>
-            Logout
-          </IonButton>
+          {session ?
+            <IonButton color="danger" expand="block" onClick={handleLogout}>
+              {processing ? <IonSpinner name="dots" /> : "Logout"}
+            </IonButton> :
+            <IonButton expand="block" onClick={handleLogin}>
+              Login
+            </IonButton>}
         </IonToolbar>
       </IonFooter>
     </IonMenu>

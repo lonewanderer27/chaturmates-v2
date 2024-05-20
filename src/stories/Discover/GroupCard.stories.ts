@@ -1,4 +1,4 @@
-import GroupCard from '../../components/Discover/GroupCard';
+import GroupCard from '../../components/CommunityPage/GroupCard';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {

@@ -11,7 +11,7 @@ type BtnProps = ComponentProps<typeof IonButton> & {
 };
 
 export default function NavBtn(props: BtnProps) {
-  const hst = useIonRouter()
+  const rt = useIonRouter()
   const isValidUrl = useMemo(() => {
     try {
       new URL(props.avatarUrl + "");
@@ -23,7 +23,7 @@ export default function NavBtn(props: BtnProps) {
 
 
   const handleClick = () => {
-    hst.push(props.route)
+    rt.push(props.route, "forward")
   }
 
   return (
@@ -42,7 +42,7 @@ export default function NavBtn(props: BtnProps) {
   )
 }
 
-NavBtn.default = {
+NavBtn.defaultProps = {
   size: "default",
   icon: peopleCircleOutline, 
 }

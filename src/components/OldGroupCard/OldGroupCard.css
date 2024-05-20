@@ -1,0 +1,29 @@
+.groupCard {
+}
+
+.groupCardIcon {
+  font-size: 50px;
+}
+
+.groupCardAvatar {
+  width: 50px;
+  height: auto;
+}
+
+.groupMemberIcon {
+  font-size: x-large;
+}
+
+.groupMemberAvatar {
+  width: 25px;
+  height: auto;
+}
+
+.groupCountBadge {
+  border-radius: 100%;
+  font-size: xx-small;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}

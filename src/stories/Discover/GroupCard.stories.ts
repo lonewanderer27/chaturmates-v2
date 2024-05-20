@@ -1,5 +1,6 @@
-import GroupCard from '../../components/CommunityPage/GroupCard';
 import type { Meta, StoryObj } from '@storybook/react';
+
+import GroupCard from '../../components/GroupCard';
 
 const meta = {
   title: 'Discover/GroupCard',

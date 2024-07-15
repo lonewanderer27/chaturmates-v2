@@ -1,4 +1,4 @@
-import { IonButtons, IonContent, IonHeader, IonPage, IonText, IonToolbar } from '@ionic/react'
+import { IonButtons, IonContent, IonHeader, IonPage, IonText, IonToggle, IonToolbar } from '@ionic/react'
 import { notificationsOutline, searchOutline } from 'ionicons/icons'
 
 import AdminPostsGrid from '../components/DiscoverPage/AdminPostsGrid';
@@ -8,9 +8,37 @@ import { getAdminPosts } from '../services/group/admin';
 import { getAllGroups } from '../services/groups';
 import { useQuery } from '@tanstack/react-query';
 import useSelfStudent from '../hooks/student';
+import { Preferences } from '@capacitor/preferences';
+import { useState, useEffect } from 'react';
+
 
 export default function Discover() {
+  const [darkMode, setDarkMode] = useState(false);
   const { student } = useSelfStudent();
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    document.body.classList.toggle('dark', newDarkMode);
+
+    if (newDarkMode) {
+      Preferences.set({ key: 'darkModeActivated', value: 'true' });
+    } else {
+      Preferences.set({ key: 'darkModeActivated', value: 'false' });
+    }
+  };
+
+
+  const checkAppMode = async () => {
+    const checkIsDarkMode = await Preferences.get({ key: 'darkModeActivated' });
+    const isDarkMode = checkIsDarkMode?.value === 'true';
+    setDarkMode(isDarkMode);
+    document.body.classList.toggle('dark', isDarkMode);
+  };
+
+  useEffect(() => {
+    checkAppMode();
+  }, []);
 
   const query = useQuery({
     queryKey: ["groups"],
@@ -42,6 +70,7 @@ export default function Discover() {
             <IonText slot="start" className="page-title font-poppins font-bold" color="secondary">
               Chat-Ur-Meyts
             </IonText>
+            
             <IonButtons slot="end">
               <NavBtn
                 route="/discover/search"
@@ -51,6 +80,8 @@ export default function Discover() {
                 route="/discover/inbox"
                 icon={notificationsOutline}
               />
+              
+           <IonToggle mode="ios"checked={darkMode} onIonChange={toggleDarkMode} justify="space-between">Test</IonToggle>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
@@ -60,3 +91,7 @@ export default function Discover() {
     </IonPage>
   )
 }
+function toggleDarkMode() {
+  throw new Error('Function not implemented.');
+}
+

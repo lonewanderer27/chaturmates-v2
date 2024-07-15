@@ -18,7 +18,7 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 /* import '@ionic/react/css/palettes/dark.always.css'; */
 /* import '@ionic/react/css/palettes/dark.class.css'; */
-import '@ionic/react/css/palettes/dark.system.css';
+// import '@ionic/react/css/palettes/dark.system.css';
 /* Theme variables */
 import './theme/variables.css';
 
@@ -35,7 +35,7 @@ import {
 } from '@ionic/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Redirect, Route } from 'react-router-dom';
-import { chatboxEllipsesOutline, chatboxOutline, compassOutline, homeOutline, newspaperOutline, peopleOutline } from 'ionicons/icons';
+import { chatboxEllipsesOutline, contrastOutline, chatboxOutline, compassOutline, homeOutline, newspaperOutline, peopleOutline } from 'ionicons/icons';
 
 import Community from './pages/Community';
 import CommunityRoute from './routes/CommunityRoute';
@@ -61,7 +61,6 @@ setupIonicReact({
 
 // instantiate tanstack client
 export const qClient = new QueryClient();
-
 const App = () => {
   return (
     <QueryClientProvider client={qClient}>

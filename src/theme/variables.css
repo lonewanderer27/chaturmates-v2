@@ -297,16 +297,17 @@ body.high-contrast {
   --ion-color-dark-shade: #0D0D0D;
   --ion-color-dark-tint: #262626;
 
-  --ion-color-medium: #808080; /* Gray */
+  --ion-color-medium: #FFA500; /* Gray */
   --ion-color-medium-rgb: 128, 128, 128;
   --ion-color-medium-contrast: #000000;
   --ion-color-medium-contrast-rgb: 0, 0, 0;
   --ion-color-medium-shade: #737373;
   --ion-color-medium-tint: #999999;
 
-  --ion-color-light: #FFFFFF; /* White */
+
+  --ion-color-light: #3a3939; /* White */
   --ion-color-light-rgb: 255, 255, 255;
-  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast: #E6E600;
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #E6E6E6;
   --ion-color-light-tint: #FFFFFF;
@@ -328,7 +329,7 @@ body.high-contrast {
   --ion-color-step-100: #1A1A1A;
   --ion-color-step-150: #FFFF00;
   --ion-color-step-200: #333333;
-  --ion-color-step-250: #404040;
+  --ion-color-step-250: #FFFF00;
   --ion-color-step-300: #4D4D4D;
   --ion-color-step-350: #00FF00;
   --ion-color-step-400: #666666;
@@ -345,7 +346,7 @@ body.high-contrast {
   --ion-color-step-950: #F2F2F2;
 
   --ion-item-background: #000000;
-
+  
   --ion-card-background: #1C1C1D;
 }
 

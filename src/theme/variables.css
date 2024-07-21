@@ -36,6 +36,10 @@
   --ion-color-light-contrast: #000000;
 }
 
+.fontSize20{
+  font-size: calc(1rem * 1.2);
+}
+
 
 
 

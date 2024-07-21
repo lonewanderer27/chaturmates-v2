@@ -79,6 +79,7 @@ export const qClient = new QueryClient();
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [highContrastMode, setHighContrastMode] = useState(false);
+  const [increaseFontMode, setFontMode] = useState(false);
  
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
@@ -99,12 +100,22 @@ const App = () => {
 
     if (newHighContrastMode) {
       Preferences.set({ key: 'highContrastModeActivated', value: 'true' });
-      Preferences.set({ key: 'darkModeActivated', value: 'false' });
     } else {
       Preferences.set({ key: 'highContrastModeActivated', value: 'false' });
     }
   };
 
+  const toggleFontMode = () => {
+    const newFontMode = !increaseFontMode;
+    setFontMode(newFontMode);
+    document.documentElement.classList.toggle('fontSize20', newFontMode);   
+
+    if (newFontMode) {
+      Preferences.set({ key: 'increaseFontModeActivated', value: 'true' });
+    } else {
+      Preferences.set({ key: 'increaseFontModeActivated', value: 'false' });
+    }
+  };
 
   const checkAppMode = async () => {
     const checkIsDarkMode = await Preferences.get({ key: 'darkModeActivated' });
@@ -202,7 +213,7 @@ const App = () => {
               </IonItem>
 
               <IonItem>
-                <IonToggle checked={darkMode} onIonChange={toggleDarkMode} justify="space-between">
+                <IonToggle checked={increaseFontMode} onIonChange={toggleFontMode} justify="space-between">
                   Increase Font size (20%)
                 </IonToggle>
               </IonItem>

@@ -17,6 +17,8 @@ import "slick-carousel/slick/slick-theme.css";
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import '@ionic/react/css/palettes/dark.class.css';
+import '@ionic/react/css/palettes/high-contrast.class.css';
+import '@ionic/react/css/palettes/high-contrast-dark.class.css';
 /* Theme variables */
 import './theme/variables.css';
 
@@ -37,7 +39,6 @@ import {
   IonTabButton,
   IonTabs,
   setupIonicReact,
-  ToggleCustomEvent,
   IonList,
   IonToggle,
   IonItem,
@@ -53,7 +54,7 @@ import {
 } from '@ionic/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Redirect, Route } from 'react-router-dom';
-import {  chatboxOutline, compassOutline, peopleOutline, chevronUpCircle,  colorPalette, globe,
+import {  chatboxOutline, compassOutline, peopleOutline, chevronUpCircle,  colorPalette, globe,add
 } from 'ionicons/icons';
 
 import Community from './pages/Community';
@@ -77,6 +78,8 @@ setupIonicReact({
 export const qClient = new QueryClient();
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [highContrastMode, setHighContrastMode] = useState(false);
+ 
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
@@ -84,9 +87,21 @@ const App = () => {
 
     if (newDarkMode) {
       Preferences.set({ key: 'darkModeActivated', value: 'true' });
-      Preferences.set({ key: 'highContrastModeActivated', value: 'false' });
     } else {
       Preferences.set({ key: 'darkModeActivated', value: 'false' });
+    }
+  };
+
+  const toggleHighContrastMode = () => {
+    const newHighContrastMode = !highContrastMode;
+    setHighContrastMode(newHighContrastMode);
+    document.documentElement.classList.toggle('ion-palette-high-contrast', newHighContrastMode);
+
+    if (newHighContrastMode) {
+      Preferences.set({ key: 'highContrastModeActivated', value: 'true' });
+      Preferences.set({ key: 'darkModeActivated', value: 'false' });
+    } else {
+      Preferences.set({ key: 'highContrastModeActivated', value: 'false' });
     }
   };
 
@@ -96,6 +111,12 @@ const App = () => {
     const isDarkMode = checkIsDarkMode?.value === 'true';
     setDarkMode(isDarkMode);
     document.documentElement.classList.toggle('ion-palette-dark', isDarkMode);   
+
+
+    const checkIsHighContrastMode = await Preferences.get({ key: 'highContrastModeActivated' });
+    const isHighContrastMode = checkIsHighContrastMode?.value === 'true';
+    setHighContrastMode(isHighContrastMode);
+    document.documentElement.classList.toggle('ion-palette-high-contrast', isHighContrastMode);
   };
 
   useEffect(() => {
@@ -139,20 +160,21 @@ const App = () => {
           </IonTabs>
 
 
-          <IonFab slot="fixed" vertical="bottom" horizontal="end">
+          <IonFab style={{marginBottom: 60}} slot="fixed" vertical="bottom" horizontal="end">
+         
           <IonFabButton>
-            <IonIcon icon={chevronUpCircle}></IonIcon>
+            <IonIcon icon={add}></IonIcon>
           </IonFabButton>
           <IonFabList side="top">
-            <IonFabButton>
-              <IonIcon icon={globe}></IonIcon>
-            </IonFabButton>
-            <IonFabButton>
+      
+            <IonFabButton id="testColor">
               <IonIcon id="open-modal" icon={colorPalette}></IonIcon>
             </IonFabButton>
-            <IonFabButton>
+            
+            <IonFabButton id="testColor">
               <IonIcon icon={globe}></IonIcon>
             </IonFabButton>
+
           </IonFabList>
         </IonFab>
 
@@ -168,12 +190,21 @@ const App = () => {
               </IonButtons>
             </IonToolbar>
             <IonList>
-              <IonItem>
+
               <IonItem>
                 <IonToggle checked={darkMode} onIonChange={toggleDarkMode} justify="space-between">
                   Dark Mode
                 </IonToggle>
               </IonItem>
+
+              <IonItem>
+              <IonToggle mode="ios" checked={highContrastMode} onIonChange={toggleHighContrastMode} justify="space-between">High Contrast</IonToggle>
+              </IonItem>
+
+              <IonItem>
+                <IonToggle checked={darkMode} onIonChange={toggleDarkMode} justify="space-between">
+                  Increase Font size (20%)
+                </IonToggle>
               </IonItem>
             </IonList>
           </IonContent>

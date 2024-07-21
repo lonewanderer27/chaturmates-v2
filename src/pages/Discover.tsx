@@ -13,55 +13,10 @@ import { useState, useEffect } from 'react';
 
 
 export default function Discover() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [highContrastMode, setHighContrastMode] = useState(false);
+
   const { student } = useSelfStudent();
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    setHighContrastMode(false); // Disable high contrast mode
-    document.body.classList.toggle('dark', newDarkMode);
-    document.body.classList.remove('high-contrast'); // Remove high contrast class
 
-    if (newDarkMode) {
-      Preferences.set({ key: 'darkModeActivated', value: 'true' });
-      Preferences.set({ key: 'highContrastModeActivated', value: 'false' });
-    } else {
-      Preferences.set({ key: 'darkModeActivated', value: 'false' });
-    }
-  };
-
-  const toggleHighContrastMode = () => {
-    const newHighContrastMode = !highContrastMode;
-    setHighContrastMode(newHighContrastMode);
-    setDarkMode(false); // Disable dark mode
-    document.body.classList.toggle('high-contrast', newHighContrastMode);
-    document.body.classList.remove('dark'); // Remove dark class
-
-    if (newHighContrastMode) {
-      Preferences.set({ key: 'highContrastModeActivated', value: 'true' });
-      Preferences.set({ key: 'darkModeActivated', value: 'false' });
-    } else {
-      Preferences.set({ key: 'highContrastModeActivated', value: 'false' });
-    }
-  };
-
-  const checkAppMode = async () => {
-    const checkIsDarkMode = await Preferences.get({ key: 'darkModeActivated' });
-    const isDarkMode = checkIsDarkMode?.value === 'true';
-    setDarkMode(isDarkMode);
-    document.body.classList.toggle('dark', isDarkMode);
-
-    const checkIsHighContrastMode = await Preferences.get({ key: 'highContrastModeActivated' });
-    const isHighContrastMode = checkIsHighContrastMode?.value === 'true';
-    setHighContrastMode(isHighContrastMode);
-    document.body.classList.toggle('high-contrast', isHighContrastMode);
-  };
-
-  useEffect(() => {
-    checkAppMode();
-  }, []);
 
   const query = useQuery({
     queryKey: ["groups"],
@@ -104,7 +59,7 @@ export default function Discover() {
                 icon={notificationsOutline}
               />
               
-           <IonToggle mode="ios" checked={highContrastMode} onIonChange={toggleHighContrastMode} justify="space-between">High Test</IonToggle>
+  
             </IonButtons>
           </IonToolbar>
         </IonHeader>

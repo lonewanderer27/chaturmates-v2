@@ -104,7 +104,6 @@ export default function Discover() {
                 icon={notificationsOutline}
               />
               
-           <IonToggle mode="ios" checked={darkMode} onIonChange={toggleDarkMode} justify="space-between">Dark Test</IonToggle>
            <IonToggle mode="ios" checked={highContrastMode} onIonChange={toggleHighContrastMode} justify="space-between">High Test</IonToggle>
             </IonButtons>
           </IonToolbar>

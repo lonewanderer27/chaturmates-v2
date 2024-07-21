@@ -16,11 +16,17 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
-/* import '@ionic/react/css/palettes/dark.always.css'; */
-/* import '@ionic/react/css/palettes/dark.class.css'; */
-// import '@ionic/react/css/palettes/dark.system.css';
+import '@ionic/react/css/palettes/dark.class.css';
 /* Theme variables */
 import './theme/variables.css';
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
 
 import {
   IonApp,
@@ -31,11 +37,24 @@ import {
   IonTabButton,
   IonTabs,
   setupIonicReact,
-  useIonRouter
+  ToggleCustomEvent,
+  IonList,
+  IonToggle,
+  IonItem,
+  IonFabButton,
+  IonFabList,
+  IonFab,
+  IonButtons,
+  IonButton,
+  IonModal,
+  IonContent,
+  IonToolbar,
+  IonTitle,
 } from '@ionic/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Redirect, Route } from 'react-router-dom';
-import { chatboxEllipsesOutline, contrastOutline, chatboxOutline, compassOutline, homeOutline, newspaperOutline, peopleOutline } from 'ionicons/icons';
+import {  chatboxOutline, compassOutline, peopleOutline, chevronUpCircle,  colorPalette, globe,
+} from 'ionicons/icons';
 
 import Community from './pages/Community';
 import CommunityRoute from './routes/CommunityRoute';
@@ -47,13 +66,8 @@ import { IonReactRouter } from '@ionic/react-router';
 import SurveysRoute from './routes/SurveysRoute';
 import Threads from './pages/Threads';
 import ThreadsRoute from './routes/ThreadsRoute';
-
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+import React, { useEffect, useState, useRef } from 'react';
+import { Preferences } from '@capacitor/preferences';
 
 setupIonicReact({
   mode: 'ios'
@@ -62,6 +76,38 @@ setupIonicReact({
 // instantiate tanstack client
 export const qClient = new QueryClient();
 const App = () => {
+  const [darkMode, setDarkMode] = useState(false);
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    document.documentElement.classList.toggle('ion-palette-dark', newDarkMode);   
+
+    if (newDarkMode) {
+      Preferences.set({ key: 'darkModeActivated', value: 'true' });
+      Preferences.set({ key: 'highContrastModeActivated', value: 'false' });
+    } else {
+      Preferences.set({ key: 'darkModeActivated', value: 'false' });
+    }
+  };
+
+
+  const checkAppMode = async () => {
+    const checkIsDarkMode = await Preferences.get({ key: 'darkModeActivated' });
+    const isDarkMode = checkIsDarkMode?.value === 'true';
+    setDarkMode(isDarkMode);
+    document.documentElement.classList.toggle('ion-palette-dark', isDarkMode);   
+  };
+
+  useEffect(() => {
+    checkAppMode();
+  }, []);
+
+  const modal = useRef<HTMLIonModalElement>(null);
+
+  function dismiss() {
+    modal.current?.dismiss();
+  }
+
   return (
     <QueryClientProvider client={qClient}>
       <IonApp>
@@ -89,7 +135,51 @@ const App = () => {
                 <IonLabel>Threads</IonLabel>
               </IonTabButton>
             </IonTabBar>
+            
           </IonTabs>
+
+
+          <IonFab slot="fixed" vertical="bottom" horizontal="end">
+          <IonFabButton>
+            <IonIcon icon={chevronUpCircle}></IonIcon>
+          </IonFabButton>
+          <IonFabList side="top">
+            <IonFabButton>
+              <IonIcon icon={globe}></IonIcon>
+            </IonFabButton>
+            <IonFabButton>
+              <IonIcon id="open-modal" icon={colorPalette}></IonIcon>
+            </IonFabButton>
+            <IonFabButton>
+              <IonIcon icon={globe}></IonIcon>
+            </IonFabButton>
+          </IonFabList>
+        </IonFab>
+
+
+        <IonModal id="settings-modal" ref={modal} trigger="open-modal">
+          <IonContent>
+            <IonToolbar>
+              <IonTitle>Accessbility</IonTitle>
+              <IonButtons slot="end">
+                <IonButton color="dark" onClick={() => dismiss()}>
+                  Close
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+            <IonList>
+              <IonItem>
+              <IonItem>
+                <IonToggle checked={darkMode} onIonChange={toggleDarkMode} justify="space-between">
+                  Dark Mode
+                </IonToggle>
+              </IonItem>
+              </IonItem>
+            </IonList>
+          </IonContent>
+        </IonModal>
+
+
         </IonReactRouter>
       </IonApp>
     </QueryClientProvider>

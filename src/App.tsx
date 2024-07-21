@@ -128,6 +128,11 @@ const App = () => {
     const isHighContrastMode = checkIsHighContrastMode?.value === 'true';
     setHighContrastMode(isHighContrastMode);
     document.documentElement.classList.toggle('ion-palette-high-contrast', isHighContrastMode);
+
+    const checkIsIncreaseFontMode = await Preferences.get({ key: 'increaseFontModeActivated' });
+    const isIncreaseFontMode = checkIsIncreaseFontMode?.value === 'true';
+    setFontMode(isIncreaseFontMode);
+    document.documentElement.classList.toggle('fontSize20', isIncreaseFontMode);
   };
 
   useEffect(() => {

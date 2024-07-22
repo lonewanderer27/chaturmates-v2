@@ -18,7 +18,8 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import '@ionic/react/css/palettes/dark.class.css';
 import '@ionic/react/css/palettes/high-contrast.class.css';
-import '@ionic/react/css/palettes/high-contrast-dark.class.css';
+import './theme/high-contrast-dark.css';
+import './theme/high-contrast-light.css';
 /* Theme variables */
 import './theme/variables.css';
 
@@ -67,7 +68,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import SurveysRoute from './routes/SurveysRoute';
 import Threads from './pages/Threads';
 import ThreadsRoute from './routes/ThreadsRoute';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback  } from 'react';
 import { Preferences } from '@capacitor/preferences';
 
 setupIonicReact({
@@ -77,67 +78,34 @@ setupIonicReact({
 // instantiate tanstack client
 export const qClient = new QueryClient();
 const App = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [highContrastMode, setHighContrastMode] = useState(false);
-  const [increaseFontMode, setFontMode] = useState(false);
- 
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    document.documentElement.classList.toggle('ion-palette-dark', newDarkMode);   
-
-    if (newDarkMode) {
-      Preferences.set({ key: 'darkModeActivated', value: 'true' });
-    } else {
-      Preferences.set({ key: 'darkModeActivated', value: 'false' });
-    }
+  
+  
+  const toggleTheme = (modeKey: string, className: string): [boolean, () => void] => {
+    const [mode, setMode] = useState<boolean>(false);
+  
+    useEffect(() => {
+      const checkMode = async () => {
+        const storedMode = await Preferences.get({ key: modeKey });
+        const isActive = storedMode?.value === 'true';
+        setMode(isActive);
+        document.documentElement.classList.toggle(className, isActive);
+      };
+      checkMode();
+    }, [modeKey, className]);
+  
+    const toggleMode = useCallback(() => {
+      const newMode = !mode;
+      setMode(newMode);
+      document.documentElement.classList.toggle(className, newMode);
+      Preferences.set({ key: modeKey, value: newMode ? 'true' : 'false' });
+    }, [mode, modeKey, className]);
+  
+    return [mode, toggleMode];
   };
 
-  const toggleHighContrastMode = () => {
-    const newHighContrastMode = !highContrastMode;
-    setHighContrastMode(newHighContrastMode);
-    document.documentElement.classList.toggle('ion-palette-high-contrast', newHighContrastMode);
-
-    if (newHighContrastMode) {
-      Preferences.set({ key: 'highContrastModeActivated', value: 'true' });
-    } else {
-      Preferences.set({ key: 'highContrastModeActivated', value: 'false' });
-    }
-  };
-
-  const toggleFontMode = () => {
-    const newFontMode = !increaseFontMode;
-    setFontMode(newFontMode);
-    document.documentElement.classList.toggle('fontSize20', newFontMode);   
-
-    if (newFontMode) {
-      Preferences.set({ key: 'increaseFontModeActivated', value: 'true' });
-    } else {
-      Preferences.set({ key: 'increaseFontModeActivated', value: 'false' });
-    }
-  };
-
-  const checkAppMode = async () => {
-    const checkIsDarkMode = await Preferences.get({ key: 'darkModeActivated' });
-    const isDarkMode = checkIsDarkMode?.value === 'true';
-    setDarkMode(isDarkMode);
-    document.documentElement.classList.toggle('ion-palette-dark', isDarkMode);   
-
-
-    const checkIsHighContrastMode = await Preferences.get({ key: 'highContrastModeActivated' });
-    const isHighContrastMode = checkIsHighContrastMode?.value === 'true';
-    setHighContrastMode(isHighContrastMode);
-    document.documentElement.classList.toggle('ion-palette-high-contrast', isHighContrastMode);
-
-    const checkIsIncreaseFontMode = await Preferences.get({ key: 'increaseFontModeActivated' });
-    const isIncreaseFontMode = checkIsIncreaseFontMode?.value === 'true';
-    setFontMode(isIncreaseFontMode);
-    document.documentElement.classList.toggle('fontSize20', isIncreaseFontMode);
-  };
-
-  useEffect(() => {
-    checkAppMode();
-  }, []);
+  const [darkMode, toggleDarkMode] = toggleTheme('darkModeActivated', 'ion-palette-dark');
+  const [highContrastMode, toggleHighContrastMode] = toggleTheme('highContrastModeActivated', 'ion-palette-high-contrast');
+  const [increaseFontMode, toggleFontMode] = toggleTheme('increaseFontModeActivated', 'fontSize20');
 
   const modal = useRef<HTMLIonModalElement>(null);
 

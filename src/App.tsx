@@ -20,6 +20,8 @@ import '@ionic/react/css/palettes/dark.class.css';
 import '@ionic/react/css/palettes/high-contrast.class.css';
 import './theme/high-contrast-dark.css';
 import './theme/high-contrast-light.css';
+import './theme/high-contrast-dark.css';
+import './theme/high-contrast-light.css';
 /* Theme variables */
 import './theme/variables.css';
 

@@ -37,8 +37,10 @@
 }
 
 .fontSize20{
-  font-size: calc(1rem * 1.2);
+  font-size: calc(1rem * 1.2 );
 }
+
+
 
 
 

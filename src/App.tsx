@@ -18,7 +18,8 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import '@ionic/react/css/palettes/dark.class.css';
 import '@ionic/react/css/palettes/high-contrast.class.css';
-import '@ionic/react/css/palettes/high-contrast-dark.class.css';
+import './theme/high-contrast-dark.css';
+import './theme/high-contrast-light.css';
 /* Theme variables */
 import './theme/variables.css';
 
@@ -67,8 +68,8 @@ import { IonReactRouter } from '@ionic/react-router';
 import SurveysRoute from './routes/SurveysRoute';
 import Threads from './pages/Threads';
 import ThreadsRoute from './routes/ThreadsRoute';
-import React, { useEffect, useState, useRef } from 'react';
-import { Preferences } from '@capacitor/preferences';
+import AccessibilitySettings from './components/AccessibilitySettings';
+import FloatingAccessibiltyBtn from './components/FloatingAccessibiltyBtn';
 
 setupIonicReact({
   mode: 'ios'
@@ -77,73 +78,6 @@ setupIonicReact({
 // instantiate tanstack client
 export const qClient = new QueryClient();
 const App = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [highContrastMode, setHighContrastMode] = useState(false);
-  const [increaseFontMode, setFontMode] = useState(false);
- 
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    document.documentElement.classList.toggle('ion-palette-dark', newDarkMode);   
-
-    if (newDarkMode) {
-      Preferences.set({ key: 'darkModeActivated', value: 'true' });
-    } else {
-      Preferences.set({ key: 'darkModeActivated', value: 'false' });
-    }
-  };
-
-  const toggleHighContrastMode = () => {
-    const newHighContrastMode = !highContrastMode;
-    setHighContrastMode(newHighContrastMode);
-    document.documentElement.classList.toggle('ion-palette-high-contrast', newHighContrastMode);
-
-    if (newHighContrastMode) {
-      Preferences.set({ key: 'highContrastModeActivated', value: 'true' });
-    } else {
-      Preferences.set({ key: 'highContrastModeActivated', value: 'false' });
-    }
-  };
-
-  const toggleFontMode = () => {
-    const newFontMode = !increaseFontMode;
-    setFontMode(newFontMode);
-    document.documentElement.classList.toggle('fontSize20', newFontMode);   
-
-    if (newFontMode) {
-      Preferences.set({ key: 'increaseFontModeActivated', value: 'true' });
-    } else {
-      Preferences.set({ key: 'increaseFontModeActivated', value: 'false' });
-    }
-  };
-
-  const checkAppMode = async () => {
-    const checkIsDarkMode = await Preferences.get({ key: 'darkModeActivated' });
-    const isDarkMode = checkIsDarkMode?.value === 'true';
-    setDarkMode(isDarkMode);
-    document.documentElement.classList.toggle('ion-palette-dark', isDarkMode);   
-
-
-    const checkIsHighContrastMode = await Preferences.get({ key: 'highContrastModeActivated' });
-    const isHighContrastMode = checkIsHighContrastMode?.value === 'true';
-    setHighContrastMode(isHighContrastMode);
-    document.documentElement.classList.toggle('ion-palette-high-contrast', isHighContrastMode);
-
-    const checkIsIncreaseFontMode = await Preferences.get({ key: 'increaseFontModeActivated' });
-    const isIncreaseFontMode = checkIsIncreaseFontMode?.value === 'true';
-    setFontMode(isIncreaseFontMode);
-    document.documentElement.classList.toggle('fontSize20', isIncreaseFontMode);
-  };
-
-  useEffect(() => {
-    checkAppMode();
-  }, []);
-
-  const modal = useRef<HTMLIonModalElement>(null);
-
-  function dismiss() {
-    modal.current?.dismiss();
-  }
 
   return (
     <QueryClientProvider client={qClient}>
@@ -176,56 +110,9 @@ const App = () => {
           </IonTabs>
 
 
-          <IonFab style={{marginBottom: 60}} slot="fixed" vertical="bottom" horizontal="end">
-         
-          <IonFabButton>
-            <IonIcon icon={add}></IonIcon>
-          </IonFabButton>
-          <IonFabList side="top">
-      
-            <IonFabButton id="testColor">
-              <IonIcon id="open-modal" icon={colorPalette}></IonIcon>
-            </IonFabButton>
-            
-            <IonFabButton id="testColor">
-              <IonIcon icon={globe}></IonIcon>
-            </IonFabButton>
+          <FloatingAccessibiltyBtn/>
 
-          </IonFabList>
-        </IonFab>
-
-
-        <IonModal id="settings-modal" ref={modal} trigger="open-modal">
-          <IonContent>
-            <IonToolbar>
-              <IonTitle>Accessbility</IonTitle>
-              <IonButtons slot="end">
-                <IonButton color="dark" onClick={() => dismiss()}>
-                  Close
-                </IonButton>
-              </IonButtons>
-            </IonToolbar>
-            <IonList>
-
-              <IonItem>
-                <IonToggle checked={darkMode} onIonChange={toggleDarkMode} justify="space-between">
-                  Dark Mode
-                </IonToggle>
-              </IonItem>
-
-              <IonItem>
-              <IonToggle mode="ios" checked={highContrastMode} onIonChange={toggleHighContrastMode} justify="space-between">High Contrast</IonToggle>
-              </IonItem>
-
-              <IonItem>
-                <IonToggle checked={increaseFontMode} onIonChange={toggleFontMode} justify="space-between">
-                  Increase Font size (20%)
-                </IonToggle>
-              </IonItem>
-            </IonList>
-          </IonContent>
-        </IonModal>
-
+        <AccessibilitySettings/>
 
         </IonReactRouter>
       </IonApp>

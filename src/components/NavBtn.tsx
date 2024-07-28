@@ -1,17 +1,23 @@
-import { ComponentProps, useMemo } from "react"
-import { IonAvatar, IonButton, IonIcon, useIonRouter } from '@ionic/react'
+import { ComponentProps, useMemo } from "react";
+import {
+  IonAvatar,
+  IonButton,
+  IonIcon,
+  IonImg,
+  useIonRouter,
+} from "@ionic/react";
 
 import { peopleCircleOutline } from "ionicons/icons";
 
 type BtnProps = ComponentProps<typeof IonButton> & {
   route: string;
   icon?: string;
-  avatarUrl?: string;
+  avatarUrl?: string | null | undefined;
   size?: "small" | "default" | "large";
 };
 
 export default function NavBtn(props: BtnProps) {
-  const rt = useIonRouter()
+  const rt = useIonRouter();
   const isValidUrl = useMemo(() => {
     try {
       new URL(props.avatarUrl + "");
@@ -21,28 +27,27 @@ export default function NavBtn(props: BtnProps) {
     }
   }, [props.avatarUrl]);
 
-
   const handleClick = () => {
-    rt.push(props.route, "forward")
-  }
+    rt.push(props.route, "forward");
+  };
 
   return (
-    <IonButton onClick={handleClick}  className="ml-4" {...props} size={props.size}>
+    <IonButton
+      onClick={handleClick}
+      className="ml-4"
+      {...props}
+      size={props.size}
+    >
       {props.avatarUrl && isValidUrl ? (
-        <IonAvatar>
-          <img src={props.avatarUrl} />
-        </IonAvatar>
+        <IonImg src={props.avatarUrl} className="w-8 h-auto" />
       ) : (
-        <IonIcon
-          className=''
-          icon={props.icon}
-        />
+        <IonIcon className="" icon={props.icon} />
       )}
     </IonButton>
-  )
+  );
 }
 
 NavBtn.defaultProps = {
   size: "default",
-  icon: peopleCircleOutline, 
-}
+  icon: peopleCircleOutline,
+};

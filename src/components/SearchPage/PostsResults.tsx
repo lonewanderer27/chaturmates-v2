@@ -1,11 +1,11 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonList, IonText } from "@ionic/react";
 
-import { GroupPostTypeWGroup } from "../../hooks/post/usePostSearch";
+import { GroupPostTypeWGroupInfo } from "../../types/group/Post";
 import PostCard from "./PostCard";
 import { SEARCH_CATEGORY } from "../../enums/search";
 
 export default function PostsResults(props: {
-  posts?: GroupPostTypeWGroup[];
+  posts?: GroupPostTypeWGroupInfo[];
   handleViewMore: (fromPage: SEARCH_CATEGORY) => void;
   activePage?: SEARCH_CATEGORY;
 }) {

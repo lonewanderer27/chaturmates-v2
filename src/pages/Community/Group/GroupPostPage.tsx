@@ -1,31 +1,75 @@
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonImg, IonList, IonMenuButton, IonModal, IonPage, IonProgressBar, IonRow, IonSelect, IonSelectOption, IonText, IonTextarea, IonTitle, IonToolbar, useIonRouter } from '@ionic/react'
-import React, { FC, useMemo, useRef, useState } from 'react'
-import { RouteComponentProps, useParams } from 'react-router'
-import { chatboxOutline, heartOutline, sendSharp, shareSocialOutline } from 'ionicons/icons'
-import { getGroupPostById, getGroupPostCommentsByPostId } from '../../../services/group/post'
-import { object, string } from 'yup'
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonCol,
+  IonContent,
+  IonFooter,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonImg,
+  IonList,
+  IonMenuButton,
+  IonModal,
+  IonPage,
+  IonProgressBar,
+  IonRow,
+  IonSelect,
+  IonSelectOption,
+  IonText,
+  IonTextarea,
+  IonTitle,
+  IonToolbar,
+  useIonRouter,
+  useIonViewWillEnter,
+} from "@ionic/react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import { RouteComponentProps, useParams } from "react-router";
+import {
+  chatboxOutline,
+  heartOutline,
+  sendSharp,
+  shareSocialOutline,
+} from "ionicons/icons";
+import {
+  getGroupPostById,
+  getGroupPostCommentsByPostId,
+} from "../../../services/group/post";
+import { object, string } from "yup";
 
-import GroupPostComment from './GroupPostComment'
-import { SortOptions } from '../../../enums'
-import client from '../../../client'
-import useHideTabs from '../../../hooks/useHideTabs'
-import { useQuery } from '@tanstack/react-query'
-import useSelfStudent from '../../../hooks/student'
-import { yupResolver } from '@hookform/resolvers/yup'
+import GroupPostComment from "./GroupPostComment";
+import { SortOptions } from "../../../enums";
+import client from "../../../client";
+import useHideTabs from "../../../hooks/useHideTabs";
+import { useQuery } from "@tanstack/react-query";
+import useSelfStudent from "../../../hooks/student";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-const GroupPostPage: FC<RouteComponentProps> = ({ match }) => {
-  console.log(match)
+type GroupPostPageParams = {
+  vanity_url: string;
+  post_id: string;
+};
+
+const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
+  match,
+}) => {
+  console.log(match);
   const rt = useIonRouter();
   useHideTabs();
 
-  const { vanity_id, post_id } = useParams<{
-    vanity_id: string;
-    post_id: string;
-  }>();
+  const { vanity_url, post_id } = match.params;
 
-  console.log("vanity_id:", vanity_id);
-  console.log("post_id:", post_id);
+  useEffect(() => {
+    console.log("vanity_url:", vanity_url);
+    console.log("post_id:", post_id);
+  }, [vanity_url, post_id]);
 
   const pquery = useQuery({
     queryKey: ["group_post", post_id],
@@ -34,7 +78,7 @@ const GroupPostPage: FC<RouteComponentProps> = ({ match }) => {
       console.log("Post:", res.data);
       return res.data;
     },
-    enabled: !!post_id,
+    enabled: post_id !== undefined,
   });
 
   const timestamp = useMemo(() => {
@@ -45,7 +89,7 @@ const GroupPostPage: FC<RouteComponentProps> = ({ match }) => {
     }
   }, [pquery.data?.created_at]);
 
-  const formattedContent = pquery.data?.content?.replace(/\n/g, '<br />');
+  const formattedContent = pquery.data?.content?.replace(/\n/g, "<br />");
 
   const modal = useRef<HTMLIonModalElement>(null);
   const [sortedBy, setSortedBy] = useState(() => SortOptions.NEWEST);
@@ -208,25 +252,30 @@ const GroupPostPage: FC<RouteComponentProps> = ({ match }) => {
   return (
     <IonPage id="sidebar-content">
       <IonContent>
-        <IonHeader collapse='condense'>
-          <IonToolbar className='px-3'>
+        <IonHeader collapse="condense">
+          <IonToolbar className="px-3">
             <IonButtons slot="start">
-              <IonBackButton defaultHref={"/"+rt.routeInfo.pathname.split("/")[1]} text={""} />
+              <IonBackButton
+                defaultHref={"/" + rt.routeInfo.pathname.split("/")[1]}
+                text={""}
+              />
             </IonButtons>
             <IonButtons slot="end">
-              <IonButton className='ml-4' disabled>
+              <IonButton className="ml-4" disabled>
                 <IonIcon icon={heartOutline} />
               </IonButton>
-              <IonButton className='ml-4' disabled>
+              <IonButton className="ml-4" disabled>
                 <IonIcon icon={shareSocialOutline} />
               </IonButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <IonCard className='rounded-3xl bg-slate-100 p-6 mx-[-3px] shadow-none'>
+        <IonCard className="rounded-3xl bg-slate-100 p-6 mx-[-3px] shadow-none">
           <IonCardSubtitle>{pquery.data?.groups?.name}</IonCardSubtitle>
-          <IonCardTitle className="text-lg font-poppins">{pquery.data?.title}</IonCardTitle>
-          <IonCardSubtitle className='mt-2'>
+          <IonCardTitle className="text-lg font-poppins">
+            {pquery.data?.title}
+          </IonCardTitle>
+          <IonCardSubtitle className="mt-2">
             {timestamp.toDateString()} {timestamp.getHours()}:
             {timestamp.getMinutes()}
           </IonCardSubtitle>
@@ -235,18 +284,20 @@ const GroupPostPage: FC<RouteComponentProps> = ({ match }) => {
             
           </div> */}
           {pquery.data?.image_url && <IonImg src={pquery.data?.image_url} />}
-          {pquery.data?.content &&
-            <IonCardContent className='px-0 pb-0 font-poppins'>
+          {pquery.data?.content && (
+            <IonCardContent className="px-0 pb-0 font-poppins">
               <IonText>
                 <p dangerouslySetInnerHTML={{ __html: formattedContent! }}></p>
               </IonText>
-            </IonCardContent>}
+            </IonCardContent>
+          )}
         </IonCard>
-        <IonRow className='p-4'>
-          <IonCol className=' flex items-center justify-start py-0'>
-            <IonIcon src={chatboxOutline} className="text-xl" /> <IonText className='ml-2'>{cquery.data?.length ?? "-"}</IonText>
+        <IonRow className="p-4">
+          <IonCol className=" flex items-center justify-start py-0">
+            <IonIcon src={chatboxOutline} className="text-xl" />{" "}
+            <IonText className="ml-2">{cquery.data?.length ?? "-"}</IonText>
           </IonCol>
-          <IonCol className='flex items-center justify-end'>
+          <IonCol className="flex items-center justify-end">
             {/* <IonSelect value={sortedBy} interface="popover" onIonChange={(e) => setSortedBy(e.detail.value)}>
               <IonSelectOption value={SortOptions.NEWEST}>
                 {SortOptions.NEWEST}
@@ -257,29 +308,31 @@ const GroupPostPage: FC<RouteComponentProps> = ({ match }) => {
             </IonSelect> */}
           </IonCol>
         </IonRow>
-        {(cquery.data && cquery.data.length > 0) && 
-        <IonCard className='rounded-3xl bg-slate-100 p-6 mx-[-3px] mb-6 shadow-none'>
-          {cquery.data.map((comment) => (
+        {cquery.data && cquery.data.length > 0 && (
+          <IonCard className="rounded-3xl bg-slate-100 p-6 mx-[-3px] mb-6 shadow-none">
+            {cquery.data.map((comment) => (
               <GroupPostComment
                 key={comment.id}
                 student={comment.students!}
                 comment={comment}
               />
             ))}
-        </IonCard>}
+          </IonCard>
+        )}
       </IonContent>
 
       <IonFooter>
         {posting && <IonProgressBar type="indeterminate" />}
-        <IonGrid className='p-0'>
-          <IonToolbar className='px-4 pt-2'>
+        <IonGrid className="p-0">
+          <IonToolbar className="px-4 pt-2">
             <Controller
               render={({ field }) => (
                 <IonTextarea
-                  className={`${getFieldState("comment").error
-                    ? "ion-touched ion-invalid border-red-500"
-                    : ""
-                    } text-sm`}
+                  className={`${
+                    getFieldState("comment").error
+                      ? "ion-touched ion-invalid border-red-500"
+                      : ""
+                  } text-sm`}
                   disabled={posting}
                   value={field.value}
                   onIonChange={(e) => setValue("comment", e.detail.value ?? "")}
@@ -323,9 +376,11 @@ const GroupPostPage: FC<RouteComponentProps> = ({ match }) => {
               initialBreakpoint={0.25}
               breakpoints={[0, 0.25, 0.5, 0.75]}
             >
-              <IonHeader collapse="condense" className='px-4'>
+              <IonHeader collapse="condense" className="px-4">
                 <IonToolbar>
-                  <IonText className="font-poppins font-bold text-xl">Group Rules</IonText>
+                  <IonText className="font-poppins font-bold text-xl">
+                    Group Rules
+                  </IonText>
                   <IonButton
                     slot="end"
                     fill="clear"
@@ -340,8 +395,8 @@ const GroupPostPage: FC<RouteComponentProps> = ({ match }) => {
           </IonToolbar>
         </IonGrid>
       </IonFooter>
-    </IonPage >
-  )
-}
+    </IonPage>
+  );
+};
 
-export default GroupPostPage
+export default GroupPostPage;

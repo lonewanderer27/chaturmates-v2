@@ -36,7 +36,7 @@ export default function SearchPage() {
 
   const handleBack = () => {
     if (rt.canGoBack()) rt.goBack();
-    else rt.push("/discover");
+    else rt.push("/discover", "back");
   };
 
   const [query, setQuery] = useAtom(searchQueryAtom);
@@ -66,22 +66,15 @@ export default function SearchPage() {
           <IonToolbar className="mx-[-10px]">
             <IonSearchbar
               className="custom px-0 mx-0 font-poppins font-semibold"
-              onIonChange={(ev) => {
-                setQuery(ev.detail.value!);
-                handleSearch(ev.detail.value!);
-                handleStudentsSearch(ev.detail.value!);
-                handleGroupSearch(ev.detail.value!);
-                handlePostSearch(ev.detail.value!);
-              }}
               debounce={750}
-              // onIonInput={(ev) => {
-              //   setQuery(ev.detail.value!);
-              //   handleSearch(ev.detail.value!);
-              //   handleStudentsSearch(ev.detail.value!);
-              //   handleGroupSearch(ev.detail.value!);
-              //   handlePostSearch(ev.detail.value!);
-              // }}
               onIonCancel={handleBack}
+              onIonChange={(e) => {
+                setQuery(e.detail.value!);
+                  handleSearch(e.detail.value!);
+                  handleStudentsSearch(e.detail.value!);
+                  handleGroupSearch(e.detail.value!);
+                  handlePostSearch(e.detail.value!);
+              }}
               value={query}
             ></IonSearchbar>
             <IonButton

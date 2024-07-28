@@ -36,7 +36,9 @@ export default function GroupItem(props: {
   }, [props.group.avatar_url]);
 
   function handleView() {
-    rt.push("/group/vu/" + props.group.vanity_id);
+    // get the main pathname like /discover
+    const mainPathname = rt.routeInfo.pathname.split("/")[1];
+    rt.push("/"+mainPathname + "/group/vu/" + props.group.vanity_id);
   }
 
   function handleJoin() {

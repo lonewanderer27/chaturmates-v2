@@ -1,4 +1,3 @@
-import { GroupPostType, GroupType } from "../../types";
 import {
   IonCard,
   IonCol,
@@ -9,22 +8,28 @@ import {
 } from "@ionic/react";
 
 import { ComponentProps } from "react";
+import { GroupPostTypeWGroupInfo } from "../../types/group/Post";
+import { GroupType } from "../../types";
 import { personCircleOutline } from "ionicons/icons";
 
 type IonCardProps = ComponentProps<typeof IonCard>;
 
-export default function PostCard(props: IonCardProps & {
-  group?: GroupType;
-  post?: GroupPostType;
-  icon?: string;
-}) {
+export default function PostCard(
+  props: IonCardProps & {
+    group?: GroupType;
+    post?: GroupPostTypeWGroupInfo;
+    icon?: string;
+  }
+) {
   const rt = useIonRouter();
   const handleClick = () => {
     // get the main pathname like /discover
     const mainPathname = rt.routeInfo.pathname.split("/")[1];
-    console.log(mainPathname)
-    console.log("props.group: "+props.group)
-    rt.push(`/${mainPathname}/group/vu/${props.group?.vanity_id}/post/${props.post?.id}`);
+    console.log(mainPathname);
+    console.log("props.group: " + props.group);
+    rt.push(
+      `/${mainPathname}/group/vu/${props.group?.vanity_id}/post/${props.post?.id}`
+    );
   };
 
   return (

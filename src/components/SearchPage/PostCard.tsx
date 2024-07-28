@@ -20,7 +20,11 @@ export default function PostCard(props: IonCardProps & {
 }) {
   const rt = useIonRouter();
   const handleClick = () => {
-    rt.push(`/group/vu/${props.group?.vanity_id}/post/${props.post?.id}`);
+    // get the main pathname like /discover
+    const mainPathname = rt.routeInfo.pathname.split("/")[1];
+    console.log(mainPathname)
+    console.log("props.group: "+props.group)
+    rt.push(`/${mainPathname}/group/vu/${props.group?.vanity_id}/post/${props.post?.id}`);
   };
 
   return (

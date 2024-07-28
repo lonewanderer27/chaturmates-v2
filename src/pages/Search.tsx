@@ -74,13 +74,13 @@ export default function SearchPage() {
                 handlePostSearch(ev.detail.value!);
               }}
               debounce={750}
-              onIonInput={(ev) => {
-                setQuery(ev.detail.value!);
-                handleSearch(ev.detail.value!);
-                handleStudentsSearch(ev.detail.value!);
-                handleGroupSearch(ev.detail.value!);
-                handlePostSearch(ev.detail.value!);
-              }}
+              // onIonInput={(ev) => {
+              //   setQuery(ev.detail.value!);
+              //   handleSearch(ev.detail.value!);
+              //   handleStudentsSearch(ev.detail.value!);
+              //   handleGroupSearch(ev.detail.value!);
+              //   handlePostSearch(ev.detail.value!);
+              // }}
               onIonCancel={handleBack}
               value={query}
             ></IonSearchbar>

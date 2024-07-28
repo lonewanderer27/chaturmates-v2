@@ -223,16 +223,17 @@ const GroupPostPage: FC<RouteComponentProps> = ({ match }) => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <div className='rounded-3xl bg-slate-100 p-6 mx-[-3px]'>
+        <IonCard className='rounded-3xl bg-slate-100 p-6 mx-[-3px] shadow-none'>
           <IonCardSubtitle>{pquery.data?.groups?.name}</IonCardSubtitle>
           <IonCardTitle className="text-lg font-poppins">{pquery.data?.title}</IonCardTitle>
           <IonCardSubtitle className='mt-2'>
             {timestamp.toDateString()} {timestamp.getHours()}:
             {timestamp.getMinutes()}
           </IonCardSubtitle>
-          <div className='my-10'>
-            {/* Display the user that posted it here */}
-          </div>
+          {/* Display the user that posted it here */}
+          {/* <div className='my-10'>
+            
+          </div> */}
           {pquery.data?.image_url && <IonImg src={pquery.data?.image_url} />}
           {pquery.data?.content &&
             <IonCardContent className='px-0 pb-0 font-poppins'>
@@ -240,7 +241,7 @@ const GroupPostPage: FC<RouteComponentProps> = ({ match }) => {
                 <p dangerouslySetInnerHTML={{ __html: formattedContent! }}></p>
               </IonText>
             </IonCardContent>}
-        </div>
+        </IonCard>
         <IonRow className='p-4'>
           <IonCol className=' flex items-center justify-start py-0'>
             <IonIcon src={chatboxOutline} className="text-xl" /> <IonText className='ml-2'>{cquery.data?.length ?? "-"}</IonText>
@@ -257,7 +258,7 @@ const GroupPostPage: FC<RouteComponentProps> = ({ match }) => {
           </IonCol>
         </IonRow>
         {(cquery.data && cquery.data.length > 0) && 
-        <div className='rounded-3xl bg-slate-100 p-6 mx-[-3px] mb-6'>
+        <IonCard className='rounded-3xl bg-slate-100 p-6 mx-[-3px] mb-6 shadow-none'>
           {cquery.data.map((comment) => (
               <GroupPostComment
                 key={comment.id}
@@ -265,7 +266,7 @@ const GroupPostPage: FC<RouteComponentProps> = ({ match }) => {
                 comment={comment}
               />
             ))}
-        </div>}
+        </IonCard>}
       </IonContent>
 
       <IonFooter>

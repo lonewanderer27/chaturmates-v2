@@ -9,6 +9,9 @@ import GroupPostPage from '../pages/Community/Group/GroupPostPage'
 import Inbox from '../pages/Inbox'
 import { IonRouterOutlet } from '@ionic/react'
 import SearchPage from '../pages/Search'
+import StudentFollowing from '../pages/Community/Student/StudentFollowing'
+import StudentGroups from '../pages/Community/Student/StudentGroups'
+import StudentPage from '../pages/Community/StudentPage'
 
 const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
   console.log(match);
@@ -25,6 +28,9 @@ const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
       <Route path={`${match.url}/group/vu/:vanity_url`} component={Inbox} exact />
       <Route path={`${match.url}/group/vu/:vanity_url/post/:post_id`} component={GroupPostPage} exact />
       <Route path={`${match.url}/search`} component={SearchPage} />
+      <Route path={`${match.url}/student/id/:student_id`} component={StudentPage} exact />
+      <Route path={`${match.url}/student/id/:student_id/following`} component={StudentFollowing} exact />
+      <Route path={`${match.url}/student/id/:student_id/groups`} component={StudentGroups} exact />
       <Route path={`${match.url}/inbox`} component={Inbox} exact />
     </IonRouterOutlet>
   )

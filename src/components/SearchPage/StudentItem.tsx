@@ -25,13 +25,11 @@ export default function StudentItem(props: {
       return false;
     }
   }, [props.student.avatar_url]);
-
+  
   function handleClick() {
-    rt.push("/student/" + props.student.id);
-  }
-
-  function handleMe() {
-    rt.push("/me");
+    // get the main pathname like /community
+    const mainPathname = rt.routeInfo.pathname.split("/")[1];
+    rt.push("/"+mainPathname+"/student/id/" + props.student.id);
   }
 
   return (

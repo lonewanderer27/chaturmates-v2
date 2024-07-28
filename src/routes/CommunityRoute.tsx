@@ -14,6 +14,9 @@ import MeFollowing from '../pages/Community/Me/MeFollowing'
 import MeGroups from '../pages/Community/Me/MeGroups'
 import MeUpdate from '../pages/Community/Me/MeUpdate'
 import SearchPage from '../pages/Search'
+import StudentFollowing from '../pages/Community/Student/StudentFollowing'
+import StudentGroups from '../pages/Community/Student/StudentGroups'
+import StudentPage from '../pages/Community/StudentPage'
 
 const CommunityRoute: React.FC<RouteComponentProps> = ({ match }) => {
   console.log(match);
@@ -32,6 +35,9 @@ const CommunityRoute: React.FC<RouteComponentProps> = ({ match }) => {
       <Route path={`${match.url}/group/id/:group_id`} component={Inbox} exact />
       <Route path={`${match.url}/group/vu/:vanity_url`} component={Inbox} exact />
       <Route path={`${match.url}/group/vu/:vanity_url/post/:post_id`} component={GroupPostPage} exact />
+      <Route path={`${match.url}/student/id/:student_id`} component={StudentPage} exact />
+      <Route path={`${match.url}/student/id/:student_id/following`} component={StudentFollowing} exact />
+      <Route path={`${match.url}/student/id/:student_id/groups`} component={StudentGroups} exact />
       <Route path={`${match.url}/search`} component={SearchPage} exact />
       <Route path={`${match.url}/inbox`} component={Inbox} exact />
     </IonRouterOutlet>

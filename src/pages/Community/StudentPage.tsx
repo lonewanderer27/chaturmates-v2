@@ -16,16 +16,19 @@ import {
   useIonViewDidEnter,
   useIonViewWillEnter,
 } from "@ionic/react";
-import { Route, RouteComponentProps } from "react-router";
-import { hideTabBar, showTabBar } from "../../utils/TabBar";
-import useSelfStudent, { useFindStudentById } from "../../hooks/student";
 
 import { FC } from "react";
 import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
+import { RouteComponentProps } from "react-router";
+import { hideTabBar } from "../../utils/TabBar";
+import { useFindStudentById } from "../../hooks/student";
 import useSession from "../../hooks/auth/useSession";
-import useStudentSearch from "../../hooks/student/useStudentSearch";
 
-const StudentPage: FC<RouteComponentProps> = ({ match }: { match: { params: { student_id: string } } }) => {
+type StudentPageProps = {
+  student_id: string;
+};
+
+const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
   useIonViewWillEnter(() => {
     hideTabBar();
   })

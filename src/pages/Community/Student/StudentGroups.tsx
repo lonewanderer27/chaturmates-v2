@@ -1,13 +1,16 @@
-import { IonBackButton, IonButton, IonButtons, IonCardContent, IonCol, IonContent, IonGrid, IonHeader, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react'
-import { hideTabBar, showTabBar } from '../../../utils/TabBar';
-import useSelfStudent, { useFindStudentById } from '../../../hooks/student';
+import { IonBackButton, IonButtons, IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react'
 
 import { FC } from 'react';
 import GroupItem from '../../../components/SearchPage/GroupItem';
 import { RouteComponentProps } from 'react-router';
-import { SEARCH_CATEGORY } from '../../../enums/search';
+import { hideTabBar } from '../../../utils/TabBar';
+import { useFindStudentById } from '../../../hooks/student';
 
-const StudentGroups: FC<RouteComponentProps> = ({ match }: { match: { params: { student_id: string } } }) => {
+type StudentGroupsPageProps = {
+  student_id: string
+}
+
+const StudentGroups: FC<RouteComponentProps<StudentGroupsPageProps>> = ({ match }) => {
   const { groups } = useFindStudentById(match.params.student_id);
   useIonViewWillEnter(() => {
     hideTabBar();

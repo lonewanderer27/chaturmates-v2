@@ -1,5 +1,6 @@
-import { IonBackButton, IonButton, IonButtons, IonCardContent, IonContent, IonFooter, IonGrid, IonHeader, IonInput, IonLabel, IonList, IonPage, IonRow, IonSpinner, IonText, IonTextarea, IonTitle, IonToolbar } from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonCardContent, IonContent, IonFooter, IonGrid, IonHeader, IonInput, IonLabel, IonList, IonPage, IonRow, IonSpinner, IonText, IonTextarea, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react'
 import React, { FC } from 'react'
+import { hideTabBar, showTabBar } from '../../../utils/TabBar'
 
 import { Controller } from 'react-hook-form'
 import MemberAvatarLarge from '../../../components/Me/MemberAvatarLarge'
@@ -11,6 +12,9 @@ import useUpdateInfo from '../../../hooks/me/useUpdateInfo'
 const MeUpdate: FC<RouteComponentProps> = ({ match }) => {
   const { student, profile, groups, school, academic_year, following, followers } = useSelfStudent();
   const { handleSubmit, handleSave, handleError, setValue, register, saving, control } = useUpdateInfo();
+  useIonViewWillEnter(() => {
+    hideTabBar();
+  })
 
   return (
     <IonPage>

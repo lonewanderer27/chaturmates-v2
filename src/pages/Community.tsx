@@ -1,12 +1,16 @@
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar } from '@ionic/react'
+import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
 import { notificationsOutline, personOutline, searchOutline } from 'ionicons/icons'
 
 import NavBtn from '../components/NavBtn'
 import Sidebar from '../components/Sidebar'
+import { showTabBar } from '../utils/TabBar'
 import useSession from '../hooks/auth/useSession'
 
 export default function Community() {
   const { session } = useSession();
+  useIonViewWillEnter(() => {
+    showTabBar();
+  })
 
   return (
     <>

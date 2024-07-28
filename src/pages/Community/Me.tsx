@@ -13,7 +13,9 @@ import {
   IonText,
   IonToolbar,
   useIonRouter,
+  useIonViewWillEnter,
 } from "@ionic/react";
+import { hideTabBar, showTabBar } from "../../utils/TabBar";
 
 import { FC } from "react";
 import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
@@ -45,6 +47,10 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
   const handleUpdate = () => {
     rt.push(rt.routeInfo.pathname + "/update");
   };
+
+  useIonViewWillEnter(() => {
+    hideTabBar();
+  })
 
   return (
     <IonPage>

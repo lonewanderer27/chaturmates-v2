@@ -1,4 +1,5 @@
-import { IonBackButton, IonButton, IonButtons, IonCardContent, IonCol, IonContent, IonGrid, IonHeader, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonCardContent, IonCol, IonContent, IonGrid, IonHeader, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react'
+import { hideTabBar, showTabBar } from '../../../utils/TabBar';
 import useSelfStudent, { useFindStudentById } from '../../../hooks/student';
 
 import { FC } from 'react';
@@ -7,6 +8,9 @@ import StudentItem from '../../../components/SearchPage/StudentItem';
 
 const StudentFollowing: FC<RouteComponentProps> = ({ match }: { match: { params: { student_id: string } } }) => {
   const { following } = useFindStudentById(match.params.student_id);
+  useIonViewWillEnter(() => {
+    hideTabBar();
+  })
 
   return (
     <IonPage>

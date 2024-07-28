@@ -1,10 +1,14 @@
-import { IonBackButton, IonButton, IonButtons, IonCardContent, IonCol, IonContent, IonGrid, IonHeader, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonCardContent, IonCol, IonContent, IonGrid, IonHeader, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react'
+import { hideTabBar, showTabBar } from '../../../utils/TabBar';
 
 import StudentItem from '../../../components/SearchPage/StudentItem';
 import useSelfStudent from '../../../hooks/student';
 
 const MeFollowing = () => {
   const { following } = useSelfStudent();
+  useIonViewWillEnter(() => {
+    hideTabBar();
+  })
 
   return (
     <IonPage>

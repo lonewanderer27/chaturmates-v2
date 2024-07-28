@@ -1,4 +1,4 @@
-import { IonButtons, IonContent, IonHeader, IonPage, IonText, IonToolbar } from '@ionic/react'
+import { IonButtons, IonContent, IonHeader, IonPage, IonText, IonToolbar, useIonViewWillEnter } from '@ionic/react'
 import { notificationsOutline, searchOutline } from 'ionicons/icons'
 
 import AdminPostsGrid from '../components/DiscoverPage/AdminPostsGrid';
@@ -6,6 +6,7 @@ import GroupsGrid from '../components/DiscoverPage/GroupsGrid';
 import NavBtn from '../components/NavBtn'
 import { getAdminPosts } from '../services/group/admin';
 import { getAllGroups } from '../services/groups';
+import { showTabBar } from '../utils/TabBar';
 import { useQuery } from '@tanstack/react-query';
 import useSelfStudent from '../hooks/student';
 
@@ -33,6 +34,9 @@ export default function Discover() {
     enabled: !!student?.id
   })
 
+  useIonViewWillEnter(() => {
+    showTabBar();
+  })
 
   return (
     <IonPage>

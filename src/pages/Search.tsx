@@ -1,4 +1,4 @@
-import { IonBackButton, IonButton, IonContent, IonHeader, IonIcon, IonPage, IonPopover, IonSearchbar, IonText, IonTitle, IonToolbar, useIonRouter } from "@ionic/react";
+import { IonBackButton, IonButton, IonContent, IonHeader, IonIcon, IonPage, IonPopover, IonSearchbar, IonText, IonTitle, IonToolbar, useIonRouter, useIonViewWillEnter } from "@ionic/react";
 import { chevronBack, options } from "ionicons/icons";
 import { searchCategoryAtom, searchQueryAtom } from "../atoms/search";
 
@@ -9,6 +9,7 @@ import RecentSearches from "../components/SearchPage/RecentSearches";
 import { SEARCH_CATEGORY } from "../enums/search";
 import SearchCategory from "../components/SearchPage/SearchCategory";
 import SearchHistory from "../components/SearchPage/SearchHistory";
+import { hideTabBar } from "../utils/TabBar";
 import { useAtom } from "jotai";
 import useGroupSearch from "../hooks/group/useGroupSearch";
 import usePostSearch from "../hooks/post/usePostSearch";
@@ -37,6 +38,10 @@ export default function SearchPage() {
     // set active page to all if it is from page
     setActivePage(activePage => activePage === fromPage ? SEARCH_CATEGORY.ALL : fromPage);
   }
+
+  useIonViewWillEnter(() => {
+    hideTabBar();
+  })
 
   return (
     <IonPage>

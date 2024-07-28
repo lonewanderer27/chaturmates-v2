@@ -1,6 +1,12 @@
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar } from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react'
+
+import { showTabBar } from '../utils/TabBar';
 
 export default function Inbox() {
+  useIonViewWillEnter(() => {
+    showTabBar();
+  })
+
   return (
     <IonPage>
       <IonHeader>

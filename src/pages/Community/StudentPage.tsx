@@ -13,8 +13,11 @@ import {
   IonText,
   IonToolbar,
   useIonRouter,
+  useIonViewDidEnter,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import { Route, RouteComponentProps } from "react-router";
+import { hideTabBar, showTabBar } from "../../utils/TabBar";
 import useSelfStudent, { useFindStudentById } from "../../hooks/student";
 
 import { FC } from "react";
@@ -23,6 +26,10 @@ import useSession from "../../hooks/auth/useSession";
 import useStudentSearch from "../../hooks/student/useStudentSearch";
 
 const StudentPage: FC<RouteComponentProps> = ({ match }: { match: { params: { student_id: string } } }) => {
+  useIonViewWillEnter(() => {
+    hideTabBar();
+  })
+
   const { session } = useSession();
   const rt = useIonRouter();
   const { student, followers, following, groups } = useFindStudentById(match.params.student_id);

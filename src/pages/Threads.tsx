@@ -1,6 +1,12 @@
-import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonViewWillEnter } from "@ionic/react";
+
+import { showTabBar } from "../utils/TabBar";
 
 export default function Threads() {
+  useIonViewWillEnter(() => {
+    showTabBar();
+  })
+
   return (
     <IonPage>
       <IonHeader translucent>

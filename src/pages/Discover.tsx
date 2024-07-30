@@ -29,7 +29,7 @@ export default function Discover() {
     queryFn: async () => {
       const res = await getAdminPosts(student!.school+"");
       console.log("adminPosts", res);
-      return res.data;
+      return res;
     },
     enabled: !!student?.id
   })
@@ -58,7 +58,7 @@ export default function Discover() {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <AdminPostsGrid group={iaQuery.data} posts={iaQuery.data?.group_posts} />
+        <AdminPostsGrid group={iaQuery.data?.group} posts={iaQuery.data?.group_posts} />
         <GroupsGrid groups={query.data?.groups} />
       </IonContent>
     </IonPage>

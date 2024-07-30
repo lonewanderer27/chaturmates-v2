@@ -33,7 +33,7 @@ type StudentPageProps = {
 const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
   useIonViewWillEnter(() => {
     hideTabBar();
-  })
+  });
 
   const { session } = useSession();
   const rt = useIonRouter();
@@ -51,18 +51,18 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons>
-            <IonBackButton
-              className="ml-2"
-              defaultHref="/community"
-              text={""}
-            />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
       <IonContent className="ion-padding">
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonButtons>
+              <IonBackButton
+                className="ml-[-5px]"
+                defaultHref="/community"
+                text={""}
+              />
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
         <MemberAvatarLarge avatarUrl={student?.avatar_url} />
         <IonCard className="pt-16 bg-slate-200 rounded-xl  z-[-500] shadow-none mx-0">
           <IonCardContent>
@@ -76,7 +76,12 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
                 </IonText>
               </IonRow>
               <IonRow className="flex justify-center mt-2">
-                <IonButton shape="round" size="small" className="mx-1" color="light">
+                <IonButton
+                  shape="round"
+                  size="small"
+                  className="mx-1"
+                  color="light"
+                >
                   Direct Message
                 </IonButton>
                 <IonButton shape="round" size="small" className="mx-1">
@@ -89,14 +94,18 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
                     {following?.length ?? "-"}
                   </IonText>
                   <br />
-                  <IonText className="text-sm" color="dark">following</IonText>
+                  <IonText className="text-sm" color="dark">
+                    following
+                  </IonText>
                 </IonCol>
                 <IonCol className="cursor-pointer" onClick={handleGroups}>
                   <IonText className="text-2xl" color="dark">
                     {groups?.length ?? "-"}
                   </IonText>
                   <br />
-                  <IonText className="text-sm" color="dark">groups</IonText>
+                  <IonText className="text-sm" color="dark">
+                    groups
+                  </IonText>
                 </IonCol>
               </IonRow>
             </IonGrid>
@@ -105,11 +114,15 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
         <IonCard className="mt-4 rounded-xl bg-slate-200 mx-0 shadow-none">
           <IonCardContent>
             <div>
-              <IonText className="text-xs font-bold" color="dark">BIO</IonText>
+              <IonText className="text-xs font-bold" color="dark">
+                BIO
+              </IonText>
               <br />
             </div>
             <div className="">
-              <IonText className="text-sm" color="dark">{student?.description}</IonText>
+              <IonText className="text-sm" color="dark">
+                {student?.description}
+              </IonText>
             </div>
           </IonCardContent>
         </IonCard>

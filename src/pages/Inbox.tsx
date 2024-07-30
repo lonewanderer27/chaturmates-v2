@@ -39,7 +39,8 @@ const Inbox: FC<RouteComponentProps> = () => {
   const handleSegmentChange = (e: CustomEvent) => {
     const value = e.detail.value as INBOX_CATEGORY;
     setSelectedSegment(value);
-    history.push(`/inbox#${value === INBOX_CATEGORY.NOTICE ? "notice" : "following"}`);
+    const pathname = location.pathname.split("/")[1];
+    history.push(`/${pathname}/inbox#${value === INBOX_CATEGORY.NOTICE ? "notice" : "following"}`);
   };
 
   return (

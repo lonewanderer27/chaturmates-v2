@@ -107,7 +107,7 @@ const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
         cover_url: newGroup.step2.cover_url,
         description: newGroup.step1.description,
         name: newGroup.step1.name,
-        school: newGroup.step3.school ?? 1,
+        school_id: newGroup.step3.school ?? 1,
         semester: newGroup.step3.semester ?? 2,
         vanity_id: newGroup.step2.vanity_id,
       })

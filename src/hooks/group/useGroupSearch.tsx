@@ -12,7 +12,7 @@ export default function useGroupSearch() {
   const fetchGroups = async () => {
     const response = await client
       .from('groups')
-      .select('*, group_members(*)')
+      .select('*, group_members!group_members_group_id_fkey(*)')
       .eq('admin_uni_group', false)
       .order('created_at', { ascending: true });
     setGroupsResults(response.data as GroupsResponse['getAll']['data']['groups']);
@@ -22,7 +22,7 @@ export default function useGroupSearch() {
   const searchGroups = async (query: string) => {
     const response = await client
       .from('groups')
-      .select('*, group_members(*)')
+      .select('*, group_members!group_members_group_id_fkey(*)')
       .ilike('name', `%${query}%`)
       .eq('admin_uni_group', false)
       .order('created_at', { ascending: true });

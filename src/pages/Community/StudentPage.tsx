@@ -38,9 +38,7 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
   const { student, followers, following, groups } = useFindStudentById(match.params.student_id);
 
   const handleFollowing = () => {
-    rt.push("/community/student/id/" + match.params.student_id + "/following", "forward", "push", {
-      
-    });
+    rt.push(rt.routeInfo.pathname + "/following");
   };
 
   const handleGroups = () => {

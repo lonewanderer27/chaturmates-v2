@@ -8,18 +8,19 @@ const useDraggableFab = () => {
   const currentY = useRef(0);
 
   useEffect(() => {
-    const handleTouchStart = (e: TouchEvent) => {
-      const touch = e.touches[0];
+    const handleDragStart = (clientY: number) => {
       isDragging.current = true;
-      startY.current = touch.clientY;
+      startY.current = clientY;
       initialTop.current = fabRef.current?.getBoundingClientRect().top || 0;
+      if (fabRef.current) {
+        fabRef.current.style.opacity = '1';
+      }
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
+    const handleDragMove = (clientY: number) => {
       if (!isDragging.current) return;
 
-      const touch = e.touches[0];
-      const deltaY = touch.clientY - startY.current;
+      const deltaY = clientY - startY.current;
       const newTop = initialTop.current + deltaY;
       const screenHeight = window.innerHeight;
       const maxTop = screenHeight * 0.85; 
@@ -36,29 +37,43 @@ const useDraggableFab = () => {
       requestAnimationFrame(() => {
         if (fabRef.current) {
           fabRef.current.style.top = `${currentY.current}px`;
-          fabRef.current.style.opacity = '1';
         }
       });
     };
 
-    const handleTouchEnd = () => {
+    const handleDragEnd = () => {
       isDragging.current = false;
+      if (fabRef.current) {
+        fabRef.current.style.opacity = '0.4';
+      }
     };
+
+    const handleTouchStart = (e: TouchEvent) => handleDragStart(e.touches[0].clientY);
+    const handleTouchMove = (e: TouchEvent) => handleDragMove(e.touches[0].clientY);
+    const handleMouseDown = (e: MouseEvent) => handleDragStart(e.clientY);
+    const handleMouseMove = (e: MouseEvent) => handleDragMove(e.clientY);
+    const handleMouseUp = () => handleDragEnd();
 
     const fabElement = fabRef.current;
 
     if (fabElement) {
       fabElement.addEventListener('touchstart', handleTouchStart);
       fabElement.addEventListener('touchmove', handleTouchMove);
-      fabElement.addEventListener('touchend', handleTouchEnd);
+      fabElement.addEventListener('touchend', handleDragEnd);
+      fabElement.addEventListener('mousedown', handleMouseDown);
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
     }
 
     return () => {
       if (fabElement) {
         fabElement.removeEventListener('touchstart', handleTouchStart);
         fabElement.removeEventListener('touchmove', handleTouchMove);
-        fabElement.removeEventListener('touchend', handleTouchEnd);
+        fabElement.removeEventListener('touchend', handleDragEnd);
+        fabElement.removeEventListener('mousedown', handleMouseDown);
       }
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
     };
   }, []);
 

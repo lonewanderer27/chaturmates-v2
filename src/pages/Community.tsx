@@ -16,7 +16,7 @@ export default function Community() {
   return (
     <>
       <Sidebar />
-      <IonPage id="sidebar-content">
+      <IonPage id="community-page">
         <IonContent className='ion-padding'>
           <IonHeader collapse='condense'>
             <IonToolbar>

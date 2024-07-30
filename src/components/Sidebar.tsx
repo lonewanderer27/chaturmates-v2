@@ -17,7 +17,7 @@ export default function Sidebar() {
   }
 
   return (
-    <IonMenu contentId="sidebar-content" type="reveal">
+    <IonMenu contentId="community-page" type="reveal">
       <IonHeader>
         <IonToolbar>
           <IonTitle>Sidebar Title</IonTitle>

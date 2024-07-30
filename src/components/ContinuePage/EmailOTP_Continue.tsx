@@ -93,8 +93,6 @@ const EmailOTP_1_Continue = (props: {
     onOTPSuccess()
   }
 
-  const { handleSetup } = useSetup();
-
   // Handle what happens if the OTP that was sent to user's email
   // matches the OTP that the user entered
   const onOTPSuccess = async () => {

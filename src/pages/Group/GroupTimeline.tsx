@@ -19,7 +19,7 @@ import {
   useIonRouter,
 } from "@ionic/react";
 
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { RouteComponentProps } from "react-router";
 import useGroupMemsCount from "../../hooks/group/useGroupMemsCount";
 import useGroupInfoLite from "../../hooks/group/useGroupInfoLite";
@@ -29,6 +29,7 @@ import {
   informationCircleOutline,
   informationOutline,
   listOutline,
+  peopleCircleOutline,
   peopleOutline,
   personOutline,
   shareOutline,
@@ -43,6 +44,15 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
 }) => {
   const { data: infoLite } = useGroupInfoLite(match.params.vanity_url);
   const { data } = useGroupMemsCount(match.params.vanity_url);
+
+  const isValidUrl = useMemo(() => {
+    try {
+      new URL(infoLite!.avatar_url + "");
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }, [infoLite?.avatar_url]);
 
   const rt = useIonRouter();
   const handleMembers = () => {
@@ -63,9 +73,13 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
       </IonHeader>
       <IonContent className="ion-padding">
         <IonItem lines="none" className="mx-[-10px]">
-          <IonThumbnail slot="start">
-            <img src={infoLite?.avatar_url!} className="rounded-full" />
-          </IonThumbnail>
+          {infoLite?.avatar_url && isValidUrl ? (
+            <IonThumbnail slot="start">
+              <img src={infoLite?.avatar_url!} className="rounded-full" />
+            </IonThumbnail>
+          ) : (
+            <IonIcon slot="start" icon={peopleCircleOutline} className="text-6xl" />
+          )}
           <IonLabel>
             <h3 className="font-semibold">
               <IonIcon src={peopleOutline} /> {data}

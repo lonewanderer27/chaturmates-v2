@@ -1,11 +1,8 @@
-import { ProfileType, StudentType } from "."
-
 export interface SetupProgressType {
   progress: [
-    { studentNo: boolean },
-    { course: boolean },
-    { type: boolean }, // regular or irregular
-    { yearLevel: boolean },
-    { subjects: boolean },
+    { Intro: boolean },               // SetupIntro
+    { PdfOrManual: boolean },         // Setup1PdfOrManual
+    { Course_YrLevel_Type: boolean }, // Setup2CourseYrLevelType
+    { Subjects: boolean },            // Setup3Subjects
   ]
 }

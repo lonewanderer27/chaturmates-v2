@@ -1,7 +1,5 @@
-import { GroupPostType, GroupType } from '../../types';
-import { IonCard, useIonRouter } from '@ionic/react';
-
-import { useHistory } from 'react-router';
+import { GroupPostType, GroupType } from "../../types";
+import { IonCard, useIonRouter } from "@ionic/react";
 
 const AdminPostCard = (props: {
   group?: GroupType;
@@ -9,20 +7,21 @@ const AdminPostCard = (props: {
   icon?: string;
 }) => {
   const rt = useIonRouter();
-  const hst = useHistory();
 
   const handleClick = () => {
-    hst.push(`${rt.routeInfo.pathname}/group/vu/${props.group?.vanity_id}/post/${props.post?.id}`, {
-      post_id: props.post?.id,
-      vanity_url: props.group?.vanity_id
-    });
+    console.log("clicked");
+    rt.push(
+      `${rt.routeInfo.pathname}/group/vu/${props.group?.vanity_id}/post/${props.post?.id}`,
+      "forward",
+      "replace"
+    );
   };
 
   return (
-    <IonCard className='my-0' onClick={handleClick}>
+    <IonCard className="my-0" onClick={handleClick}>
       <img src={props.post?.image_url!} />
     </IonCard>
-  )
-}
+  );
+};
 
-export default AdminPostCard
+export default AdminPostCard;

@@ -1,48 +1,82 @@
 import { SetupProgressType } from '../../types/setup';
-import client from '../../client';
+import { useIonRouter } from '@ionic/react';
 import useSession from '../auth/useSession'
 import { useState } from 'react'
+import { useSteps } from '../useSteps';
 
 export default function useSetup() {
   const [progress, setProgress] = useState<SetupProgressType["progress"]>([
-    { studentNo: false },
-    { course: false },
-    { type: false },
-    { yearLevel: false },
-    { subjects: false },
+    { Intro: false },
+    { PdfOrManual: false },
+    { Course_YrLevel_Type: false },
+    { Subjects: false },
   ]);
-  const { session } = useSession();
+  const stepHookParts = useSteps(4);
+  const rt = useIonRouter();
 
-  const checkProgress = async () => {
+  const checkProgress = async () => {console.log(stepHookParts)
     // calls the edge function to check the progress of the user
   }
 
-  const handleBack = () => {
-    
-  }
-
   const handleNext = () => {
-    
+    switch (stepHookParts.currentStep) {
+      case 0:
+        setProgress([{ Intro: true }, { PdfOrManual: false }, { Course_YrLevel_Type: false }, { Subjects: false }]);
+        rt.push('/setup/pdfOrManual');
+        console.log("going to pdfOrManual")
+        break;
+      case 1:
+        setProgress([{ Intro: true }, { PdfOrManual: true }, { Course_YrLevel_Type: false }, { Subjects: false }]);
+        rt.push('/setup/courseYrLevelType');
+        console.log("going to courseYrLevelType")
+        break;
+      case 2:
+        setProgress([{ Intro: true }, { PdfOrManual: true }, { Course_YrLevel_Type: true }, { Subjects: false }]);
+        rt.push('/setup/subjects');
+        console.log("going to subjects")
+        break;
+      case 3:
+        setProgress([{ Intro: true }, { PdfOrManual: true }, { Course_YrLevel_Type: true }, { Subjects: true }]);
+        rt.push('/setup/finish');
+        console.log("going to finish")
+        break;
+    }
+    if (stepHookParts.currentStep < 3) {
+      stepHookParts.goToNextStep();
+    }
+    console.log(stepHookParts.currentStep)
   }
 
-  const handleSetup = () => {
-    // Our goal is have this function to be called
-    // whenever our user logins to the app
-    // using Adamson Google Account or Email
-    // we shall check if there's already a user & profile
-    // then we'll check if they're a student and has already setup their profile
-    // these are conditions to be met before we can allow them to use the app
-    // a student record must be existing in the database
-    // if not, we shall redirect them to the setup page
-    // where they will setup one information at a time
-    // otherwise, we shall redirect them to the home page
+  const handlePrev = () => {
+    switch (stepHookParts.currentStep) {
+      case 0:
+        setProgress([{ Intro: false }, { PdfOrManual: false }, { Course_YrLevel_Type: false }, { Subjects: false }]);
+        rt.push('/discover');
+        break;
+      case 1:
+        setProgress([{ Intro: true }, { PdfOrManual: false }, { Course_YrLevel_Type: false }, { Subjects: false }]);
+        rt.push('/setup');
+        break;
+      case 2:
+        setProgress([{ Intro: true }, { PdfOrManual: true }, { Course_YrLevel_Type: false }, { Subjects: false }]);
+        rt.push('/setup/pdfOrManual');
+        break;
+      case 3:
+        setProgress([{ Intro: true }, { PdfOrManual: true }, { Course_YrLevel_Type: true }, { Subjects: false }]);
+        rt.push('/setup/courseYrLevelType');
+        break;
+    }
+    if (stepHookParts.currentStep > 0) {
+      stepHookParts.goToPrevStep();
+    }
+    console.log(stepHookParts.currentStep)
   }
 
   return {
     progress,
     checkProgress,
-    handleBack,
-    handleNext,
-    handleSetup
+    ...stepHookParts,
+    handlePrev,
+    handleNext
   }
 }

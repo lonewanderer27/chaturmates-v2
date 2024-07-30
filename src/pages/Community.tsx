@@ -4,10 +4,11 @@ import { notificationsOutline, personOutline, searchOutline } from 'ionicons/ico
 import NavBtn from '../components/NavBtn'
 import Sidebar from '../components/Sidebar'
 import { showTabBar } from '../utils/TabBar'
+import useSelfStudent from '../hooks/student'
 import useSession from '../hooks/auth/useSession'
 
 export default function Community() {
-  const { session } = useSession();
+  const { student } = useSelfStudent();
   useIonViewWillEnter(() => {
     showTabBar();
   })
@@ -25,7 +26,7 @@ export default function Community() {
               <IonButtons slot="end">
                 <NavBtn
                   route="community/me"
-                  icon={personOutline}
+                  avatarUrl={student?.avatar_url}
                 />
                 <NavBtn
                   route="community/search"

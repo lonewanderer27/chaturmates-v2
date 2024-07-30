@@ -2,17 +2,15 @@ import {
   IonButton,
   IonContent,
   IonFooter,
-  IonIcon,
   IonPage,
+  IonProgressBar,
   useIonViewWillEnter,
 } from "@ionic/react";
 
-import { IonText } from "@ionic/react";
-import { fingerPrintOutline } from "ionicons/icons";
-import { hideTabBar } from "../utils/TabBar";
-import useSetup from "../hooks/setup/useSetup";
+import { hideTabBar } from "../../utils/TabBar";
+import useSetup from "../../hooks/setup/useSetup";
 
-export default function Setup() {
+const Setup1PdfOrManual = () => {
   useIonViewWillEnter(() => {
     hideTabBar();
   });
@@ -22,14 +20,8 @@ export default function Setup() {
   return (
     <IonPage>
       <IonContent className="ion-padding">
-        <div className="w-100 text-center my-auto">
-          <IonIcon src={fingerPrintOutline} size="large" />
-          <IonText>
-            <h3>Title</h3>
-          </IonText>
-          <IonText>
-            <p>Description</p>
-          </IonText>
+        <div>
+          <IonProgressBar value={0.2}></IonProgressBar>
         </div>
       </IonContent>
       <IonFooter className="ion-padding flex justify-end">
@@ -39,4 +31,6 @@ export default function Setup() {
       </IonFooter>
     </IonPage>
   );
-}
+};
+
+export default Setup1PdfOrManual;

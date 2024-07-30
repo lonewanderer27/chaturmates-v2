@@ -330,13 +330,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "group_members_group_vanity_id_fkey"
-            columns: ["group_vanity_id"]
-            isOneToOne: false
-            referencedRelation: "groups"
-            referencedColumns: ["vanity_id"]
-          },
-          {
             foreignKeyName: "group_members_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
@@ -440,7 +433,7 @@ export type Database = {
           id: number
           name: string
           private: boolean
-          school: number
+          school_id: number
           semester: number | null
           vanity_id: string
         }
@@ -456,7 +449,7 @@ export type Database = {
           id?: number
           name: string
           private?: boolean
-          school: number
+          school_id: number
           semester?: number | null
           vanity_id: string
         }
@@ -472,7 +465,7 @@ export type Database = {
           id?: number
           name?: string
           private?: boolean
-          school?: number
+          school_id?: number
           semester?: number | null
           vanity_id?: string
         }
@@ -499,8 +492,8 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "groups_school_fkey"
-            columns: ["school"]
+            foreignKeyName: "groups_school_id_fkey"
+            columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
             referencedColumns: ["id"]

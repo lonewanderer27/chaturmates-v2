@@ -29,7 +29,7 @@ const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
 
   return (
     <IonRouterOutlet id="discover">
-      <Route component={Discover} exact />
+      <Route path={match.url} component={Discover} exact />
       <Route path={`${match.url}/me`} component={Me} exact />
       <Route path={`${match.url}/me/groups`} component={MeGroups} exact />
       <Route path={`${match.url}/me/following`} component={MeFollowing} exact />

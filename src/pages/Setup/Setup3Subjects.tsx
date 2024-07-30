@@ -3,7 +3,7 @@ import { IonContent, IonPage, IonProgressBar, useIonViewWillEnter } from '@ionic
 import React from 'react'
 import { hideTabBar } from '../../utils/TabBar';
 
-const Setup2CourseYrLevelType = () => {
+const Setup3Subjects = () => {
   useIonViewWillEnter(() => {
     hideTabBar();
   });
@@ -19,4 +19,4 @@ const Setup2CourseYrLevelType = () => {
   )
 }
 
-export default Setup2CourseYrLevelType
+export default Setup3Subjects

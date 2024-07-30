@@ -6,12 +6,11 @@ import Sidebar from '../components/Sidebar'
 import { showTabBar } from '../utils/TabBar'
 import useSelfStudent from '../hooks/student'
 import useSession from '../hooks/auth/useSession'
+import useHideTabs from '../hooks/useHideTabs'
 
 export default function Community() {
   const { student } = useSelfStudent();
-  useIonViewWillEnter(() => {
-    showTabBar();
-  })
+  useHideTabs();
 
   return (
     <>

@@ -20,6 +20,7 @@ import '@ionic/react/css/palettes/dark.class.css';
 import '@ionic/react/css/palettes/high-contrast.class.css';
 import './theme/high-contrast-dark.css';
 import './theme/high-contrast-light.css';
+
 /* Theme variables */
 import './theme/variables.css';
 
@@ -111,24 +112,6 @@ const App = () => {
             
           </IonTabs>
 
-
-          <IonFab style={{marginBottom: 60}} slot="fixed" vertical="bottom" horizontal="end">
-         
-          <IonFabButton>
-            <IonIcon icon={add}></IonIcon>
-          </IonFabButton>
-          <IonFabList side="top">
-      
-            <IonFabButton id="testColor">
-              <IonIcon id="open-modal" icon={colorPalette}></IonIcon>
-            </IonFabButton>
-            
-            <IonFabButton id="testColor">
-              <IonIcon icon={globe}></IonIcon>
-            </IonFabButton>
-
-          </IonFabList>
-        </IonFab>
 
 
        <AccessibilitySettings/>

@@ -1,7 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { IonButton, IonContent, IonFooter, IonIcon, IonImg, IonPage, IonText, IonTitle, useIonRouter } from "@ionic/react";
 import { boolean, object, ref, string } from 'yup';
-import { chevronForward, logoGoogle } from "ionicons/icons";
+import { chevronForward, logoGoogle, mailOutline, mailSharp } from "ionicons/icons";
 
 import EmailOTPPass_1_Continue from "../components/ContinuePage/EmailOTPPass_1_Continue";
 import EmailOTP_1_Continue from "../components/ContinuePage/EmailOTP_Continue";
@@ -82,9 +82,9 @@ export default function Continue() {
         </IonContent>
         <IonFooter className="ion-padding text-center">
           <div className="mb-32">
-            <IonButton expand="block" fill="outline" color="light" onClick={handleContinue} >
+            <IonButton expand="block" fill="outline" color="light" onClick={handleContinue} shape="round">
               Continue with Email
-              <IonIcon slot="end" src={chevronForward} />
+              <IonIcon slot="start" src={mailOutline} />
             </IonButton>
             <IonButton
               onClick={handleGoogle}

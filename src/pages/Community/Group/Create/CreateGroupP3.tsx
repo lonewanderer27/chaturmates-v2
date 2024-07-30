@@ -341,6 +341,7 @@ const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
       <IonFooter>
         <IonToolbar className="p-4">
           <IonButton
+            shape="round"
             className="font-poppins font-bold"
             expand="block"
             onClick={handleSubmit(handleNext)}

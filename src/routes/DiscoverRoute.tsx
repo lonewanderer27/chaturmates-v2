@@ -19,6 +19,10 @@ import SearchPage from "../pages/Search";
 import StudentFollowing from "../pages/Community/Student/StudentFollowing";
 import StudentGroups from "../pages/Community/Student/StudentGroups";
 import StudentPage from "../pages/Community/StudentPage";
+import Me from "../pages/Community/Me";
+import MeFollowing from "../pages/Community/Me/MeFollowing";
+import MeGroups from "../pages/Community/Me/MeGroups";
+import MeUpdate from "../pages/Community/Me/MeUpdate";
 
 const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
   console.log(match);
@@ -26,6 +30,10 @@ const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
   return (
     <IonRouterOutlet id="discover">
       <Route component={Discover} exact />
+      <Route path={`${match.url}/me`} component={Me} exact />
+      <Route path={`${match.url}/me/groups`} component={MeGroups} exact />
+      <Route path={`${match.url}/me/following`} component={MeFollowing} exact />
+      <Route path={`${match.url}/me/update`} component={MeUpdate} exact />
       {/* <Route path={`${match.url}/group`} component={GroupsRoute} /> */}
       <Route
         path={`${match.url}/group/create`}

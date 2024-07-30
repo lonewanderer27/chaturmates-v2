@@ -49,6 +49,12 @@ export default function Sidebar() {
     rt.push("/threads");
   };
 
+  const handleGroup = (vanityUrl: string) => {
+    rt.push(
+      "/" + rt.routeInfo.pathname.split("/")[1] + "/group/vu/" + vanityUrl
+    );
+  };
+
   const { data: meAdminGroups } = useMeAdminGroups();
 
   return (
@@ -74,7 +80,7 @@ export default function Sidebar() {
           {meAdminGroups?.map((group) => {
             if (group!.avatar_url && isValidUrl(group!.avatar_url)) {
               return (
-                <IonItem key={group!.id}>
+                <IonItem key={group!.id} onClick={() => handleGroup(group!.vanity_id)}>
                   <IonAvatar slot="start">
                     <img
                       src={group!.avatar_url!}
@@ -86,7 +92,7 @@ export default function Sidebar() {
               );
             } else {
               return (
-                <IonItem key={group!.id}>
+                <IonItem key={group!.id} onClick={() => handleGroup(group!.vanity_id)}>
                   <IonIcon
                     slot="start"
                     icon={peopleCircleOutline}

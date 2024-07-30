@@ -13,15 +13,15 @@ interface GroupCardProps {
   icon?: string;
 }
 
-GroupCard.defaultProps = {
+NewGroupCard.defaultProps = {
   icon: peopleCircleOutline
 }
 
-function GroupCard(props: GroupCardProps) {
+function NewGroupCard(props: GroupCardProps) {
   const rt = useIonRouter();
   const isPhotoValid = useValidUrl(props.avatar_url);
   function handleView() {
-    rt.push("/group/vu/" + props.vanity_id, "forward")
+    rt.push("/"+rt.routeInfo.pathname.split("/")[1]+"/group/vu/"+props.vanity_id)
   }
   return (
     <IonCard
@@ -56,4 +56,4 @@ function GroupCard(props: GroupCardProps) {
   )
 }
 
-export default GroupCard
+export default NewGroupCard

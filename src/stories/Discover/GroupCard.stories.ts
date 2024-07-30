@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import GroupCard from '../../components/GroupCard';
+import NewGroupCard from '../../components/NewGroupCard';
 
 const meta = {
   title: 'Discover/GroupCard',
-  component: GroupCard,
+  component: NewGroupCard,
   parameters: {
     layout: 'centered',
   },
@@ -17,7 +17,7 @@ const meta = {
     cover_url: { control: 'text' },
     icon: { control: 'text' },
   }
-} as Meta<typeof GroupCard>;
+} as Meta<typeof NewGroupCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

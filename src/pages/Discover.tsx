@@ -9,20 +9,10 @@ import { getAllGroups } from '../services/groups';
 import { showTabBar } from '../utils/TabBar';
 import { useQuery } from '@tanstack/react-query';
 import useSelfStudent from '../hooks/student';
+import ExploreGroupsGrid from '../components/DiscoverPage/ExploreGroupsGrid';
 
 export default function Discover() {
   const { student } = useSelfStudent();
-
-  const query = useQuery({
-    queryKey: ["groups"],
-    queryFn: async () => {
-      console.log("useQuery");
-      const res = await getAllGroups();
-      await close();
-      console.log("data", res.data);
-      return res.data;
-    },
-  });
 
   const iaQuery = useQuery({
     queryKey: ["important_announcements"],
@@ -59,7 +49,7 @@ export default function Discover() {
           </IonToolbar>
         </IonHeader>
         <AdminPostsGrid group={iaQuery.data?.group} posts={iaQuery.data?.group_posts} />
-        <GroupsGrid groups={query.data?.groups} />
+        <ExploreGroupsGrid />
       </IonContent>
     </IonPage>
   )

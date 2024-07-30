@@ -4,9 +4,7 @@ import AdminPostCard from './AdminPostCard';
 import Slider from "react-slick";
 
 const AdminPostsGrid = (props: {
-  group?: GroupType & {
-    group_posts: GroupPostType[]
-  }
+  group?: GroupType;
   posts?: GroupPostType[];
 }) => {
   return (

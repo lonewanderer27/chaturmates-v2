@@ -284,6 +284,7 @@ export type Database = {
       group_members: {
         Row: {
           approved: boolean
+          avatar_url: string | null
           created_at: string
           creator: boolean
           description: string | null
@@ -297,6 +298,7 @@ export type Database = {
         }
         Insert: {
           approved?: boolean
+          avatar_url?: string | null
           created_at?: string
           creator?: boolean
           description?: string | null
@@ -310,6 +312,7 @@ export type Database = {
         }
         Update: {
           approved?: boolean
+          avatar_url?: string | null
           created_at?: string
           creator?: boolean
           description?: string | null
@@ -328,6 +331,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "groups"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_members_group_vanity_id_fkey"
+            columns: ["group_vanity_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["vanity_id"]
           },
           {
             foreignKeyName: "group_members_profile_id_fkey"

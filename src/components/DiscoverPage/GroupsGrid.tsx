@@ -3,10 +3,22 @@ import { IonCol, IonGrid, IonRow, IonText } from "@ionic/react";
 import AddGroupCard from "./AddGroupCard";
 import { GroupResponse } from "../../services/groups";
 import OldGroupCard from "../OldGroupCard/OldGroupCard";
+import { GroupType, StudentType } from "../../types";
+import { GroupMemberType } from "../../types";
 
-export default function GroupsGrid(props: {
-  groups?: GroupResponse["get"]["data"]["group"][];
-}) {
+type GMT = GroupMemberType[] & {
+  student: StudentType
+}[]
+
+type GT = GroupType[] & {
+  group_members: GMT[]
+}[]
+
+type GroupsGridProps = {
+  groups?: GT | undefined
+}
+
+export default function GroupsGrid(props: GroupsGridProps) {
   return (
     <IonGrid className="ion-padding-vertical mx-[-4px]">
       <IonRow>

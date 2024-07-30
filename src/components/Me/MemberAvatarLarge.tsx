@@ -5,7 +5,7 @@ const MemberAvatarLarge = (props: {
   avatarUrl: string | null | undefined
 }) => {
   return (
-    <IonRow className="justify-center mb-[-65px] z-[500]">
+    <IonRow className="justify-center mb-[-80px] z-[500]">
       {props.avatarUrl ? <>
         <div>
           <img className="w-32 rounded-full" src={props.avatarUrl} />

@@ -1,9 +1,9 @@
 import client from "../../client";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useGroupMembers(vanity_url?: string, pending?: boolean) {
+export default function useGroupMembers(vanity_url?: string, approved?: boolean) {
   const q = useQuery({
-    queryKey: ["group_members", vanity_url, pending],
+    queryKey: ["group_members", vanity_url, approved],
     queryFn: async () => {
       // Fetch the group_id using the vanity_url from the groups table
       const groupRes = await client
@@ -23,7 +23,7 @@ export default function useGroupMembers(vanity_url?: string, pending?: boolean) 
         .from("group_members")
         .select("*, students(*)")
         .eq("group_id", group_id)
-        .eq("approved", pending ? false : true);
+        .eq("approved", approved ? true : false);
 
       return memberRes.data;
     },

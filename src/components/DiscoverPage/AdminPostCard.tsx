@@ -18,7 +18,7 @@ const AdminPostCard = (props: {
   };
 
   return (
-    <IonCard className="my-0" onClick={handleClick}>
+    <IonCard onClick={handleClick}>
       <img src={props.post?.image_url!} />
     </IonCard>
   );

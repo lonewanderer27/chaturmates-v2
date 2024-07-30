@@ -10,7 +10,6 @@ import {
 import { notificationsOutline, searchOutline } from "ionicons/icons";
 
 import AdminPostsGrid from "../components/DiscoverPage/AdminPostsGrid";
-import GroupsGrid from "../components/DiscoverPage/GroupsGrid";
 import NavBtn from "../components/NavBtn";
 import { getAdminPosts } from "../services/group/admin";
 import { getAllGroups } from "../services/groups";

@@ -8,7 +8,7 @@ const AdminPostsGrid = (props: {
   posts?: GroupPostType[];
 }) => {
   return (
-      <Slider className='mx-[-10px] my-5' infinite={true} autoplay autoplaySpeed={2500} dots appendDots={(dots) => {
+      <Slider className='mx-[-10px]' infinite={true} autoplay autoplaySpeed={2500} dots appendDots={(dots) => {
         return (
           <div className='mt-[-20px]'>
             {dots}

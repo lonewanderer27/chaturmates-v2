@@ -77,6 +77,7 @@ export async function getAllGroups(): Promise<GroupsResponse["getAll"]> {
 
   console.log("groups: ", groups.data);
 
+  // @ts-ignore
   return Promise.resolve({
     data: {
       groups: groups.data!,
@@ -215,6 +216,7 @@ export async function getGroupByVanityUrl(
   console.log("approved members count: ", approvedStudents.data?.length);
 
   // return the group, members, admins, students, chat urls, and posts
+  // @ts-ignore
   return Promise.resolve({
     data: {
       group: {

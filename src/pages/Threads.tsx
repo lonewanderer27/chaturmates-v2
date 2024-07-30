@@ -1,30 +1,37 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonViewWillEnter } from "@ionic/react";
+import {
+  IonBackButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonText,
+  IonTitle,
+  IonToolbar,
+  useIonViewWillEnter,
+} from "@ionic/react";
 
 import { showTabBar } from "../utils/TabBar";
 
 export default function Threads() {
   useIonViewWillEnter(() => {
     showTabBar();
-  })
+  });
 
   return (
     <IonPage>
-      <IonHeader translucent>
+      <IonContent fullscreen className="ion-padding">
+        <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle>
+            <IonText
+              slot="start"
+              className="page-title font-poppins font-bold"
+              color="secondary"
+            >
               Threads
-            </IonTitle>
-          </IonToolbar>
-        </IonHeader>
-      <IonContent fullscreen className='ion-padding'>
-        <IonHeader collapse='condense'>
-          <IonToolbar>
-            <IonTitle size="large">
-              Threads
-            </IonTitle>
+            </IonText>
           </IonToolbar>
         </IonHeader>
       </IonContent>
     </IonPage>
-  )
+  );
 }

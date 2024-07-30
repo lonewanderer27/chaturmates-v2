@@ -6,6 +6,7 @@ import {
   IonPage,
   IonSegment,
   IonSegmentButton,
+  IonText,
   IonTitle,
   IonToolbar,
   useIonRouter,
@@ -40,24 +41,29 @@ const Inbox: FC<RouteComponentProps> = () => {
     const value = e.detail.value as INBOX_CATEGORY;
     setSelectedSegment(value);
     const pathname = location.pathname.split("/")[1];
-    history.push(`/${pathname}/inbox#${value === INBOX_CATEGORY.NOTICE ? "notice" : "following"}`);
+    history.push(
+      `/${pathname}/inbox#${value === INBOX_CATEGORY.NOTICE ? "notice" : "following"}`
+    );
   };
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Inbox</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/discover" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen className="ion-padding">
-        <IonSegment
-          value={selectedSegment}
-          onIonChange={handleSegmentChange}
-        >
+      <IonContent className="ion-padding">
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonBackButton defaultHref="/discover" text={""} />
+            </IonButtons>
+            <IonText
+              slot="start"
+              className="page-title font-poppins font-bold"
+              color="secondary"
+            >
+              Inbox
+            </IonText>
+          </IonToolbar>
+        </IonHeader>
+        <IonSegment value={selectedSegment} onIonChange={handleSegmentChange}>
           <IonSegmentButton value={INBOX_CATEGORY.FOLLOWING}>
             Following
           </IonSegmentButton>

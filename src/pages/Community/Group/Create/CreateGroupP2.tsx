@@ -114,7 +114,9 @@ const CreateGroupP2: React.FC<RouteComponentProps> = ({ match }) => {
 
   return (
     <IonPage>
-      <IonHeader>
+      
+      <IonContent fullscreen className="ion-padding">
+      <IonHeader collapse="condense">
         <IonToolbar>
           <IonButtons slot="start">
             <IonBackButton defaultHref={match.path.split("/")[1]+"/groups/create/p1"} />
@@ -122,7 +124,6 @@ const CreateGroupP2: React.FC<RouteComponentProps> = ({ match }) => {
           <IonTitle>Customize {newGroup.step1.name}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen className="ion-padding">
         <IonGrid>
           <IonRow>
             <IonCol>

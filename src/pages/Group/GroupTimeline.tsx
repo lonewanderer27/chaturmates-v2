@@ -33,6 +33,7 @@ import {
   peopleOutline,
   personOutline,
   shareOutline,
+  shareSocialOutline,
 } from "ionicons/icons";
 
 type GroupTimelinePageProps = {
@@ -61,24 +62,30 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons>
-            <IonBackButton defaultHref="/community" text="" />
-            <IonButton slot="end">
-              <IonIcon icon={shareOutline} />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
       <IonContent className="ion-padding">
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonBackButton defaultHref="/community" text="" />
+            </IonButtons>
+            <IonButtons slot="end">
+              <IonButton>
+                <IonIcon icon={shareSocialOutline} />
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
         <IonItem lines="none" className="mx-[-10px]">
           {infoLite?.avatar_url && isValidUrl ? (
             <IonThumbnail slot="start">
               <img src={infoLite?.avatar_url!} className="rounded-full" />
             </IonThumbnail>
           ) : (
-            <IonIcon slot="start" icon={peopleCircleOutline} className="text-6xl" />
+            <IonIcon
+              slot="start"
+              icon={peopleCircleOutline}
+              className="text-6xl"
+            />
           )}
           <IonLabel>
             <h3 className="font-semibold">

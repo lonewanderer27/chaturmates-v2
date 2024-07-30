@@ -54,18 +54,18 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonContent className="ion-padding">
+      <IonHeader collapse="condense">
         <IonToolbar>
           <IonButtons>
             <IonBackButton
-              className="ml-2"
+              className="ml-[-5px]"
               defaultHref="/community"
               text={""}
             />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
         <MemberAvatarLarge avatarUrl={student?.avatar_url} />
         <IonCard className="pt-16 mx-0 bg-slate-200  z-[-500] shadow-none">
           <IonCardContent>

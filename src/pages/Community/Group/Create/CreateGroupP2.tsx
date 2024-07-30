@@ -31,8 +31,11 @@ import client from "../../../../client";
 import { newGroupAtom } from "../../../../atoms/group";
 import { useAtom } from "jotai";
 import { yupResolver } from "@hookform/resolvers/yup";
+import useHideTabs from "../../../../hooks/useHideTabs";
 
 const CreateGroupP2: React.FC<RouteComponentProps> = ({ match }) => {
+  useHideTabs();
+
   const rt = useIonRouter();
   const validationSchema = object().shape({
     avatar_url: string().optional().url("Must be a valid photo url"),

@@ -39,8 +39,11 @@ import { useQuery } from "@tanstack/react-query";
 import useSelfStudent from "../../../../hooks/student";
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import useHideTabs from "../../../../hooks/useHideTabs";
 
 const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
+  useHideTabs();useHideTabs();
+
   const [show, dismiss] = useIonAlert();
   const { student } = useSelfStudent();
   const rt = useIonRouter();

@@ -35,8 +35,11 @@ import { newGroupAtom } from "../../../../atoms/group";
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import useHideTabs from "../../../../hooks/useHideTabs";
 
 const CreateGroupP1: React.FC<RouteComponentProps> = ({ match }) => {
+  useHideTabs();
+
   const [show, dismiss] = useIonAlert();
   const rt = useIonRouter();
   const validationSchema = object().shape({

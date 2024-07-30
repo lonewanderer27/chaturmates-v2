@@ -4,14 +4,14 @@ import { FC } from 'react';
 import GroupItem from '../../../components/SearchPage/GroupItem';
 import { RouteComponentProps } from 'react-router';
 import { hideTabBar } from '../../../utils/TabBar';
-import { useFindStudentById } from '../../../hooks/student';
+import useStudentGroups from '../../../hooks/student/useStudentGroups';
 
 type StudentGroupsPageProps = {
   student_id: string
 }
 
 const StudentGroups: FC<RouteComponentProps<StudentGroupsPageProps>> = ({ match }) => {
-  const { groups } = useFindStudentById(match.params.student_id);
+  const { data: groups } = useStudentGroups(match.params.student_id);
   useIonViewWillEnter(() => {
     hideTabBar();
   })

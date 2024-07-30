@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import client from '../../client'
 
-const useStudentInfoLiteById = (studentId: string) => {
+const useStudentInfo = (studentId: string) => {
   const query = useQuery({
     queryKey: ["student", "lite", studentId],
     queryFn: async() => {
@@ -19,4 +19,4 @@ const useStudentInfoLiteById = (studentId: string) => {
   return query;
 }
 
-export default useStudentInfoLiteById
+export default useStudentInfo

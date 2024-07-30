@@ -23,8 +23,8 @@ import { RouteComponentProps } from "react-router";
 import { hideTabBar } from "../../utils/TabBar";
 import useSession from "../../hooks/auth/useSession";
 import useStudentFollowings from "../../hooks/student/useStudentFollowings";
-import useStudentInfoLiteById from "../../hooks/student/useStudentInfoLite";
-import useStudentGroupsLite from "../../hooks/student/useStudentGroups";
+import useStudentInfo from "../../hooks/student/useStudentInfo";
+import useStudentGroups from "../../hooks/student/useStudentGroups";
 
 type StudentPageProps = {
   student_id: string;
@@ -37,9 +37,8 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
 
   const { session } = useSession();
   const rt = useIonRouter();
-  // const { groups } = useFindStudentById(match.params.student_id);
-  const { data: groups } = useStudentGroupsLite(match.params.student_id);
-  const { data: student } = useStudentInfoLiteById(match.params.student_id);
+  const { data: groups } = useStudentGroups(match.params.student_id);
+  const { data: student } = useStudentInfo(match.params.student_id);
   const { data: following } = useStudentFollowings(match.params.student_id);
 
   const handleFollowing = () => {

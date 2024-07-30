@@ -38,20 +38,20 @@ const GroupMembers: FC<RouteComponentProps<GroupMembersPageProps>> = ({
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons>
-            <IonBackButton
-              className="ml-2"
-              defaultHref="/community"
-              text={""}
-            />
-          </IonButtons>
-          <IonTitle>Group Members ({count})</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent>
-        <IonList>
+      <IonContent className="ion-padding">
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonButtons>
+              <IonBackButton
+                className="ml-[-5px]"
+                defaultHref="/community"
+                text={""}
+              />
+            </IonButtons>
+            <IonTitle>Group Members ({count})</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonList className="mx-[-15px]">
           {data?.map((member) => {
             const klasmeyt = member.students;
             if (klasmeyt!.id === meStudent!.id) {

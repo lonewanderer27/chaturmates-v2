@@ -21,8 +21,10 @@ import { FC } from "react";
 import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
 import { RouteComponentProps } from "react-router";
 import { hideTabBar } from "../../utils/TabBar";
-import { useFindStudentById } from "../../hooks/student";
 import useSession from "../../hooks/auth/useSession";
+import useStudentFollowings from "../../hooks/student/useStudentFollowings";
+import useStudentInfoLiteById from "../../hooks/student/useStudentInfoLite";
+import useStudentGroupsLite from "../../hooks/student/useStudentGroups";
 
 type StudentPageProps = {
   student_id: string;
@@ -35,7 +37,10 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
 
   const { session } = useSession();
   const rt = useIonRouter();
-  const { student, followers, following, groups } = useFindStudentById(match.params.student_id);
+  // const { groups } = useFindStudentById(match.params.student_id);
+  const { data: groups } = useStudentGroupsLite(match.params.student_id);
+  const { data: student } = useStudentInfoLiteById(match.params.student_id);
+  const { data: following } = useStudentFollowings(match.params.student_id);
 
   const handleFollowing = () => {
     rt.push(rt.routeInfo.pathname + "/following");
@@ -70,6 +75,14 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
                 <IonText className="text-sm capitalize" color="dark">
                   {student?.type ?? "-"}
                 </IonText>
+              </IonRow>
+              <IonRow className="flex justify-center mt-2">
+                <IonButton shape="round" size="small" className="mx-1" color="light">
+                  Direct Message
+                </IonButton>
+                <IonButton shape="round" size="small" className="mx-1">
+                  Follow
+                </IonButton>
               </IonRow>
               <IonRow className="text-center mt-2">
                 <IonCol className="cursor-pointer" onClick={handleFollowing}>

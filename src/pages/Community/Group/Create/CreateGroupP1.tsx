@@ -180,11 +180,11 @@ const CreateGroupP1: React.FC<RouteComponentProps> = ({ match }) => {
         </div>
       </IonContent>
       <IonFooter>
-        <IonToolbar className="p-4">
+        <IonToolbar className="p-5">
           <IonButton
             className="font-poppins font-bold"
-            expand="block"
             onClick={handleSubmit(handleNext, handleError)}
+            slot="end"
           >
             {nameChecking ? <IonSpinner name="dots" /> : <span>Next</span>}
           </IonButton>

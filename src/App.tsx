@@ -56,7 +56,7 @@ import {
 } from '@ionic/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Redirect, Route } from 'react-router-dom';
-import {  chatboxOutline, compassOutline, peopleOutline, chevronUpCircle,  colorPalette, globe,add
+import {  chatboxOutline, compassOutline, peopleOutline, chevronUpCircle,  colorPalette, globe,add, accessibilitySharp
 } from 'ionicons/icons';
 
 import Community from './pages/Community';
@@ -72,7 +72,7 @@ import ThreadsRoute from './routes/ThreadsRoute';
 import React, { useEffect, useState, useRef, useCallback  } from 'react';
 import { Preferences } from '@capacitor/preferences';
 import AccessibilitySettings from './components/AccessibilitySettings';
-
+import useDraggableFab from './hooks/useDraggableFab';
 
 setupIonicReact({
   mode: 'ios'
@@ -81,6 +81,7 @@ setupIonicReact({
 // instantiate tanstack client
 export const qClient = new QueryClient();
 const App = () => {
+  const { fabRef } = useDraggableFab();
 
   return (
     <QueryClientProvider client={qClient}>
@@ -113,6 +114,15 @@ const App = () => {
           </IonTabs>
 
 
+
+       <IonFab  
+            ref={fabRef}
+            style={{ marginBottom: 60 }}
+             vertical="bottom" horizontal="end">
+      <IonFabButton size="small">
+        <IonIcon size="small" id="open-modal" icon={accessibilitySharp}></IonIcon>
+      </IonFabButton>
+    </IonFab>
 
        <AccessibilitySettings/>
 

@@ -41,9 +41,14 @@
 }
 
 
+ion-fab-button::part(native) {
+  opacity: 0.4;
+  transition: opacity 0.3s ease-in-out;
+}
 
-
-
+ion-fab-button::part(native):hover, ion-fab-button:focus {
+  opacity: 1;
+}
 
 
 

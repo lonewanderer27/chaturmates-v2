@@ -12,7 +12,7 @@ export default function usePostSearch() {
   const fetchGroupPosts = async () => {
     const res = await client
       .from('group_posts')
-      .select('*, groups(*)')
+      .select('*, groups!group_posts_group_id_fkey(*)')
       .order('created_at', { ascending: false });
     setGroupPosts(res.data as GroupPostTypeWGroupInfo[]);
     return res.data as GroupPostTypeWGroupInfo[];
@@ -21,7 +21,7 @@ export default function usePostSearch() {
   const searchGroupPosts = async (query: string) => {
     const res = await client
       .from('group_posts')
-      .select('*, groups(*)')
+      .select('*, groups!group_posts_group_id_fkey(*)')
       .ilike('content', `%${query}%`)
       .order('created_at', { ascending: true });
     return res.data as GroupPostTypeWGroupInfo[];

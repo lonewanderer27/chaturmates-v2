@@ -3,8 +3,10 @@ import { hideTabBar, showTabBar } from '../../../utils/TabBar';
 
 import StudentItem from '../../../components/SearchPage/StudentItem';
 import useSelfStudent from '../../../hooks/student';
+import { FC } from 'react';
+import { RouteComponentProps } from 'react-router';
 
-const MeFollowing = () => {
+const MeFollowing: FC<RouteComponentProps> = () => {
   const { following } = useSelfStudent();
   useIonViewWillEnter(() => {
     hideTabBar();

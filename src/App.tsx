@@ -34,31 +34,29 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Redirect, Route, useLocation } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import {
   chatboxEllipsesOutline,
   chatboxOutline,
   compassOutline,
   compassSharp,
-  homeOutline,
-  newspaperOutline,
   peopleOutline,
   peopleSharp,
 } from "ionicons/icons";
 
 import AuthWrapper from "./components/Auth/AuthWrapper";
-import Community from "./pages/Community";
 import CommunityRoute from "./routes/CommunityRoute";
 import ContinueRoute from "./routes/ContinueRoute";
-import Discover from "./pages/Discover";
 import DiscoverRoute from "./routes/DiscoverRoute";
 import Inbox from "./pages/Inbox";
 import { IonReactRouter } from "@ionic/react-router";
 import SetupRoute from "./routes/SetupRoute";
 import SurveysRoute from "./routes/SurveysRoute";
 import TabIconChangerWrapper from "./TabIconChangerWrapper";
-import Threads from "./pages/Threads";
 import ThreadsRoute from "./routes/ThreadsRoute";
+import RecommendRoute from "./routes/RecommendRoute";
+import NotFound from "./routes/NotFound";
+import MeRoute from "./routes/MeRoute";
 
 /**
  * Ionic Dark Mode
@@ -88,6 +86,9 @@ const App = () => {
                   <Route path="/threads" component={ThreadsRoute} />
                   <Route path="/surveys" component={SurveysRoute} />
                   <Route path="/setup" component={SetupRoute} />
+                  <Route path="/recommend" component={RecommendRoute} />
+                  <Route path="/inbox" component={Inbox} />
+                  <Route path="/me" component={MeRoute} />
                   <Route
                     path="/"
                     component={() => <Redirect to="/discover" />}
@@ -95,6 +96,10 @@ const App = () => {
                   />
                 </AuthWrapper>
                 <Route path="/continue" component={ContinueRoute} />
+                {/* <Route render={() => <Redirect to="/not-found" />} /> */}
+                <Route path="/not-found" component={NotFound} />
+                <Route path="/terms-of-service" component={NotFound} />
+                <Route path="/privacy-policy" component={NotFound} />
               </TabIconChangerWrapper>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">

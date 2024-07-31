@@ -8,6 +8,8 @@ import {
   IonContent,
   IonGrid,
   IonHeader,
+  IonIcon,
+  IonLabel,
   IonPage,
   IonRow,
   IonText,
@@ -22,6 +24,7 @@ import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
 import { RouteComponentProps } from "react-router";
 import useSelfStudent from "../../hooks/student";
 import useSession from "../../hooks/auth/useSession";
+import { pencilOutline } from "ionicons/icons";
 
 const Me: FC<RouteComponentProps> = ({ match }) => {
   const { session } = useSession();
@@ -57,12 +60,17 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
       <IonContent className="ion-padding">
       <IonHeader collapse="condense">
         <IonToolbar>
-          <IonButtons>
+          <IonButtons slot="start">
             <IonBackButton
-              className="ml-[-5px]"
               defaultHref="/community"
               text={""}
             />
+          </IonButtons>
+          <IonButtons slot="end">
+            <IonButton fill="clear" onClick={handleUpdate}>
+              {/* <IonIcon slot="start" src={pencilOutline} /> */}
+              <IonLabel>Edit</IonLabel>
+            </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -70,8 +78,8 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
         <IonCard className="pt-16 mx-0 bg-slate-200  z-[-500] shadow-none">
           <IonCardContent>
             <IonGrid>
-              <IonRow className="flex justify-end mt-[-70px] pb-4 z-[1000]">
-                <IonButton size="small" onClick={handleUpdate}>
+              <IonRow className="flex justify-end mt-[-70px] pb-4 top-0 ">
+                <IonButton size="small" className="invisible">
                   Edit
                 </IonButton>
               </IonRow>

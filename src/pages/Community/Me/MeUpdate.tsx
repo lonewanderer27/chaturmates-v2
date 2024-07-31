@@ -60,7 +60,7 @@ const MeUpdate: FC<RouteComponentProps> = ({ match }) => {
             <IonButtons>
               <IonBackButton
                 disabled={saving}
-                className="ml-2"
+                className="ml-[-5px]"
                 defaultHref="/community"
                 text={""}
               />

@@ -39,7 +39,7 @@ export default function NavBtn(props: BtnProps) {
       size={props.size}
     >
       {props.avatarUrl && isValidUrl ? (
-        <IonImg src={props.avatarUrl} className="w-8 h-auto" />
+        <img src={props.avatarUrl} className="w-8 h-auto rounded-full" />
       ) : (
         <IonIcon className="" icon={props.icon} />
       )}

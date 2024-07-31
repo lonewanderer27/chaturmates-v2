@@ -26,6 +26,9 @@ importers:
       '@capacitor/keyboard':
         specifier: ^6.0.0
         version: 6.0.0(@capacitor/core@6.0.0)
+      '@capacitor/share':
+        specifier: ^6.0.1
+        version: 6.0.1(@capacitor/core@6.0.0)
       '@capacitor/status-bar':
         specifier: ^6.0.0
         version: 6.0.0(@capacitor/core@6.0.0)
@@ -880,6 +883,11 @@ packages:
 
   '@capacitor/keyboard@6.0.0':
     resolution: {integrity: sha512-pPX/PQWWjw5ce47kHEYv6IWlHzuhAxgXihqEAAAGLdwK3u3srgGWCljXrYS9juVBPi/lA1uK7UaUzYI0XrgxVQ==}
+    peerDependencies:
+      '@capacitor/core': ^6.0.0
+
+  '@capacitor/share@6.0.1':
+    resolution: {integrity: sha512-KQev3omYZ5hgjoZA+NdFZTuFyu1dd/ZIYkE0RnLBB11ZmFEmGRSCYdYtOyqkVxGU1n6FDDqgPPy13CvAZKWNPQ==}
     peerDependencies:
       '@capacitor/core': ^6.0.0
 
@@ -6148,6 +6156,10 @@ snapshots:
       '@capacitor/core': 6.0.0
 
   '@capacitor/keyboard@6.0.0(@capacitor/core@6.0.0)':
+    dependencies:
+      '@capacitor/core': 6.0.0
+
+  '@capacitor/share@6.0.1(@capacitor/core@6.0.0)':
     dependencies:
       '@capacitor/core': 6.0.0
 

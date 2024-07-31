@@ -134,10 +134,7 @@ const MeUpdate: FC<RouteComponentProps> = ({ match }) => {
           <IonButton
             className="font-poppins font-bold"
             expand="block"
-            onClick={() => {
-              handleSubmit(handleSave, handleError);
-              console.log("Submitting new profile info");
-            }}
+            onClick={handleSubmit(handleSave, handleError)}
           >
             {saving ? (
               <IonSpinner name="dots" />

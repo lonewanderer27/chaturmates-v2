@@ -3,11 +3,12 @@ import {SubmitErrorHandler, SubmitHandler, useForm} from "react-hook-form";
 import { UpdateProfileInputs } from "../../types/me";
 import client from "../../client";
 import { qClient } from "../../App";
-import {useIonAlert} from "@ionic/react";
+import {useIonAlert, useIonRouter} from "@ionic/react";
 import useSelfStudent from "../student";
 import {useState} from "react";
 
 export default function useUpdateInfo() {
+  const rt = useIonRouter();
   const [show] = useIonAlert();
   const [saving, setSaving] = useState(() => false);
   const {student} = useSelfStudent();
@@ -59,6 +60,16 @@ export default function useUpdateInfo() {
 
     // set the saving to false
     setSaving(false);
+
+    // show success message
+    await show({
+      header: "Success",
+      message: "Your profile has been updated.",
+      buttons: ["Ok"]
+    })
+
+    // redirect to the prior page
+    rt.goBack();
   }
 
   const handleError: SubmitErrorHandler<UpdateProfileInputs> = async (data) => {

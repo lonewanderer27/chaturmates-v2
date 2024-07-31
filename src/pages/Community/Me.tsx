@@ -25,19 +25,16 @@ import { RouteComponentProps } from "react-router";
 import useSelfStudent from "../../hooks/student";
 import useSession from "../../hooks/auth/useSession";
 import { pencilOutline } from "ionicons/icons";
+import useSelfGroups from "../../hooks/student/useSelfGroups";
+import useSelfFollowing from "../../hooks/student/useSelfFollowing";
 
 const Me: FC<RouteComponentProps> = ({ match }) => {
-  const { session } = useSession();
   const rt = useIonRouter();
-  const {
-    student,
-    profile,
-    groups,
-    school,
-    academic_year,
-    following,
-    followers,
-  } = useSelfStudent();
+  const { student } = useSelfStudent();
+
+  const { data: groups } = useSelfGroups();
+  const { data: following } = useSelfFollowing();
+  console.log("following", following);
 
   const handleFollowing = () => {
     rt.push(rt.routeInfo.pathname + "/following");
@@ -53,27 +50,24 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
 
   useIonViewWillEnter(() => {
     hideTabBar();
-  })
+  });
 
   return (
     <IonPage>
       <IonContent className="ion-padding">
-      <IonHeader collapse="condense">
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton
-              defaultHref="/community"
-              text={""}
-            />
-          </IonButtons>
-          <IonButtons slot="end">
-            <IonButton fill="clear" onClick={handleUpdate}>
-              {/* <IonIcon slot="start" src={pencilOutline} /> */}
-              <IonLabel>Edit</IonLabel>
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonBackButton defaultHref="/community" text={""} />
+            </IonButtons>
+            <IonButtons slot="end">
+              <IonButton fill="clear" onClick={handleUpdate}>
+                {/* <IonIcon slot="start" src={pencilOutline} /> */}
+                <IonLabel>Edit</IonLabel>
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
         <MemberAvatarLarge avatarUrl={student?.avatar_url} />
         <IonCard className="pt-16 mx-0 bg-slate-200  z-[-500] shadow-none">
           <IonCardContent>

@@ -16,14 +16,25 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
-/* import '@ionic/react/css/palettes/dark.always.css'; */
-/* import '@ionic/react/css/palettes/dark.class.css'; */
-import "@ionic/react/css/palettes/dark.system.css";
+import "@ionic/react/css/palettes/dark.class.css";
+import "@ionic/react/css/palettes/high-contrast.class.css";
+import "./theme/high-contrast-dark.css";
+import "./theme/high-contrast-light.css";
+
 /* Theme variables */
 import "./theme/variables.css";
 
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
 import {
   IonApp,
+  IonFab,
+  IonFabButton,
   IonIcon,
   IonLabel,
   IonRouterOutlet,
@@ -36,6 +47,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Redirect, Route } from "react-router-dom";
 import {
+  accessibilitySharp,
   chatboxEllipsesOutline,
   chatboxOutline,
   compassOutline,
@@ -57,13 +69,10 @@ import ThreadsRoute from "./routes/ThreadsRoute";
 import RecommendRoute from "./routes/RecommendRoute";
 import NotFound from "./routes/NotFound";
 import MeRoute from "./routes/MeRoute";
-
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { Preferences } from "@capacitor/preferences";
+import AccessibilitySettings from "./components/AccessibilitySettings";
+import useDraggableFab from "./hooks/useDraggableFab";
 
 setupIonicReact({
   mode: "ios",
@@ -71,8 +80,9 @@ setupIonicReact({
 
 // instantiate tanstack client
 export const qClient = new QueryClient();
-
 const App = () => {
+  const { fabRef } = useDraggableFab();
+
   return (
     <QueryClientProvider client={qClient}>
       <IonApp>
@@ -141,6 +151,23 @@ const App = () => {
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
+
+          <IonFab
+            ref={fabRef}
+            style={{ marginBottom: 60 }}
+            vertical="bottom"
+            horizontal="end"
+          >
+            <IonFabButton size="small">
+              <IonIcon
+                size="small"
+                id="open-modal"
+                icon={accessibilitySharp}
+              ></IonIcon>
+            </IonFabButton>
+          </IonFab>
+
+          <AccessibilitySettings />
         </IonReactRouter>
       </IonApp>
     </QueryClientProvider>

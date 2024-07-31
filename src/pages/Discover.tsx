@@ -23,6 +23,17 @@ import { RouteComponentProps } from "react-router";
 const Discover: FC<RouteComponentProps> = ({ match }) => {
   const { student } = useSelfStudent();
 
+  const query = useQuery({
+    queryKey: ["groups"],
+    queryFn: async () => {
+      console.log("useQuery");
+      const res = await getAllGroups();
+      await close();
+      console.log("data", res.data);
+      return res.data;
+    },
+  });
+
   const iaQuery = useQuery({
     queryKey: ["important_announcements"],
     queryFn: async () => {
@@ -49,6 +60,7 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
             >
               Chat-Ur-Meyts
             </IonText>
+            
             <IonButtons slot="end">
               <NavBtn route="/discover/me" avatarUrl={student?.avatar_url} />
               <NavBtn route="/discover/search" icon={searchOutline} />

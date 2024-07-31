@@ -1,5 +1,5 @@
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
-import { notificationsOutline, personOutline, searchOutline } from 'ionicons/icons'
+import { IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonToolbar } from '@ionic/react'
+import { notificationsOutline, personOutline, searchOutline, accessibilityOutline } from 'ionicons/icons'
 
 import NavBtn from '../components/NavBtn'
 import Sidebar from '../components/Sidebar'
@@ -36,6 +36,8 @@ export default function Community() {
                   icon={notificationsOutline}
                 />
               </IonButtons>
+
+              
             </IonToolbar>
           </IonHeader>
         </IonContent>

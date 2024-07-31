@@ -8,7 +8,7 @@ const ThreadsRoute: React.FC<RouteComponentProps> = ({ match }) => {
 
   return (
     <IonRouterOutlet id="threads">
-      <Route path="/threads" component={Threads} exact />
+      <Route path={match.url} component={Threads} exact />
     </IonRouterOutlet>
   )
 }

@@ -1,11 +1,11 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonList, IonText } from "@ionic/react";
 
-import { GroupPostType } from "../../types";
+import { GroupPostTypeWGroupInfo } from "../../types/group/Post";
 import PostCard from "./PostCard";
 import { SEARCH_CATEGORY } from "../../enums/search";
 
 export default function PostsResults(props: {
-  posts?: GroupPostType[];
+  posts?: GroupPostTypeWGroupInfo[];
   handleViewMore: (fromPage: SEARCH_CATEGORY) => void;
   activePage?: SEARCH_CATEGORY;
 }) {
@@ -27,13 +27,13 @@ export default function PostsResults(props: {
           {props.activePage === SEARCH_CATEGORY.POST ? (
             <>
               {props.posts.map((post) => (
-                <PostCard post={post} key={post.id} />
+                <PostCard post={post} key={post.id} group={post.groups} />
               ))}
             </>
           ) : (
             <>
               {props.posts.slice(0, 3).map((post) => (
-                <PostCard post={post} key={post.id} />
+                <PostCard post={post} key={post.id} group={post.groups} />
               ))}
             </>
           )}

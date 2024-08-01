@@ -284,10 +284,12 @@ export type Database = {
       group_members: {
         Row: {
           approved: boolean
+          avatar_url: string | null
           created_at: string
           creator: boolean
           description: string | null
           group_id: number
+          group_vanity_id: string | null
           id: number
           is_admin: boolean
           profile_id: string
@@ -296,10 +298,12 @@ export type Database = {
         }
         Insert: {
           approved?: boolean
+          avatar_url?: string | null
           created_at?: string
           creator?: boolean
           description?: string | null
           group_id: number
+          group_vanity_id?: string | null
           id?: number
           is_admin?: boolean
           profile_id: string
@@ -308,10 +312,12 @@ export type Database = {
         }
         Update: {
           approved?: boolean
+          avatar_url?: string | null
           created_at?: string
           creator?: boolean
           description?: string | null
           group_id?: number
+          group_vanity_id?: string | null
           id?: number
           is_admin?: boolean
           profile_id?: string
@@ -325,6 +331,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "groups"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_members_group_vanity_id_fkey"
+            columns: ["group_vanity_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["vanity_id"]
           },
           {
             foreignKeyName: "group_members_profile_id_fkey"
@@ -354,6 +367,7 @@ export type Database = {
           content: string | null
           created_at: string
           group_id: number
+          group_vanity_id: string | null
           id: number
           image_url: string | null
           member_id: number
@@ -365,6 +379,7 @@ export type Database = {
           content?: string | null
           created_at?: string
           group_id: number
+          group_vanity_id?: string | null
           id?: number
           image_url?: string | null
           member_id: number
@@ -376,6 +391,7 @@ export type Database = {
           content?: string | null
           created_at?: string
           group_id?: number
+          group_vanity_id?: string | null
           id?: number
           image_url?: string | null
           member_id?: number
@@ -390,6 +406,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "groups"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_posts_group_vanity_id_fkey"
+            columns: ["group_vanity_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["vanity_id"]
           },
           {
             foreignKeyName: "group_posts_member_id_fkey"
@@ -420,7 +443,7 @@ export type Database = {
           id: number
           name: string
           private: boolean
-          school: number
+          school_id: number
           semester: number | null
           vanity_id: string
         }
@@ -436,7 +459,7 @@ export type Database = {
           id?: number
           name: string
           private?: boolean
-          school: number
+          school_id: number
           semester?: number | null
           vanity_id: string
         }
@@ -452,7 +475,7 @@ export type Database = {
           id?: number
           name?: string
           private?: boolean
-          school?: number
+          school_id?: number
           semester?: number | null
           vanity_id?: string
         }
@@ -479,8 +502,8 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "groups_school_fkey"
-            columns: ["school"]
+            foreignKeyName: "groups_school_id_fkey"
+            columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
             referencedColumns: ["id"]
@@ -644,6 +667,55 @@ export type Database = {
           },
         ]
       }
+      resources_collection: {
+        Row: {
+          created_at: string
+          group_id: number | null
+          group_member_id: number | null
+          id: number
+          student_id: number | null
+          title: string | null
+        }
+        Insert: {
+          created_at?: string
+          group_id?: number | null
+          group_member_id?: number | null
+          id?: number
+          student_id?: number | null
+          title?: string | null
+        }
+        Update: {
+          created_at?: string
+          group_id?: number | null
+          group_member_id?: number | null
+          id?: number
+          student_id?: number | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resources_collection_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "resources_collection_group_member_id_fkey"
+            columns: ["group_member_id"]
+            isOneToOne: false
+            referencedRelation: "group_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "resources_collection_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rooms: {
         Row: {
           building: string
@@ -727,6 +799,7 @@ export type Database = {
       schools: {
         Row: {
           created_at: string
+          domain: string | null
           email: string
           id: number
           name: string
@@ -736,6 +809,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          domain?: string | null
           email: string
           id?: number
           name: string
@@ -745,6 +819,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          domain?: string | null
           email?: string
           id?: number
           name?: string
@@ -922,6 +997,7 @@ export type Database = {
           school_email: string
           student_no: string | null
           type: Database["public"]["Enums"]["student_type"] | null
+          vanity_url: string | null
           verified: boolean
           year_level: number | null
         }
@@ -938,6 +1014,7 @@ export type Database = {
           school_email: string
           student_no?: string | null
           type?: Database["public"]["Enums"]["student_type"] | null
+          vanity_url?: string | null
           verified?: boolean
           year_level?: number | null
         }
@@ -954,6 +1031,7 @@ export type Database = {
           school_email?: string
           student_no?: string | null
           type?: Database["public"]["Enums"]["student_type"] | null
+          vanity_url?: string | null
           verified?: boolean
           year_level?: number | null
         }

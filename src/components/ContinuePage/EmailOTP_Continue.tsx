@@ -9,6 +9,7 @@ import client from "../../client";
 import useSetup from "../../hooks/setup/useSetup";
 import { useState } from "react";
 import { yupResolver } from '@hookform/resolvers/yup';
+import MaskEmail from "../../utils/MaskEmail";
 
 const schema = object({
   email: string().email().required().label("Email").matches(/^[a-zA-Z0-9._%+-]+@adamson\.edu\.ph$/, "Must be an Adamson Email"),
@@ -20,7 +21,7 @@ const EmailOTP_1_Continue = (props: {
   setOpen: (open: boolean) => void;
 }) => {
   const rt = useIonRouter();
-  const { handleSubmit, control, setError, clearErrors, reset } = useForm<{ email: string, code?: string }>({ resolver: yupResolver(schema) });
+  const { handleSubmit, control, setError, clearErrors, reset, getValues } = useForm<{ email: string, code?: string }>({ resolver: yupResolver(schema) });
   const [processing, setProcessing] = useState(false)
   const [state, setState] = useState<EmailOTP_Continue_Enum>(EmailOTP_Continue_Enum.InputEmail)
 
@@ -93,8 +94,6 @@ const EmailOTP_1_Continue = (props: {
     onOTPSuccess()
   }
 
-  const { handleSetup } = useSetup();
-
   // Handle what happens if the OTP that was sent to user's email
   // matches the OTP that the user entered
   const onOTPSuccess = async () => {
@@ -133,7 +132,7 @@ const EmailOTP_1_Continue = (props: {
             </IonButton>
           </IonButtons>
           <IonTitle>
-            {state === EmailOTP_Continue_Enum.InputEmail ? "Log in with OTP " : "Verify OTP"}
+            {state === EmailOTP_Continue_Enum.InputEmail ? "Continue with Email" : "Enter Verification Code"}
           </IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -161,13 +160,13 @@ const EmailOTP_1_Continue = (props: {
             </IonCol>
           </IonRow>
           <IonRow className="mt-4">
-            <IonCol size="12">
+            <IonCol size="12" className="flex justify-end">
               <IonButton
-                expand="block"
+                shape="round"
                 disabled={processing}
                 onClick={handleSubmit(handleEmailOTPSuccess, handleError)}
               >
-                {processing ? <IonSpinner name="dots" /> : "Send OTP"}
+                {processing ? <IonSpinner name="dots" /> : "Next"}
               </IonButton>
             </IonCol>
           </IonRow>
@@ -178,7 +177,8 @@ const EmailOTP_1_Continue = (props: {
               <IonText className="text-3xl font-poppins font-bold">Verification</IonText>
             </IonRow>
             <IonRow className='my-2'>
-              <IonText className=" font-poppins">Enter the 6-digit code sent to your email</IonText>
+              <IonText className=" font-poppins">Your verification code is sent via email to</IonText>
+              <IonText className="font-poppins">{MaskEmail(getValues("email"))}</IonText>
             </IonRow>
             <IonRow className='ml-[-4px] my-2'>
               <Controller

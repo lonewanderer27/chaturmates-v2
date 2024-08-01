@@ -10,15 +10,14 @@ import {
   IonText,
   useIonRouter,
 } from "@ionic/react";
-
-import { GroupResponse } from "../../services/groups";
 import ItemListButton from "../ItemListButton";
 import { peopleCircleOutline } from "ionicons/icons";
 import { useMemo } from "react";
 import useSelfStudent from "../../hooks/student";
+import { GroupType } from "../../types";
 
 export default function GroupItem(props: {
-  group: GroupResponse["get"]["data"]["group"];
+  group: GroupType;
   icon?: string;
   buttonLabel?: string;
   hideButton?: boolean;
@@ -36,7 +35,9 @@ export default function GroupItem(props: {
   }, [props.group.avatar_url]);
 
   function handleView() {
-    rt.push("/group/vu/" + props.group.vanity_id);
+    // get the main pathname like /discover
+    const mainPathname = rt.routeInfo.pathname.split("/")[1];
+    rt.push("/"+mainPathname + "/group/vu/" + props.group.vanity_id);
   }
 
   function handleJoin() {
@@ -61,10 +62,10 @@ export default function GroupItem(props: {
           <IonText className="groupName truncate font-poppins">
             {props.group.name}
           </IonText>
-          <br />
+          {/* <br />
           <IonText className="groupCount text-sm" color="medium">
             {props.group.group_members.length} Members
-          </IonText>
+          </IonText> */}
         </IonCol>
       </IonRow>
       {props.hideButton === false && <>

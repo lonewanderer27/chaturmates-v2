@@ -15,6 +15,7 @@ export default function StudentItem(props: {
   showBtn?: boolean;
   buttonLabel?: string;
   buttonIcon?: string;
+  me?: boolean;
 }) {
   const rt = useIonRouter();
   const isValidUrl = useMemo(() => {
@@ -25,13 +26,19 @@ export default function StudentItem(props: {
       return false;
     }
   }, [props.student.avatar_url]);
-
+  
   function handleClick() {
-    rt.push("/student/" + props.student.id);
-  }
+    // get the main pathname like /community
+    const mainPathname = rt.routeInfo.pathname.split("/")[1];
 
-  function handleMe() {
-    rt.push("/me");
+    // if me is true, then we are this person
+    if (props.me) {
+      rt.push("/"+mainPathname+"/me");
+      return;
+    }
+    
+    // otherwise we are looking at someone else
+    rt.push("/"+mainPathname+"/student/id/" + props.student.id);
   }
 
   return (

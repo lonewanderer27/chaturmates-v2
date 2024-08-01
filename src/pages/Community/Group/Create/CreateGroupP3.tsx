@@ -1,8 +1,4 @@
-import {
-  Controller,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
   IonBackButton,
   IonButton,
@@ -43,8 +39,11 @@ import { useQuery } from "@tanstack/react-query";
 import useSelfStudent from "../../../../hooks/student";
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import useHideTabs from "../../../../hooks/useHideTabs";
 
 const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
+  useHideTabs();useHideTabs();
+
   const [show, dismiss] = useIonAlert();
   const { student } = useSelfStudent();
   const rt = useIonRouter();
@@ -87,9 +86,7 @@ const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
     },
   });
 
-  const handleNext: SubmitHandler<NewGroupInputs["step3"]> = async (
-    data
-  ) => {
+  const handleNext: SubmitHandler<NewGroupInputs["step3"]> = async (data) => {
     setCreating(() => true);
 
     console.log("handleNext");
@@ -113,7 +110,7 @@ const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
         cover_url: newGroup.step2.cover_url,
         description: newGroup.step1.description,
         name: newGroup.step1.name,
-        school: newGroup.step3.school ?? 1,
+        school_id: newGroup.step3.school ?? 1,
         semester: newGroup.step3.semester ?? 2,
         vanity_id: newGroup.step2.vanity_id,
       })
@@ -135,17 +132,17 @@ const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
         group_id: Number(res.data!.id),
         creator: true,
         is_admin: true,
-        profile_id: student?.profile_id + ""
+        profile_id: student?.profile_id + "",
       })
-      .select("*")
+      .select("*");
 
     if (!res2.data) {
       console.log("error creating group");
-      console.log(res.error)
+      console.log(res.error);
       show({
         header: "Error",
         message: "Something went wrong. Please try again",
-        buttons: ['OK']
+        buttons: ["OK"],
       });
       setCreating(() => false);
       return;
@@ -155,22 +152,24 @@ const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
     setNewGroup(NEW_GROUP);
 
     // redirect the user to their newly created group using vanity url
-    rt.push(`/${match.path.split("/")[1]}/group/vu/${res.data?.vanity_id}`)
+    rt.push(`/${match.path.split("/")[1]}/group/vu/${res.data?.vanity_id}`);
   };
 
   console.log(getValues());
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref={match.path.split("/")[1]+"/groups/create/p2"} />
-          </IonButtons>
-          <IonTitle>Additional Information</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent fullscreen className="ion-padding">
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonBackButton
+                defaultHref={match.path.split("/")[1] + "/groups/create/p2"}
+              />
+            </IonButtons>
+            <IonTitle>Additional Information</IonTitle>
+          </IonToolbar>
+        </IonHeader>
         <IonGrid>
           <IonRow>
             <IonCol>
@@ -193,7 +192,9 @@ const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
                       value={field.value}
                       onIonChange={(e) => setValue("school", e.detail.value)}
                     >
-                      <IonSelectOption value={1}>Adamson University</IonSelectOption>
+                      <IonSelectOption value={1}>
+                        Adamson University
+                      </IonSelectOption>
                     </IonSelect>
                   )}
                   control={control}
@@ -341,6 +342,7 @@ const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
       <IonFooter>
         <IonToolbar className="p-4">
           <IonButton
+            shape="round"
             className="font-poppins font-bold"
             expand="block"
             onClick={handleSubmit(handleNext)}
@@ -351,6 +353,6 @@ const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
       </IonFooter>
     </IonPage>
   );
-}
+};
 
 export default CreateGroupP3;

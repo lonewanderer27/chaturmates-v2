@@ -183,7 +183,7 @@ export async function getStudentById(
   // fetch the groups of the student from the database
   const groups = await client
       .from("groups")
-      .select("*, group_members(*)")
+      .select("*, group_members!group_members_group_id_fkey(*)")
       .in(
           "id",
           group_ids.data!.map((group_id) => group_id.group_id)

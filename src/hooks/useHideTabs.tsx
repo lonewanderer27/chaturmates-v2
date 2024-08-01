@@ -1,17 +1,10 @@
-import { hideTabBar, showTabBar } from '../utils/TabBar';
-
-import { useEffect } from 'react'
+import { useIonViewWillEnter } from '@ionic/react';
+import { hideTabBar } from '../utils/TabBar';
 
 const useHideTabs = () => {
-  useEffect(() => {
-    // hide tab bar 
+  useIonViewWillEnter(() => {
     hideTabBar();
-
-    // upon unmount, show tab bar
-    return () => {
-      showTabBar();
-    }
-  }, [])
+  })
 }
 
 export default useHideTabs

@@ -1,41 +1,53 @@
-import { GroupPostType } from "../../types";
-import client from "../../client";
-import { groupPostsResultsAtom } from "../../atoms/search";
-import { useAtom } from "jotai";
-import { useEffect } from "react";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { GroupPostTypeWGroupInfo } from '../../types/group/Post';
+import client from '../../client';
+import { groupPostsResultsAtom } from '../../atoms/search';
+import { useAtom } from 'jotai';
 
 export default function usePostSearch() {
   const [groupPosts, setGroupPosts] = useAtom(groupPostsResultsAtom);
+  const queryClient = useQueryClient();
 
-  async function getAll() {
+  const fetchGroupPosts = async () => {
     const res = await client
-      .from("group_posts")
-      .select("*, groups(*)")
-      .order("created_at", { ascending: false });
-    console.log("groupPosts response:", res);
-    setGroupPosts(res.data as GroupPostType[]);
-  }
+      .from('group_posts')
+      .select('*, groups!group_posts_group_id_fkey(*)')
+      .order('created_at', { ascending: false });
+    setGroupPosts(res.data as GroupPostTypeWGroupInfo[]);
+    return res.data as GroupPostTypeWGroupInfo[];
+  };
+  
+  const searchGroupPosts = async (query: string) => {
+    const res = await client
+      .from('group_posts')
+      .select('*, groups!group_posts_group_id_fkey(*)')
+      .ilike('content', `%${query}%`)
+      .order('created_at', { ascending: true });
+    return res.data as GroupPostTypeWGroupInfo[];
+  };
+
+  // Initial fetch
+  const { data, isLoading, error } = useQuery<GroupPostTypeWGroupInfo[]>({
+    queryKey: ['group_posts'],
+    queryFn: fetchGroupPosts
+  });
 
   const handlePostSearch = async (query: string) => {
     if (query.length === 0) {
-      getAll();
-      return;
+      queryClient.invalidateQueries({
+        queryKey: ['group_posts']
+      });
     } else {
-      const res = await client
-        .from("group_posts")
-        .select("*, groups(*)")
-        .ilike("content", `%${query}%`)
-        .order("created_at", { ascending: true });
-      setGroupPosts(res.data as GroupPostType[]);
+      const data = await searchGroupPosts(query);
+      setGroupPosts(data ?? []);
     }
   };
 
-  useEffect(() => {
-    getAll();
-  }, []);
-
   return {
     handlePostSearch,
-    groupPosts,
+    groupPosts: groupPosts ?? [],
+    isLoading,
+    error,
   };
 }

@@ -1,13 +1,14 @@
 import { Controller, useForm } from "react-hook-form";
-import { IonButton, IonContent, IonFooter, IonIcon, IonImg, IonPage, IonText, IonTitle } from "@ionic/react";
+import { IonButton, IonContent, IonFooter, IonIcon, IonImg, IonPage, IonText, IonTitle, useIonRouter } from "@ionic/react";
 import { boolean, object, ref, string } from 'yup';
-import { chevronForward, logoGoogle } from "ionicons/icons";
+import { chevronForward, logoGoogle, mailOutline, mailSharp } from "ionicons/icons";
 
 import EmailOTPPass_1_Continue from "../components/ContinuePage/EmailOTPPass_1_Continue";
 import EmailOTP_1_Continue from "../components/ContinuePage/EmailOTP_Continue";
 import { EmailOTP_Continue_Enum } from "../enums/continue";
 import { NewStudentType } from "../types/student/post/NewStudentType";
 import useGoogle from "../hooks/auth/useGoogle";
+import useSession from "../hooks/auth/useSession";
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -25,6 +26,19 @@ export default function Continue() {
   const [showMoreContinueOptions, setShowMoreContinueOptions] = useState(false);
   const handleShowMoreContinueOptions = () => {
     setShowMoreContinueOptions(prev => !prev);
+  }
+
+  const rt = useIonRouter();
+  const { session } = useSession();
+
+  const handleContinue = () => {
+    // check if our user is already logged in
+    // and they've just redirected to this page by accident
+    if (session) {
+      rt.push("/discover", "forward", "replace");
+    } else {
+      setOpen(true)
+    }
   }
 
   const {
@@ -61,15 +75,16 @@ export default function Continue() {
             className="fixed z-[-10] top-0 left-0 min-w-full min-h-full w-auto h-auto transform object-cover"
             src="/480.mp4"
             autoPlay
+            muted
             loop
           />
           <IonImg src="/logo_w_name.png" className="w-32 mx-auto mt-28" />
         </IonContent>
         <IonFooter className="ion-padding text-center">
           <div className="mb-32">
-            <IonButton expand="block" fill="outline" color="light" onClick={() => setOpen(true)} >
-              Log in with OTP Code
-              <IonIcon slot="end" src={chevronForward} />
+            <IonButton expand="block" fill="outline" color="light" onClick={handleContinue} shape="round">
+              Continue with Email
+              <IonIcon slot="start" src={mailOutline} />
             </IonButton>
             <IonButton
               onClick={handleGoogle}

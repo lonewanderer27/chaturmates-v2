@@ -1,31 +1,55 @@
-import { IonBackButton, IonButton, IonButtons, IonCardContent, IonCol, IonContent, IonGrid, IonHeader, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react'
+import {
+  IonBackButton,
+  IonButtons,
+  IonCardContent,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonList,
+  IonPage,
+  IonRow,
+  IonText,
+  IonTitle,
+  IonToolbar,
+  useIonViewWillEnter,
+} from "@ionic/react";
+import { hideTabBar } from "../../../utils/TabBar";
 
-import GroupItem from '../../../components/SearchPage/GroupItem';
-import { SEARCH_CATEGORY } from '../../../enums/search';
-import useSelfStudent from '../../../hooks/student';
+import GroupItem from "../../../components/SearchPage/GroupItem";
+import useSelfStudent from "../../../hooks/student";
+import { FC } from "react";
+import { RouteComponentProps } from "react-router";
+import useStudentGroups from "../../../hooks/student/useStudentGroups";
 
-const MeGroups = () => {
-  const { groups } = useSelfStudent();
+const MeGroups: FC<RouteComponentProps> = () => {
+  const { student, groups } = useSelfStudent();
+
+  useIonViewWillEnter(() => {
+    hideTabBar();
+  });
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons>
-            <IonBackButton className='ml-2' defaultHref="/community" text={""} />
-          </IonButtons>
-          <IonTitle>Your Groups ({groups?.length ?? "-"})</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent>
-        <IonList>
-          {groups?.map((group) => (
-            <GroupItem group={group} key={group.id} />
-          ))}
+      <IonContent className="ion-padding">
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonButtons>
+              <IonBackButton
+                className="ml-[-5px]"
+                defaultHref="/community"
+                text={""}
+              />
+            </IonButtons>
+            <IonTitle>Your Groups ({groups?.length ?? "-"})</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonList className="mx-[-15px]">
+          {groups?.map((group) => <GroupItem group={group} key={group.id} />)}
         </IonList>
       </IonContent>
     </IonPage>
-  )
-}
+  );
+};
 
 export default MeGroups;

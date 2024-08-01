@@ -3,15 +3,19 @@ import { notificationsOutline, personOutline, searchOutline, accessibilityOutlin
 
 import NavBtn from '../components/NavBtn'
 import Sidebar from '../components/Sidebar'
+import { showTabBar } from '../utils/TabBar'
+import useSelfStudent from '../hooks/student'
 import useSession from '../hooks/auth/useSession'
+import useHideTabs from '../hooks/useHideTabs'
 
 export default function Community() {
-  const { session } = useSession();
+  const { student } = useSelfStudent();
+  useHideTabs();
 
   return (
     <>
       <Sidebar />
-      <IonPage id="sidebar-content">
+      <IonPage id="community-page">
         <IonContent className='ion-padding'>
           <IonHeader collapse='condense'>
             <IonToolbar>
@@ -21,7 +25,7 @@ export default function Community() {
               <IonButtons slot="end">
                 <NavBtn
                   route="community/me"
-                  icon={personOutline}
+                  avatarUrl={student?.avatar_url}
                 />
                 <NavBtn
                   route="community/search"

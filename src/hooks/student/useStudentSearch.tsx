@@ -1,45 +1,53 @@
-import { StudentType } from "../../types";
-import client from "../../client";
-import { studentsResultsAtom } from "../../atoms/search";
-import { useAtom } from "jotai";
-import { useEffect } from "react";
+import { useAtom, useSetAtom } from 'jotai';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { StudentType } from '../../types';
+import client from '../../client';
+import { studentsResultsAtom } from '../../atoms/search';
 
 export default function useStudentSearch() {
   const [studentsResults, setStudentsResults] = useAtom(studentsResultsAtom);
+  const queryClient = useQueryClient();
 
-  async function getAll() {
-    // load();
+  const fetchStudents = async () => {
     const response = await client
-      .from("students")
-      .select("*")
-      .order("created_at", { ascending: false });
-    // dismiss();
-    console.log("studentsResults response:", response);
-    setStudentsResults(response.data as StudentType[] ?? []);
-  }
+      .from('students')
+      .select('*')
+      .order('created_at', { ascending: false });
+    setStudentsResults(response.data as StudentType[]);
+    return response.data as StudentType[];
+  };
 
-  useEffect(() => {
-    getAll();
-  }, []);
+  // Initial fetch
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['students'],
+    queryFn: fetchStudents,
+  })
+
+  const searchStudents = async (query: string) => {
+    const response = await client
+      .from('students')
+      .select('*')
+      .ilike('full_name', `%${query}%`)
+      .order('created_at', { ascending: false });
+    return response.data as StudentType[];
+  };
 
   const handleStudentsSearch = async (query: string) => {
     if (query.length === 0) {
-      getAll();
+      queryClient.invalidateQueries({
+        queryKey: ['students'],
+      })
     } else {
-      // load();
-      const response = await client
-        .from("students")
-        .select("*")
-        .ilike("full_name", `%${query}%`)
-        .order("created_at", { ascending: false });
-      // dismiss();
-      console.log("studentsResults response:", response);
-      setStudentsResults(response.data as StudentType[] ?? []);
+      const data = await searchStudents(query);
+      setStudentsResults(data ?? []);
     }
   };
 
   return {
     handleStudentsSearch,
-    studentsResults,
+    studentsResults: studentsResults ?? [],
+    isLoading,
+    error,
   };
 }

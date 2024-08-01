@@ -19,7 +19,7 @@ const RecentSearches = (props: {
   }
 
   return (
-    <IonCard color="light" className='mx-[-20px] shadow-none rounded-2xl mt-5'>
+    <IonCard color="light" className='mx-[-20px] shadow-none rounded-2xl mt-[-50]'>
       <IonCardHeader>
         <IonCardSubtitle>Recent Searches</IonCardSubtitle>
       </IonCardHeader>

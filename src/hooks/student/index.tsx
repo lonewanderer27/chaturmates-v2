@@ -4,6 +4,23 @@ import useProfile from "../profile/useProfile";
 import { useQuery } from "@tanstack/react-query";
 import useSession from "../auth/useSession";
 
+export function useFindStudentById(studentId?: string) {
+  const query = useQuery({
+    queryKey: ["student", studentId],
+    queryFn: async () => {
+      console.log("useQuery");
+      const res = await getStudentById(studentId!);
+      console.log("data", res.data);
+      return res.data;
+    },
+    enabled: !!studentId,
+  });
+
+  return {
+    ...query.data
+  }
+}
+
 export default function useSelfStudent() {
   const { session } = useSession();
   const { profile } = useProfile();

@@ -35,8 +35,11 @@ import { newGroupAtom } from "../../../../atoms/group";
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import useHideTabs from "../../../../hooks/useHideTabs";
 
 const CreateGroupP1: React.FC<RouteComponentProps> = ({ match }) => {
+  useHideTabs();
+
   const [show, dismiss] = useIonAlert();
   const rt = useIonRouter();
   const validationSchema = object().shape({
@@ -119,7 +122,9 @@ const CreateGroupP1: React.FC<RouteComponentProps> = ({ match }) => {
 
   return (
     <IonPage>
-      <IonHeader>
+      
+      <IonContent fullscreen className="ion-padding">
+      <IonHeader collapse="condense">
         <IonToolbar>
           <IonButtons slot="start">
             <IonBackButton defaultHref={"/"+match.path.split("/")[1]} />
@@ -127,7 +132,6 @@ const CreateGroupP1: React.FC<RouteComponentProps> = ({ match }) => {
           <IonTitle>Create Group</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen className="ion-padding">
         <IonGrid>
           <IonRow>
             <IonCol>
@@ -180,11 +184,12 @@ const CreateGroupP1: React.FC<RouteComponentProps> = ({ match }) => {
         </div>
       </IonContent>
       <IonFooter>
-        <IonToolbar className="p-4">
+        <IonToolbar className="p-5">
           <IonButton
+            shape="round"
             className="font-poppins font-bold"
-            expand="block"
             onClick={handleSubmit(handleNext, handleError)}
+            slot="end"
           >
             {nameChecking ? <IonSpinner name="dots" /> : <span>Next</span>}
           </IonButton>

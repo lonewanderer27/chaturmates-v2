@@ -27,9 +27,11 @@
 
 /* This sets a different item background when dark mode is enabled on ios and md */
 .ion-palette-dark.ios,
-.ion-palette-dark.md {
+.ion-palette-dark.md{
   --ion-item-background: #1c1c1d;
 }
+
+
 
 .ion-palette-high-contrast.ion-palette-dark #testColor {
   --background: #00E600;
@@ -39,6 +41,17 @@
 .fontSize20{
   font-size: calc(1rem * 1.2 );
 }
+
+ion-card#testCard, #testCard{
+  --ion-card-background:  rgb(226 232 240);
+  background-color: rgb(226 232 240);
+}
+
+.ion-palette-dark ion-card#testCard, .ion-palette-dark #testCard{
+  --ion-card-background:  var(--ion-background-color-step-200);
+  background-color: var(--ion-background-color-step-200);
+}
+
 
 
 ion-fab-button::part(native) {

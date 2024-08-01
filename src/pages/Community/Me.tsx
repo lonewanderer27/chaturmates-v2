@@ -69,7 +69,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
           </IonToolbar>
         </IonHeader>
         <MemberAvatarLarge avatarUrl={student?.avatar_url} />
-        <IonCard className="pt-16 mx-0 bg-slate-200  z-[-500] shadow-none">
+        <IonCard id="testCard" className="pt-16 mx-0 z-[-500] shadow-none">
           <IonCardContent>
             <IonGrid>
               <IonRow className="flex justify-end mt-[-70px] pb-4 top-0 ">
@@ -108,7 +108,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
             </IonGrid>
           </IonCardContent>
         </IonCard>
-        <IonCard className="mt-4 mx-0 rounded-xl bg-slate-200 shadow-none">
+        <IonCard id="testCard" className="mt-4 mx-0 rounded-xl shadow-none">
           <IonCardContent>
             <div>
               <IonText className="text-xs font-bold" color="dark">

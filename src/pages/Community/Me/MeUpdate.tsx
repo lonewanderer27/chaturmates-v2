@@ -69,7 +69,7 @@ const MeUpdate: FC<RouteComponentProps> = ({ match }) => {
           </IonToolbar>
         </IonHeader>
         <MemberAvatarLarge avatarUrl={student?.avatar_url} />
-        <div className="pt-20 bg-slate-200 rounded-xl px-4">
+        <div id="testCard"className="pt-20 rounded-xl px-4">
           <IonGrid>
             <IonRow>
               <IonLabel
@@ -99,7 +99,7 @@ const MeUpdate: FC<RouteComponentProps> = ({ match }) => {
             <IonRow></IonRow>
           </IonGrid>
         </div>
-        <div className="mt-4 rounded-xl bg-slate-200">
+        <div id="testCard" className="mt-4 rounded-xl">
           <IonCardContent>
             <IonLabel
               className="font-poppins font-semibold text-l"

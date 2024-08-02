@@ -176,6 +176,8 @@ const EmailOTP_1_Continue = (props: {
 
       console.log(profile);
       
+      // push the user to the home page
+      window.location.href = "/";
     }
   };
 

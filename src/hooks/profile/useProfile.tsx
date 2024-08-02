@@ -5,7 +5,7 @@ import useSession from "../auth/useSession";
 export default function useProfile() {
   const { session } = useSession();
 
-  const { data: profile } = useQuery({
+  const { data: profile, isLoading } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
       const response = (
@@ -23,5 +23,6 @@ export default function useProfile() {
 
   return {
     profile,
+    isLoading,
   };
 }

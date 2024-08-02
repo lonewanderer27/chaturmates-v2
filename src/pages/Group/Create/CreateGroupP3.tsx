@@ -79,7 +79,6 @@ const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
   //     return res;
   //   },
   // });
-  
 
   // const coursesQry = useQuery({
   //   queryKey: ["courses"],
@@ -156,7 +155,11 @@ const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
     setNewGroup(NEW_GROUP);
 
     // redirect the user to their newly created group using vanity url
-    rt.push(`/${match.path.split("/")[1]}/group/vu/${res.data?.vanity_id}`);
+    rt.push(
+      `/${match.path.split("/")[1]}/group/vu/${res.data?.vanity_id}`,
+      "forward",
+      "replace"
+    );
   };
 
   const { data: academicYears } = useFetchAcademicYears();

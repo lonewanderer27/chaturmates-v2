@@ -14,6 +14,7 @@ export default function useGroupSearch() {
       .from('groups')
       .select('*, group_members!group_members_group_id_fkey(*)')
       .eq('admin_uni_group', false)
+      .eq("deleted", false)
       .order('created_at', { ascending: true });
     setGroupsResults(response.data as GroupsResponse['getAll']['data']['groups']);
     return response.data as GroupsResponse['getAll']['data']['groups'];

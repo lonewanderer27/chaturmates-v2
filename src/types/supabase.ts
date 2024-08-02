@@ -123,6 +123,32 @@ export type Database = {
           },
         ]
       }
+      coe_scans: {
+        Row: {
+          created_at: string
+          id: number
+          student_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          student_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          student_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coe_scans_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       colleges: {
         Row: {
           created_at: string
@@ -511,6 +537,7 @@ export type Database = {
           course: number | null
           cover_url: string | null
           created_at: string
+          deleted: boolean
           description: string | null
           id: number
           name: string
@@ -527,6 +554,7 @@ export type Database = {
           course?: number | null
           cover_url?: string | null
           created_at?: string
+          deleted?: boolean
           description?: string | null
           id?: number
           name: string
@@ -543,6 +571,7 @@ export type Database = {
           course?: number | null
           cover_url?: string | null
           created_at?: string
+          deleted?: boolean
           description?: string | null
           id?: number
           name?: string

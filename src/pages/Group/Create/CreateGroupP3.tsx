@@ -136,6 +136,7 @@ const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
         creator: true,
         is_admin: true,
         profile_id: student?.profile_id + "",
+        group_vanity_id: res.data?.vanity_id,
       })
       .select("*");
 

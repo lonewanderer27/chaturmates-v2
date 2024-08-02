@@ -25,8 +25,6 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import { number, object } from "yup";
-
-import { CourseType } from "../../../../types";
 import { NEW_GROUP } from "../../../../constants/group";
 import { NewGroupInputs } from "../../../../types/group/NewGroup";
 import { RouteComponentProps } from "react-router";
@@ -42,7 +40,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import useHideTabs from "../../../../hooks/useHideTabs";
 
 const CreateGroupP3: React.FC<RouteComponentProps> = ({ match }) => {
-  useHideTabs();useHideTabs();
+  useHideTabs();
+  useHideTabs();
 
   const [show, dismiss] = useIonAlert();
   const { student } = useSelfStudent();

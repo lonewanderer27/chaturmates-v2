@@ -21,7 +21,9 @@ export type ThreadMessageType = Database["public"]["Tables"]["threads_messages"]
 
 export type CollegeType = Database["public"]["Tables"]["colleges"]["Row"];
 export type CourseType = Database["public"]["Tables"]["courses"]["Row"];
-
+export type SubjectType = Database["public"]["Tables"]["subjects"]["Row"];
+export type ClassType = Tables<"classes">;
+export type CrowdSourcedProfType = Database["public"]["Tables"]["crowd_sourced_professors"]["Row"];
 export type OtpCodeType = Tables<"otp_codes">;
 
 export type SchoolType = Tables<"schools">;

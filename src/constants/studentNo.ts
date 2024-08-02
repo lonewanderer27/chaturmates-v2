@@ -1,0 +1,1 @@
+export const DEFAULT_STUDENT_NO = 202117150;

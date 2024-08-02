@@ -13,26 +13,26 @@ export type Database = {
         Row: {
           academic_year: string
           created_at: string
-          end_date: string
+          end_date: string | null
           id: number
           school: number
-          start_date: string
+          start_date: string | null
         }
         Insert: {
           academic_year: string
           created_at?: string
-          end_date: string
+          end_date?: string | null
           id?: number
           school: number
-          start_date: string
+          start_date?: string | null
         }
         Update: {
           academic_year?: string
           created_at?: string
-          end_date?: string
+          end_date?: string | null
           id?: number
           school?: number
-          start_date?: string
+          start_date?: string | null
         }
         Relationships: [
           {
@@ -46,32 +46,72 @@ export type Database = {
       }
       classes: {
         Row: {
-          code: string
+          code: string | null
           created_at: string
+          end_time: string
+          friday: boolean
           id: number
-          professor_id: number
+          monday: boolean
+          professor_id: number | null
+          room_id: number
+          saturday: boolean
+          start_time: string
+          student_id: number
           subject_id: number
+          sunday: boolean
+          thursday: boolean
+          tuesday: boolean
+          wednesday: boolean
         }
         Insert: {
-          code: string
+          code?: string | null
           created_at?: string
+          end_time: string
+          friday: boolean
           id?: number
-          professor_id: number
+          monday: boolean
+          professor_id?: number | null
+          room_id: number
+          saturday: boolean
+          start_time: string
+          student_id: number
           subject_id: number
+          sunday: boolean
+          thursday: boolean
+          tuesday: boolean
+          wednesday: boolean
         }
         Update: {
-          code?: string
+          code?: string | null
           created_at?: string
+          end_time?: string
+          friday?: boolean
           id?: number
-          professor_id?: number
+          monday?: boolean
+          professor_id?: number | null
+          room_id?: number
+          saturday?: boolean
+          start_time?: string
+          student_id?: number
           subject_id?: number
+          sunday?: boolean
+          thursday?: boolean
+          tuesday?: boolean
+          wednesday?: boolean
         }
         Relationships: [
           {
             foreignKeyName: "classes_professor_id_fkey"
             columns: ["professor_id"]
             isOneToOne: false
-            referencedRelation: "professors"
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "classes_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
             referencedColumns: ["id"]
           },
           {
@@ -183,6 +223,38 @@ export type Database = {
             columns: ["school"]
             isOneToOne: false
             referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crowd_sourced_professors: {
+        Row: {
+          created_at: string
+          full_name: string
+          id: number
+          official_professor_id: number | null
+          school: number
+        }
+        Insert: {
+          created_at?: string
+          full_name: string
+          id?: number
+          official_professor_id?: number | null
+          school: number
+        }
+        Update: {
+          created_at?: string
+          full_name?: string
+          id?: number
+          official_professor_id?: number | null
+          school?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crowd_sourced_professors_official_professor_id_fkey"
+            columns: ["official_professor_id"]
+            isOneToOne: false
+            referencedRelation: "professors"
             referencedColumns: ["id"]
           },
         ]
@@ -606,6 +678,7 @@ export type Database = {
           id: number
           profile_id: string
           school: number
+          verified: boolean
         }
         Insert: {
           created_at?: string
@@ -613,6 +686,7 @@ export type Database = {
           id?: number
           profile_id: string
           school: number
+          verified: boolean
         }
         Update: {
           created_at?: string
@@ -620,6 +694,7 @@ export type Database = {
           id?: number
           profile_id?: string
           school?: number
+          verified?: boolean
         }
         Relationships: [
           {
@@ -718,23 +793,23 @@ export type Database = {
       }
       rooms: {
         Row: {
-          building: string
+          building: string | null
           created_at: string
-          floor: string
+          floor: string | null
           id: number
           name: string
         }
         Insert: {
-          building: string
+          building?: string | null
           created_at?: string
-          floor: string
+          floor?: string | null
           id?: number
           name: string
         }
         Update: {
-          building?: string
+          building?: string | null
           created_at?: string
-          floor?: string
+          floor?: string | null
           id?: number
           name?: string
         }
@@ -1211,6 +1286,14 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      daysofweek:
+        | "Monday"
+        | "Tuesday"
+        | "Wednesday"
+        | "Thursday"
+        | "Friday"
+        | "Saturday"
+        | "Sunday"
       reaction: "like" | "love" | "celebrate" | "insightful" | "curious"
       student_type: "regular" | "irregular"
     }

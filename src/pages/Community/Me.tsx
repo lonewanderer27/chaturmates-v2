@@ -27,6 +27,7 @@ import useSession from "../../hooks/auth/useSession";
 import { pencilOutline } from "ionicons/icons";
 import useSelfGroups from "../../hooks/student/useSelfGroups";
 import useSelfFollowing from "../../hooks/student/useSelfFollowing";
+import { useToggleTheme } from "../../hooks/useToggleTheme";
 
 const Me: FC<RouteComponentProps> = ({ match }) => {
   const rt = useIonRouter();
@@ -51,6 +52,8 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
   useIonViewWillEnter(() => {
     hideTabBar();
   });
+
+  const [darkMode, toggleDarkMode] = useToggleTheme('darkModeActivated', 'ion-palette-dark');
 
   return (
     <IonPage>

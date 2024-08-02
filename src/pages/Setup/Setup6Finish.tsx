@@ -1,8 +1,10 @@
 import { IonContent, IonPage, IonProgressBar, useIonViewWillEnter } from '@ionic/react';
 
 import { hideTabBar } from '../../utils/TabBar';
+import { FC } from 'react';
+import { RouteComponentProps } from 'react-router';
 
-const Setup4Finish = () => {
+const Setup6Finish: FC<RouteComponentProps> = () => {
   useIonViewWillEnter(() => {
     hideTabBar();
   });
@@ -18,4 +20,4 @@ const Setup4Finish = () => {
   )
 }
 
-export default Setup4Finish
+export default Setup6Finish

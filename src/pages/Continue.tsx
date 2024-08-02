@@ -9,8 +9,9 @@ import { EmailOTP_Continue_Enum } from "../enums/continue";
 import { NewStudentType } from "../types/student/post/NewStudentType";
 import useGoogle from "../hooks/auth/useGoogle";
 import useSession from "../hooks/auth/useSession";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import client from "../client";
 
 export const formSchema = object().shape({
   email: string().email().required().label("Email").matches(/^[a-zA-Z0-9._%+-]+@adamson\.edu\.ph$/, "Must be an Adamson mail"),

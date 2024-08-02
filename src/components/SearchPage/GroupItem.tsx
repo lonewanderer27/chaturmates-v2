@@ -15,6 +15,7 @@ import { peopleCircleOutline } from "ionicons/icons";
 import { useMemo } from "react";
 import useSelfStudent from "../../hooks/student";
 import { GroupType } from "../../types";
+import useAmIAMember from "../../hooks/group/useAmIAMember";
 
 export default function GroupItem(props: {
   group: GroupType;
@@ -34,10 +35,25 @@ export default function GroupItem(props: {
     }
   }, [props.group.avatar_url]);
 
+  const { data: amIAMember } = useAmIAMember(props.group.vanity_id);
   function handleView() {
+    // check if user is a member of the group
+    if (amIAMember && amIAMember.approved === false) {
+      rt.push(
+        "/" +
+          rt.routeInfo.pathname.split("/")[1] +
+          "/group/vu/" +
+          props.group.vanity_id +
+          "/preview",
+        "forward",
+        "push"
+      );
+      return;
+    }
+
     // get the main pathname like /discover
     const mainPathname = rt.routeInfo.pathname.split("/")[1];
-    rt.push("/"+mainPathname + "/group/vu/" + props.group.vanity_id);
+    rt.push("/" + mainPathname + "/group/vu/" + props.group.vanity_id);
   }
 
   function handleJoin() {
@@ -68,14 +84,19 @@ export default function GroupItem(props: {
           </IonText> */}
         </IonCol>
       </IonRow>
-      {props.hideButton === false && <>
-        {/* Only show join button if group is not found in the groups array */}
-      {groups && groups.find((group) => group.id === props.group.id) ? (
-        <ItemListButton buttonLabel={"Visit"} />
-      ) : (
-        <ItemListButton buttonLabel={props.buttonLabel} onClick={handleJoin} />
+      {props.hideButton === false && (
+        <>
+          {/* Only show join button if group is not found in the groups array */}
+          {groups && groups.find((group) => group.id === props.group.id) ? (
+            <ItemListButton buttonLabel={"Visit"} />
+          ) : (
+            <ItemListButton
+              buttonLabel={props.buttonLabel}
+              onClick={handleJoin}
+            />
+          )}
+        </>
       )}
-      </>}
     </IonItem>
   );
 }

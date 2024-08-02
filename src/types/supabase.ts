@@ -1051,21 +1051,18 @@ export type Database = {
       student_followers: {
         Row: {
           created_at: string
-          follow_date: string | null
           follower_id: number
           following_id: number
           id: number
         }
         Insert: {
           created_at?: string
-          follow_date?: string | null
           follower_id: number
           following_id: number
           id?: number
         }
         Update: {
           created_at?: string
-          follow_date?: string | null
           follower_id?: number
           following_id?: number
           id?: number

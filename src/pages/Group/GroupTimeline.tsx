@@ -35,6 +35,8 @@ import {
   shareOutline,
   shareSocialOutline,
 } from "ionicons/icons";
+import useProtect from "../../hooks/group/useProtect";
+import useAmIAMember from "../../hooks/group/useAmIAMember";
 
 type GroupTimelinePageProps = {
   vanity_url: string;
@@ -59,6 +61,8 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
   const handleMembers = () => {
     rt.push(rt.routeInfo.pathname + "/members");
   };
+
+  useProtect(match.params.vanity_url);
 
   return (
     <IonPage>

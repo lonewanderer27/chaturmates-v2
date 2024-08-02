@@ -23,6 +23,7 @@ import Me from "../pages/Me/Me";
 import MeFollowing from "../pages/Me/MeFollowing";
 import MeGroups from "../pages/Me/MeGroups";
 import MeUpdate from "../pages/Me/MeUpdate";
+import GroupPreview from "../pages/Group/GroupPreview";
 
 const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
   console.log(match);
@@ -61,11 +62,11 @@ const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
         component={GroupTimeline}
         exact
       />
-      <Route
+      {/* <Route
         path={`${match.url}/group/vu/:vanity_url/awaiting_approval`}
         component={GroupAwaitingApproval}
         exact
-      />
+      /> */}
       <Route
         path={`${match.url}/group/vu/:vanity_url/post/:post_id`}
         component={GroupPostPage}
@@ -89,6 +90,11 @@ const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
       <Route
         path={`${match.url}/group/vu/:vanity_url/info`}
         component={GroupInfo}
+        exact
+      />
+      <Route
+        path={`${match.url}/group/vu/:vanity_url/preview`}
+        component={GroupPreview}
         exact
       />
       {/* <Route

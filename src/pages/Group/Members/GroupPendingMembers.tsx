@@ -15,6 +15,7 @@ import { RouteComponentProps } from "react-router";
 import StudentItem from "../../../components/SearchPage/StudentItem";
 import { hideTabBar } from "../../../utils/TabBar";
 import useGroupMembers from "../../../hooks/group/useGroupMembers";
+import useProtect from "../../../hooks/group/useProtect";
 
 type GroupPendingMembersPageProps = {
   vanity_url: string;
@@ -28,6 +29,8 @@ const GroupPendingMembers: FC<
   useIonViewWillEnter(() => {
     hideTabBar();
   });
+
+  useProtect(match.params.vanity_url);
 
   return (
     <IonPage>

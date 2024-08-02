@@ -1,5 +1,6 @@
 import {
   IonBackButton,
+  IonButton,
   IonButtons,
   IonCardContent,
   IonCol,
@@ -14,17 +15,15 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from "@ionic/react";
-import { hideTabBar } from "../../../utils/TabBar";
+import { hideTabBar } from "../../utils/TabBar";
 
-import GroupItem from "../../../components/SearchPage/GroupItem";
-import useSelfStudent from "../../../hooks/student";
+import StudentItem from "../../components/SearchPage/StudentItem";
+import useSelfStudent from "../../hooks/student";
 import { FC } from "react";
 import { RouteComponentProps } from "react-router";
-import useStudentGroups from "../../../hooks/student/useStudentGroups";
 
-const MeGroups: FC<RouteComponentProps> = () => {
-  const { student, groups } = useSelfStudent();
-
+const MeFollowing: FC<RouteComponentProps> = () => {
+  const { following } = useSelfStudent();
   useIonViewWillEnter(() => {
     hideTabBar();
   });
@@ -41,15 +40,17 @@ const MeGroups: FC<RouteComponentProps> = () => {
                 text={""}
               />
             </IonButtons>
-            <IonTitle>Your Groups ({groups?.length ?? "-"})</IonTitle>
+            <IonTitle>Your Following ({following?.length ?? "-"})</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList className="mx-[-15px]">
-          {groups?.map((group) => <GroupItem group={group} key={group.id} />)}
+          {following?.map((klasmeyt) => (
+            <StudentItem student={klasmeyt} key={klasmeyt.id} />
+          ))}
         </IonList>
       </IonContent>
     </IonPage>
   );
 };
 
-export default MeGroups;
+export default MeFollowing;

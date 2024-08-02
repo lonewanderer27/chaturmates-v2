@@ -11,10 +11,10 @@ import {
 } from "@ionic/react";
 
 import { FC } from "react";
-import GroupItem from "../../../components/SearchPage/GroupItem";
+import GroupItem from "../../components/SearchPage/GroupItem";
 import { RouteComponentProps } from "react-router";
-import { hideTabBar } from "../../../utils/TabBar";
-import useStudentGroups from "../../../hooks/student/useStudentGroups";
+import { hideTabBar } from "../../utils/TabBar";
+import useStudentGroups from "../../hooks/student/useStudentGroups";
 
 type StudentGroupsPageProps = {
   student_id: string;

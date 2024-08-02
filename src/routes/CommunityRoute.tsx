@@ -16,14 +16,14 @@ import GroupPostPage from "../pages/Group/GroupPostPage";
 import GroupResources from "../pages/Group/GroupResources";
 import GroupTimeline from "../pages/Group/GroupTimeline";
 import Inbox from "../pages/Inbox";
-import Me from "../pages/Community/Me";
-import MeFollowing from "../pages/Community/Me/MeFollowing";
-import MeGroups from "../pages/Community/Me/MeGroups";
-import MeUpdate from "../pages/Community/Me/MeUpdate";
+import Me from "../pages/Me/Me";
+import MeFollowing from "../pages/Me/MeFollowing";
+import MeGroups from "../pages/Me/MeGroups";
+import MeUpdate from "../pages/Me/MeUpdate";
 import SearchPage from "../pages/Search";
-import StudentFollowing from "../pages/Community/Student/StudentFollowing";
-import StudentGroups from "../pages/Community/Student/StudentGroups";
-import StudentPage from "../pages/Community/StudentPage";
+import StudentFollowing from "../pages/Student/StudentFollowing";
+import StudentGroups from "../pages/Student/StudentGroups";
+import StudentPage from "../pages/Student/StudentPage";
 
 const CommunityRoute: React.FC<RouteComponentProps> = ({ match }) => {
   console.log(match);

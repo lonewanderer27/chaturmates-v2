@@ -20,14 +20,14 @@ import {
   useIonViewWillEnter,
 } from "@ionic/react";
 import React, { FC } from "react";
-import { hideTabBar, showTabBar } from "../../../utils/TabBar";
+import { hideTabBar } from "../../utils/TabBar";
 
 import { Controller } from "react-hook-form";
-import MemberAvatarLarge from "../../../components/Me/MemberAvatarLarge";
+import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
 import { RouteComponentProps } from "react-router";
-import StudentItem from "../../../components/SearchPage/StudentItem";
-import useSelfStudent from "../../../hooks/student";
-import useUpdateInfo from "../../../hooks/me/useUpdateInfo";
+import StudentItem from "../../components/SearchPage/StudentItem";
+import useSelfStudent from "../../hooks/student";
+import useUpdateInfo from "../../hooks/me/useUpdateInfo";
 
 const MeUpdate: FC<RouteComponentProps> = ({ match }) => {
   const {

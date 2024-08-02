@@ -103,10 +103,10 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
             <IonIcon icon={peopleOutline} />
             <IonLabel>Members</IonLabel>
           </IonChip>
-          <IonChip>
+          {/* <IonChip>
             <IonIcon icon={listOutline} />
             <IonLabel>Rules</IonLabel>
-          </IonChip>
+          </IonChip> */}
           <IonChip>
             <IonIcon icon={informationOutline} />
             <IonLabel>About</IonLabel>

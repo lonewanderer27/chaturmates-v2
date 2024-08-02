@@ -346,14 +346,14 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
             />
           </IonToolbar>
           <IonToolbar>
-            <IonButton
+            {/* <IonButton
               className="font-poppins font-bold"
               size="small"
               fill="clear"
               id="group_rules"
             >
               Rules
-            </IonButton>
+            </IonButton> */}
 
             <IonButton
               slot="end"

@@ -12,9 +12,9 @@ import {
 
 import { FC } from "react";
 import { RouteComponentProps } from "react-router";
-import StudentItem from "../../../components/SearchPage/StudentItem";
-import { hideTabBar } from "../../../utils/TabBar";
-import useStudentFollowings from "../../../hooks/student/useStudentFollowings";
+import StudentItem from "../../components/SearchPage/StudentItem";
+import { hideTabBar } from "../../utils/TabBar";
+import useStudentFollowings from "../../hooks/student/useStudentFollowings";
 
 type StudentFollowingPageProps = {
   student_id: string;

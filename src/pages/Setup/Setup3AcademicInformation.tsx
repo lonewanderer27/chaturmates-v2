@@ -109,10 +109,20 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
       // check if there is a value in the student atom
       // if there is, set the default values to that
       // else, set the default values to an empty object
-      studentNo: newStudent.step2.studentNo !== 0 ? newStudent.step2.studentNo! : undefined,
-      course: newStudent.step2.course !== 0 ? newStudent.step2.course : undefined,
-      yearLevel: newStudent.step2.yearLevel !== 0 ? newStudent.step2.yearLevel : undefined,
-      academicYear: newStudent.step2.academicYear !== 0 ? newStudent.step2.academicYear : undefined,
+      studentNo:
+        newStudent.step2.studentNo !== 0
+          ? newStudent.step2.studentNo!
+          : undefined,
+      course:
+        newStudent.step2.course !== 0 ? newStudent.step2.course : undefined,
+      yearLevel:
+        newStudent.step2.yearLevel !== 0
+          ? newStudent.step2.yearLevel
+          : undefined,
+      academicYear:
+        newStudent.step2.academicYear !== 0
+          ? newStudent.step2.academicYear
+          : undefined,
     },
   });
   const [checking, setChecking] = useState(() => false);
@@ -204,7 +214,10 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
                 onClick={openCourseModal}
                 placeholder="Select your course"
                 readonly
-                value={courses?.find((course) => course.id === getValues("course"))?.full_title ?? ""}
+                value={
+                  courses?.find((course) => course.id === getValues("course"))
+                    ?.full_title ?? ""
+                }
               />
             </IonCol>
           </IonRow>
@@ -306,9 +319,12 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
             <IonToolbar>
               <IonTitle>Select your course</IonTitle>
               <IonButtons slot="start">
-                <IonButton fill="clear" onClick={() => {
-                  courseModal.current?.dismiss();
-                }}>
+                <IonButton
+                  fill="clear"
+                  onClick={() => {
+                    courseModal.current?.dismiss();
+                  }}
+                >
                   <IonIcon src={closeOutline} />
                 </IonButton>
               </IonButtons>
@@ -336,13 +352,16 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
           </IonContent>
         </IonModal>
       </IonContent>
-      <IonFooter className="p-5 flex justify-end">
-        <IonButton
-          shape="round"
-          onClick={handleSubmit(handleNext, handleError)}
-        >
-          Next
-        </IonButton>
+      <IonFooter>
+        <IonToolbar className="p-4 flex justify-end">
+          <IonButton
+            shape="round"
+            slot="end"
+            onClick={handleSubmit(handleNext, handleError)}
+          >
+            Next
+          </IonButton>
+        </IonToolbar>
       </IonFooter>
     </IonPage>
   );

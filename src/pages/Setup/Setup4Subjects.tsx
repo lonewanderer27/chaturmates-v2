@@ -659,13 +659,16 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
           </IonContent>
         </IonModal>
       </IonContent>
-      <IonFooter className="p-4 flex justify-end">
-        <IonButton
-          shape="round"
-          onClick={handleSubmit(handlePageNext, handlePageNextError)}
-        >
-          Next
-        </IonButton>
+      <IonFooter>
+        <IonToolbar className="p-4 flex justify-end">
+          <IonButton
+            shape="round"
+            slot="end"
+            onClick={handleSubmit(handlePageNext, handlePageNextError)}
+          >
+            Next
+          </IonButton>
+        </IonToolbar>
       </IonFooter>
     </IonPage>
   );

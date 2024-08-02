@@ -62,8 +62,8 @@ const Setup2IntroduceYourself: FC<RouteComponentProps> = ({ match }) => {
       return {
         fullName: newStudent.step1.fullName || "",
         description: newStudent.step1.description || "",
-      }
-    }
+      };
+    },
   });
   const { handleNext: next } = useSetup();
 
@@ -159,14 +159,16 @@ const Setup2IntroduceYourself: FC<RouteComponentProps> = ({ match }) => {
           </IonRow>
         </IonGrid>
       </IonContent>
-      <IonFooter className="p-5 flex justify-end">
-        <IonButton
-          shape="round"
-          className="font-poppins font-bold"
-          onClick={handleSubmit(handleNext, handleError)}
-        >
-          {checking ? <IonSpinner name="dots" /> : <span>Next</span>}
-        </IonButton>
+      <IonFooter>
+        <IonToolbar className="p-4 flex justify-end">
+          <IonButton
+            shape="round"
+            onClick={handleSubmit(handleNext, handleError)}
+            slot="end"
+          >
+            {checking ? <IonSpinner name="dots" /> : <span>Next</span>}
+          </IonButton>
+        </IonToolbar>
       </IonFooter>
     </IonPage>
   );

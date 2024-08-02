@@ -8,6 +8,7 @@ import {
   IonImg,
   IonPage,
   IonRow,
+  IonToolbar,
   useIonViewWillEnter,
 } from "@ionic/react";
 
@@ -69,23 +70,32 @@ const Setup: FC<RouteComponentProps> = () => {
           </IonRow>
           <IonRow className="py-20">
             <IonCol size="3">
-              <IonIcon icon={helpCircleOutline} size="large" />
+              <IonButton fill="clear">
+                <IonIcon
+                  slot="end"
+                  size="large"
+                  color="medium"
+                  icon={helpCircleOutline}
+                />
+              </IonButton>
             </IonCol>
             <IonCol>
               <IonText className="text-start">
                 <p>
-                  We'll ask you a few questions to help us better understand your
-                  academic needs
+                  We'll ask you a few questions to help us better understand
+                  your academic needs
                 </p>
               </IonText>
             </IonCol>
           </IonRow>
         </IonGrid>
       </IonContent>
-      <IonFooter className="ion-padding flex justify-end">
-        <IonButton shape="round" onClick={handleNext}>
-          Get Started
-        </IonButton>
+      <IonFooter>
+        <IonToolbar className="ion-padding flex justify-end">
+          <IonButton slot="end" shape="round" onClick={handleNext}>
+            Get Started
+          </IonButton>
+        </IonToolbar>
       </IonFooter>
     </IonPage>
   );

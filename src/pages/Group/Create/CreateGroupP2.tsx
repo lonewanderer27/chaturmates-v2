@@ -25,13 +25,13 @@ import React, { useState } from "react";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { object, string } from "yup";
 
-import { NewGroupInputs } from "../../../../types/group/NewGroup";
+import { NewGroupInputs } from "../../../types/group/NewGroup";
 import { RouteComponentProps } from "react-router";
-import client from "../../../../client";
-import { newGroupAtom } from "../../../../atoms/group";
+import client from "../../../client";
+import { newGroupAtom } from "../../../atoms/group";
 import { useAtom } from "jotai";
 import { yupResolver } from "@hookform/resolvers/yup";
-import useHideTabs from "../../../../hooks/useHideTabs";
+import useHideTabs from "../../../hooks/useHideTabs";
 
 const CreateGroupP2: React.FC<RouteComponentProps> = ({ match }) => {
   useHideTabs();
@@ -40,7 +40,6 @@ const CreateGroupP2: React.FC<RouteComponentProps> = ({ match }) => {
   const validationSchema = object().shape({
     avatar_url: string().optional().url("Must be a valid photo url"),
     cover_url: string().optional().url("Must be a valid photo url"),
-    vanity_id: string().required("Vanity ID is required").min(2),
   });
   const [checkingUrl, setCheckingUrl] = useState(() => false);
   const [newGroup, setNewGroup] = useAtom(newGroupAtom);
@@ -68,66 +67,43 @@ const CreateGroupP2: React.FC<RouteComponentProps> = ({ match }) => {
     console.log(errors);
   };
 
-  const handleNext: SubmitHandler<NewGroupInputs["step2"]> = async (
-    data
-  ) => {
-    setCheckingUrl(() => true);
+  const handleNext: SubmitHandler<NewGroupInputs["step2"]> = async (data) => {
     console.log("handleNext");
     console.log(data);
 
     // set avatar and cover url in the atom
-    setNewGroup((prev) => {
+    setNewGroup((prev: any) => {
       return {
         ...prev,
         step2: data,
       };
     });
 
-    // check if the vanity url exists
-    console.log("checking if the vanity url is unique");
-    const res = await client
-      .from("groups")
-      .select("vanity_id")
-      .ilike("vanity_id", data.vanity_id);
-
-    console.log(res);
-
-    setCheckingUrl(() => false);
-
-    // if a group already exists, then the vanity url is not unique
-    if (res.data!.length > 0) {
-      console.log("vanity url is not unique");
-      setError("vanity_id", {
-        type: "value",
-        message:
-          "This ID is already taken. Please choose another one.",
-      });
-
-      return;
-    }
-
-    if (res.error) {
-      console.log(res.error.message);
-      return;
-    }
-
-    // there's no group, that means the vanity url is unique
-    rt.push("/"+match.path.split("/")[1]+"/group/create/p3", "forward");
+    rt.push("/" + match.path.split("/")[1] + "/group/create/p3", "forward");
   };
 
   return (
     <IonPage>
-      
       <IonContent fullscreen className="ion-padding">
-      <IonHeader collapse="condense">
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref={match.path.split("/")[1]+"/groups/create/p1"} />
-          </IonButtons>
-          <IonTitle>Customize {newGroup.step1.name}</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonBackButton
+                text=""
+                defaultHref={match.path.split("/")[1] + "/groups/create/p1"}
+              />
+            </IonButtons>
+            {/* <IonTitle>Customize {newGroup.step1.name}</IonTitle> */}
+          </IonToolbar>
+        </IonHeader>
         <IonGrid>
+          <IonRow className="pb-[20px]">
+            <IonCol>
+              <IonText className="text-center">
+                <h3>Customize Group</h3>
+              </IonText>
+            </IonCol>
+          </IonRow>
           <IonRow>
             <IonCol>
               <IonLabel>
@@ -136,12 +112,14 @@ const CreateGroupP2: React.FC<RouteComponentProps> = ({ match }) => {
                 </IonText>
               </IonLabel>
               <IonInput
-                className={`custom my-2 text-lg ${getFieldState("avatar_url").isTouched ? "ion-touched" : ""
-                  } ${errors.avatar_url
+                className={`custom my-2 text-lg ${
+                  getFieldState("avatar_url").isTouched ? "ion-touched" : ""
+                } ${
+                  errors.avatar_url
                     ? "ion-touched ion-invalid border-red-500"
                     : ""
-                  }`}
-                placeholder={`Profile Photo of ${newGroup.step1.name}`}
+                }`}
+                placeholder={`Enter Profile Photo URL`}
                 type="text"
                 errorText={getFieldState("avatar_url").error?.message}
                 {...register("avatar_url")}
@@ -156,48 +134,32 @@ const CreateGroupP2: React.FC<RouteComponentProps> = ({ match }) => {
                 </IonText>
               </IonLabel>
               <IonInput
-                className={`custom my-2 text-lg ${getFieldState("cover_url").isTouched ? "ion-touched" : ""
-                  } ${errors.cover_url
+                className={`custom my-2 text-lg ${
+                  getFieldState("cover_url").isTouched ? "ion-touched" : ""
+                } ${
+                  errors.cover_url
                     ? "ion-touched ion-invalid border-red-500"
                     : ""
-                  }`}
-                placeholder={`Cover Photo of ${newGroup.step1.name}`}
+                }`}
+                placeholder={`Enter Cover Photo URL`}
                 errorText={getFieldState("cover_url").error?.message}
                 {...register("cover_url")}
               ></IonInput>
             </IonCol>
           </IonRow>
-          <IonRow>
-            <IonCol>
-              <IonLabel>
-                <IonText className="font-poppins font-semibold text-lg">
-                  Vanity ID
-                </IonText>
-              </IonLabel>
-              <IonInput
-                className={`custom my-2 text-lg ${getFieldState("vanity_id").isTouched ? "ion-touched" : ""
-                  } ${errors.vanity_id
-                    ? "ion-touched ion-invalid border-red-500"
-                    : ""
-                  }`}
-                placeholder={`Vanity ID of ${newGroup.step1.name}`}
-                errorText={getFieldState("vanity_id").error?.message}
-                {...register("vanity_id")}
-              ></IonInput>
-            </IonCol>
-          </IonRow>
         </IonGrid>
-        <div className="m-[-5px]">
+        {/* <div className="m-[-5px]">
           <IonCard>
-            <IonCardContent>This will serve as {newGroup.step1.name}'s Invite ID</IonCardContent>
+            <IonCardContent>
+              This will serve as {newGroup.step1.name}'s Invite ID
+            </IonCardContent>
           </IonCard>
-        </div>
+        </div> */}
       </IonContent>
       <IonFooter>
-        <IonToolbar className="p-5">
+        <IonToolbar className="p-4">
           <IonButton
             shape="round"
-            className="font-poppins font-bold"
             onClick={handleSubmit(handleNext, handleError)}
             slot="end"
           >
@@ -207,6 +169,6 @@ const CreateGroupP2: React.FC<RouteComponentProps> = ({ match }) => {
       </IonFooter>
     </IonPage>
   );
-}
+};
 
 export default CreateGroupP2;

@@ -1,8 +1,8 @@
 import { Redirect, Route, RouteComponentProps } from "react-router";
 
-import CreateGroupP1 from "../pages/Community/Group/Create/CreateGroupP1";
-import CreateGroupP2 from "../pages/Community/Group/Create/CreateGroupP2";
-import CreateGroupP3 from "../pages/Community/Group/Create/CreateGroupP3";
+import CreateGroupP1 from "../pages/Group/Create/CreateGroupP1";
+import CreateGroupP2 from "../pages/Group/Create/CreateGroupP2";
+import CreateGroupP3 from "../pages/Group/Create/CreateGroupP3";
 import Discover from "../pages/Discover";
 import { FC } from "react";
 import GroupAwaitingApproval from "../pages/Group/Members/GroupAwaitingApproval";
@@ -10,7 +10,7 @@ import GroupAwaitingApproval from "../pages/Group/Members/GroupAwaitingApproval"
 import GroupInfo from "../pages/Group/GroupInfo";
 import GroupMembers from "../pages/Group/Members/GroupMembers";
 import GroupPendingMembers from "../pages/Group/Members/GroupPendingMembers";
-import GroupPostPage from "../pages/Community/Group/GroupPostPage";
+import GroupPostPage from "../pages/Group/GroupPostPage";
 import GroupResources from "../pages/Group/GroupResources";
 import GroupTimeline from "../pages/Group/GroupTimeline";
 import Inbox from "../pages/Inbox";

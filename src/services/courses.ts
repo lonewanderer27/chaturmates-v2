@@ -16,7 +16,7 @@ export interface CourseResponse {
 }
 
 export async function getAllCourses(): Promise<CourseResponse["getAll"]> {
-  const courses = await client.from("courses").select("*");
+  const courses = await client.from("courses").select("*").order("title");
 
   if (courses.data?.length === 0) {
     return Promise.reject("No courses found");
@@ -42,6 +42,7 @@ export async function getCoursesInCollege(
     const courses = await client
       .from("courses")
       .select("*")
+      .order("title")
       .eq("college_id", college_id);
 
     if (courses.data?.length === 0) {

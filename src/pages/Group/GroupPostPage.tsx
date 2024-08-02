@@ -41,15 +41,15 @@ import {
 import {
   getGroupPostById,
   getGroupPostCommentsByPostId,
-} from "../../../services/group/post";
+} from "../../services/group/post";
 import { object, string } from "yup";
 
 import GroupPostComment from "./GroupPostComment";
-import { SortOptions } from "../../../enums";
-import client from "../../../client";
-import useHideTabs from "../../../hooks/useHideTabs";
+import { SortOptions } from "../../enums";
+import client from "../../client";
+import useHideTabs from "../../hooks/useHideTabs";
 import { useQuery } from "@tanstack/react-query";
-import useSelfStudent from "../../../hooks/student";
+import useSelfStudent from "../../hooks/student";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 type GroupPostPageParams = {

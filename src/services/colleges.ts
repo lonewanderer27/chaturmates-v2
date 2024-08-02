@@ -17,7 +17,7 @@ export interface CollegeResponse {
 }
 
 export async function getAllColleges(): Promise<CollegeResponse["getAll"]> {
-  const colleges = await client.from("colleges").select("*");
+  const colleges = await client.from("colleges").select("*").order("title");
 
   if (colleges.data!.length === 0) {
     return Promise.reject("No colleges found");
@@ -48,6 +48,7 @@ export async function getCollege(id: string): Promise<CollegeResponse["get"]> {
   const courses = await client
     .from("courses")
     .select("*")
+    .order("title")
     .eq("college_id", college.data!.id);
 
   return Promise.resolve({

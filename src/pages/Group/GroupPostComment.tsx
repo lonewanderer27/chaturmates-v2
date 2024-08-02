@@ -1,4 +1,4 @@
-import { GroupCommentType, StudentType } from '../../../types'
+import { GroupCommentType, StudentType } from '../../types'
 import { IonIcon, IonItem, IonText } from '@ionic/react'
 
 import { personCircleOutline } from 'ionicons/icons'

@@ -33,7 +33,7 @@ const FeatureUnavailable: FC<RouteComponentProps> = () => {
           <IonIcon src={timeOutline} size="large" />
           <IonText>
             <h1>Feature Unavailable</h1>
-            <h3>This feature is not available yet</h3>
+            <h3 className="mt-8">This feature is not available yet</h3>
             <p>
               Stay tuned for further{" "}
               <span className="underline cursor-pointer" onClick={handleNotice}>
@@ -44,8 +44,8 @@ const FeatureUnavailable: FC<RouteComponentProps> = () => {
         </div>
       </IonContent>
       <IonFooter className="flex justify-center ion-padding">
-        <IonButton onClick={handleGoHome} className="rounded-full">
-          <IonIcon slot="start" icon={homeOutline} />
+        <IonButton onClick={handleGoHome} shape="round">
+          {/* <IonIcon slot="start" icon={homeOutline} /> */}
           Go to Home
         </IonButton>
       </IonFooter>

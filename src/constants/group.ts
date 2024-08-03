@@ -2,11 +2,11 @@ export const NEW_GROUP = {
   step1: {
     name: "",
     description: "",
+    vanity_id: ""
   },
   step2: {
     avatar_url: "",
     cover_url: "",
-    vanity_id: ""
   },
   step3: {
     school: 1,

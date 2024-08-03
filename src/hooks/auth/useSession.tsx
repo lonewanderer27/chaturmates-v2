@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 
 import { Session } from "@supabase/supabase-js";
 import client from "../../client";
+import { useIonRouter } from "@ionic/react";
 
 const useSession = () => {
+  const rt = useIonRouter();
   const [session, setSession] = useState<Session | null | undefined>(undefined);
   const [processing, setProcessing] = useState<boolean>(false);
   
@@ -11,6 +13,7 @@ const useSession = () => {
     setProcessing(() => true);
     await client.auth.signOut();
     setProcessing(() => false);
+    rt.push("/continue", "root");
   }
 
   useEffect(() => {

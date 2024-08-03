@@ -109,6 +109,7 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
 
   const worker = createWorker({
     logger: (m) => console.log(m),
+    langPath: "https://tessdata.projectnaptha.com/4.0.0_fast",
   });
   const [loader, dismissLoader] = useIonLoading();
   const { data: subjects } = useFetchSubjects();

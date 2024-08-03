@@ -47,7 +47,7 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
     isLoading,
     requesToFollow,
     unfollow,
-    loading
+    loading,
   } = useFollow(match.params.student_id);
 
   const handleFollowing = () => {
@@ -93,16 +93,29 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
                 >
                   Direct Message
                 </IonButton>
-                {<IonButton shape="round" size="small" className="mx-1" onClick={() => {
-                  if (isLoading) return;
-                  if (follow) {
-                    unfollow();
-                  } else {
-                    requesToFollow();
-                  }
-                }}>
-                  {loading || isLoading ? <IonSpinner name="dots" /> : follow ? <IonText color="light">Unfollow</IonText> : <IonText color="light">Follow</IonText>}
-                </IonButton>}
+                {
+                  <IonButton
+                    shape="round"
+                    size="small"
+                    className="mx-1"
+                    onClick={() => {
+                      if (isLoading) return;
+                      if (follow) {
+                        unfollow();
+                      } else {
+                        requesToFollow();
+                      }
+                    }}
+                  >
+                    {loading || isLoading ? (
+                      <IonSpinner name="dots" />
+                    ) : follow ? (
+                      <IonText color="light">Unfollow</IonText>
+                    ) : (
+                      <IonText color="light">Follow</IonText>
+                    )}
+                  </IonButton>
+                }
               </IonRow>
               <IonRow className="text-center mt-2">
                 <IonCol className="cursor-pointer" onClick={handleFollowing}>
@@ -127,21 +140,23 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
             </IonGrid>
           </IonCardContent>
         </IonCard>
-        <IonCard className="mt-4 rounded-xl bg-slate-200 mx-0 shadow-none">
-          <IonCardContent>
-            <div>
-              <IonText className="text-xs font-bold" color="dark">
-                BIO
-              </IonText>
-              <br />
-            </div>
-            <div className="">
-              <IonText className="text-sm" color="dark">
-                {student?.description}
-              </IonText>
-            </div>
-          </IonCardContent>
-        </IonCard>
+        {student?.description && (
+          <IonCard className="mt-4 rounded-xl bg-slate-200 mx-0 shadow-none">
+            <IonCardContent>
+              <div>
+                <IonText className="text-xs font-bold" color="dark">
+                  BIO
+                </IonText>
+                <br />
+              </div>
+              <div className="">
+                <IonText className="text-sm" color="dark">
+                  {student?.description}
+                </IonText>
+              </div>
+            </IonCardContent>
+          </IonCard>
+        )}
       </IonContent>
     </IonPage>
   );

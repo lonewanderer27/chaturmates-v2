@@ -18,6 +18,7 @@ import {
   IonItemSliding,
   IonLabel,
   IonList,
+  IonLoading,
   IonModal,
   IonPage,
   IonProgressBar,
@@ -181,7 +182,7 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
     console.log(getValues());
   };
 
-  const { handleNext, handleUpload } = useSetup();
+  const { handleNext, handleUpload, uploading } = useSetup();
   const [show, hide] = useIonLoading();
   const handlePageNext: SubmitHandler<NewStudentTypeSteps["step3"]> = async (
     data
@@ -276,7 +277,7 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
 
     // success
     setValue("classes", [
-      ...getValues("classes") ?? [],
+      ...(getValues("classes") ?? []),
       {
         subjectId: getValues2("subjectId"),
         room: getValues2("room")!,
@@ -364,6 +365,7 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
                       <IonItemOption
                         color="danger"
                         onClick={() => handleDeleteClass(c.subjectId)}
+                        disabled={uploading}
                       >
                         Delete
                       </IonItemOption>
@@ -661,16 +663,33 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
         </IonModal>
       </IonContent>
       <IonFooter>
-        <IonToolbar className="p-4 flex justify-end">
-          <IonButton
+        <IonToolbar className="p-4">
+          {/* TODO */}
+          {/* <IonButton
             shape="round"
             slot="end"
             onClick={handleSubmit(handlePageNext, handlePageNextError)}
           >
             Next
+          </IonButton> */}
+          <IonButton
+            shape="round"
+            slot="end"
+            expand="block"
+            onClick={handleSubmit(handlePageNext, handlePageNextError)}
+            disabled={uploading}
+          >
+            COMPLETE
           </IonButton>
         </IonToolbar>
       </IonFooter>
+      {uploading && (
+        <IonLoading
+          message={"Uploading your data"}
+          isOpen={uploading}
+          spinner="circular"
+        />
+      )}
     </IonPage>
   );
 };

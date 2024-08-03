@@ -156,6 +156,8 @@ export default function useSetup() {
   const [uploading, setUploading] = useState(false);
   const [showAlert] = useIonAlert();
   const handleUpload = async () => {
+    setUploading(() => true);
+
     // upload the student information
     const { data, error } = await client
       .from("students")
@@ -177,6 +179,7 @@ export default function useSetup() {
 
     if (error) {
       console.error(error);
+      setUploading(() => false);
       showAlert({
         header: "Error",
         message:
@@ -216,6 +219,7 @@ export default function useSetup() {
 
     if (classesError) {
       console.error(error);
+      setUploading(() => false);
 
       // since there is an error, we should delete the student that we just created
       const { error: deleteError } = await client
@@ -232,6 +236,8 @@ export default function useSetup() {
       });
       return;
     }
+
+    setUploading(() => false);
 
     // go to the finish page
     rt.push("/setup/finish");

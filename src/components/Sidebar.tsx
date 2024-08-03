@@ -34,7 +34,6 @@ export default function Sidebar() {
 
   const handleLogout = async () => {
     await logout();
-    rt.push("/continue", "root");
   };
 
   const handleLogin = async () => {

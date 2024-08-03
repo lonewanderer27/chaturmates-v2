@@ -19,7 +19,7 @@ const FeatureUnavailable: FC<RouteComponentProps> = () => {
   const history = useIonRouter();
 
   const handleGoHome = () => {
-    history.push("/");
+    history.push("/", "root", "replace");
   };
 
   const handleNotice = () => {

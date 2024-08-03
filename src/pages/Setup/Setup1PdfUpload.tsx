@@ -564,6 +564,7 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
                 semester: studentInfo.semester ? studentInfo.semester : 0,
                 yearLevel: studentInfo.yearLevel ? studentInfo.yearLevel : 0,
                 type: schedule.blockNumber.length > 0 ? true : false,
+                block: schedule.blockNumber.length > 0 ? schedule.blockNumber : "",
               },
             }));
 

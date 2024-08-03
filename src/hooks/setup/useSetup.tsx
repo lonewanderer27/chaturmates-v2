@@ -171,6 +171,7 @@ export default function useSetup() {
         school_email: session!.user.email!,
         student_no: newStudent.step2.studentNo! + "",
         type: newStudent.step2.type ? "regular" : "irregular",
+        block: newStudent.step2.block!,
         verified: true,
         year_level: newStudent.step2.yearLevel!,
       })

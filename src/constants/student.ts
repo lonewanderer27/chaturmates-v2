@@ -14,6 +14,7 @@ export const NEW_STUDENT = {
     yearLevel: 0,
     academicYear: 0,
     type: true,
+    block: "",
   },
   step3: {
     classes: [

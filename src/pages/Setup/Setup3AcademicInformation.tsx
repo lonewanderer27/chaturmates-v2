@@ -50,6 +50,7 @@ const validationSchema = object().shape({
   yearLevel: number().required("Year Level is required"),
   academicYear: number().required("Academic Year is required"),
   type: boolean().required("Type is required"),
+  block: string().required("Block No. is required"),
 });
 
 const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
@@ -100,6 +101,7 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
     handleSubmit,
     setError,
     getFieldState,
+    trigger,
     getValues,
     setValue,
     formState: { errors },
@@ -123,6 +125,12 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
         newStudent.step2.academicYear !== 0
           ? newStudent.step2.academicYear
           : undefined,
+      type: 
+        newStudent.step2.type !== undefined
+          ? newStudent.step2.type
+          : undefined,
+      block:
+        newStudent.step2.block.length > 0 ? newStudent.step2.block : undefined,
     },
   });
   const [checking, setChecking] = useState(() => false);
@@ -178,7 +186,7 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <IonGrid className="mt-[10px]">
+        <IonGrid>
           <IonRow className="pb-[20px]">
             <IonCol>
               <IonText className="text-center">
@@ -294,6 +302,7 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
               <IonRadioGroup
                 onIonChange={(e) => {
                   setValue("type", e.detail.value);
+                  trigger("block");
                 }}
                 value={getValues("type")}
               >
@@ -313,6 +322,23 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
               )}
             </IonCol>
           </IonRow>
+          {getValues("type") && (
+            <IonRow className="py-1">
+              <IonCol>
+                <IonLabel>
+                  <IonText className="font-poppins font-semibold text-lg">
+                    Block No
+                  </IonText>
+                </IonLabel>
+                <IonInput
+                  errorText={errors.block?.message}
+                  {...register("block")}
+                  placeholder="Enter your Block No."
+                  value={getValues("block")}
+                />
+              </IonCol>
+            </IonRow>
+          )}
         </IonGrid>
         <IonModal ref={courseModal} presentingElement={presentingElement!}>
           <IonHeader>

@@ -6,6 +6,7 @@ import {
   IonCardContent,
   IonCol,
   IonContent,
+  IonFooter,
   IonGrid,
   IonHeader,
   IonIcon,
@@ -32,6 +33,7 @@ import { useToggleTheme } from "../../hooks/useToggleTheme";
 const Me: FC<RouteComponentProps> = ({ match }) => {
   const rt = useIonRouter();
   const { student } = useSelfStudent();
+  const { logout } = useSession();
 
   const { data: groups } = useSelfGroups();
   const { data: following } = useSelfFollowing();
@@ -52,8 +54,6 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
   useIonViewWillEnter(() => {
     hideTabBar();
   });
-
-  const [darkMode, toggleDarkMode] = useToggleTheme('darkModeActivated', 'ion-palette-dark');
 
   return (
     <IonPage>
@@ -127,6 +127,19 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
           </IonCardContent>
         </IonCard>
       </IonContent>
+      <IonFooter>
+        <IonToolbar className="p-2">
+          <IonButton
+            color="medium"
+            onClick={logout}
+            // shape="round"
+            expand="block"
+            fill="outline"
+          >
+            Logout
+          </IonButton>
+        </IonToolbar>
+      </IonFooter>
     </IonPage>
   );
 };

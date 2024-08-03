@@ -27,7 +27,7 @@ const useSelfGroups = () => {
       .in(
         "id",
         groupMembersQuery.data!.map((groupMember) => groupMember.group_id)
-      );
+      ).eq("admin_uni_group", false);
 
       return res.data;
     },

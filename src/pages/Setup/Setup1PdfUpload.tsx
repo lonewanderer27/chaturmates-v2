@@ -11,17 +11,14 @@ import {
   IonImg,
   IonLoading,
   IonPage,
-  IonProgressBar,
   IonRow,
   IonText,
-  IonTitle,
   IonToolbar,
   useIonAlert,
   useIonLoading,
   useIonRouter,
   useIonViewWillEnter,
 } from "@ionic/react";
-
 import { hideTabBar } from "../../utils/TabBar";
 import useSetup from "../../hooks/setup/useSetup";
 import { useDropzone } from "react-dropzone";
@@ -30,15 +27,12 @@ import { createWorker } from "tesseract.js";
 import * as PDFJS from "pdfjs-dist";
 import { RouteComponentProps } from "react-router";
 import useFetchSubjects from "../../hooks/setup/useFetchSubjects";
-import client from "../../client";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import { NewStudentTypeSteps } from "../../types/student/post/NewStudentType";
 import { newStudentAtom } from "../../atoms/student";
 import { useAtom } from "jotai";
 import useFetchAcademicYears from "../../hooks/setup/useFetchAcademicYears";
 import useFetchCourses from "../../hooks/setup/useFetchCourses";
-import { AcademicYearType, CourseType } from "../../types";
+import { CourseType } from "../../types";
+import Image from "image-js";
 
 PDFJS.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -113,6 +107,24 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
   });
   const [loader, dismissLoader] = useIonLoading();
   const { data: subjects } = useFetchSubjects();
+
+  // function processImage(bitmap: ImageBitmap): string {
+  //   // Convert ImageBitmap to Image object from image-js
+  //   const image = await Image.load(bitmap);
+
+  //   // Desaturate the image
+  //   const desaturated = image.grey();
+
+  //   // Increase contrast
+  //   const highContrast = desaturated.level({
+
+  //   });
+
+  //   // Invert the image
+  //   const inverted = highContrast.invert();
+
+  //   return inverted;
+  // }
 
   function parseAcademicInfo(text: string) {
     try {
@@ -354,7 +366,33 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
 
           console.log(imgObj);
 
+          // Convert ImageBitmap to a format image-js can work with
+          const canvas0 = document.createElement("canvas");
+          canvas0.width = imgObj.width;
+          canvas0.height = imgObj.height;
+          const ctx0 = canvas0.getContext("2d");
+          if (!ctx0) {
+            throw new Error("Failed to get canvas context");
+          }
+          ctx0.drawImage(imgObj.bitmap, 0, 0);
+          const imageData0 = ctx0.getImageData(0, 0, imgObj.width, imgObj.height);
+
+          // Load the image using image-js
+          const image = new Image(
+            imgObj.width,
+            imgObj.height,
+            new Uint8Array(imageData0.data),
+            // @ts-ignore
+            { kind: "RGBA" }  
+          )
+
           // EXTRACT THE TOP PART OF THE IMAGE
+          const topImage = image.crop({
+            x: 0,
+            y: 112,
+            width: image.width,
+            height: 60,
+          });
 
           // Create a canvas element
           const canvas = document.createElement("canvas");
@@ -363,61 +401,61 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
 
           // Draw the ImageBitmap to the canvas
           const ctx = canvas.getContext("2d");
-          ctx!.drawImage(
-            imgObj.bitmap,
-            0, // source x
-            112, // source y
-            imgObj.width, // source width
-            60, // source height
-            0, // destination x
-            0, // destination y
-            imgObj.width, // destination width
-            60 // destination height
+
+          const imageData = new ImageData(
+            new Uint8ClampedArray(topImage.getRGBAData()),
+            topImage.width,
+            topImage.height
           );
+          ctx!.putImageData(imageData, 0, 0);
 
           // Convert canvas to blob
-          const blob = await new Promise((resolve) =>
+          const blob = await new Promise<Blob | null>((resolve) =>
             canvas.toBlob(resolve, "image/jpeg")
           );
-
-          // Create object URL
-          // @ts-ignore
-          const url = URL.createObjectURL(blob);
+          const url = URL.createObjectURL(blob!);
 
           // EXTRACT THE BOTTOM PART OF THE IMAGE
-
-          // Create a canvas element
-          const canvas2 = document.createElement("canvas");
           const croppedWidth = 520;
-          const croppedHeight = imgObj.height - 306; // original height - 206 - 100
+          const croppedHeight = image.height - 306;
 
-          // Set the canvas dimensions to match the cropped image dimensions
+          const bottomImage = image.crop({
+            x: 0,
+            y: 206,
+            width: croppedWidth,
+            height: croppedHeight,
+          }).grey();
+
+          // Create a canvas element for the bottom part
+          const canvas2 = document.createElement("canvas");
           canvas2.width = croppedWidth;
           canvas2.height = croppedHeight;
 
-          // Draw the ImageBitmap to the canvas
+          // Draw the processed image to the canvas
           const ctx2 = canvas2.getContext("2d");
-          ctx2!.drawImage(
-            imgObj.bitmap,
-            0, // source x
-            206, // source y
-            croppedWidth, // source width
-            croppedHeight, // source height
-            0, // destination x
-            0, // destination y
-            croppedWidth, // destination width
-            croppedHeight // destination height
-          );
+          if (ctx2) {
+            const imageData2 = new ImageData(
+              new Uint8ClampedArray(bottomImage.getRGBAData()),
+              bottomImage.width,
+              bottomImage.height
+            );
+            ctx2.putImageData(imageData2, 0, 0);
+          }
+          ctx2!.imageSmoothingEnabled = true;
+          ctx2!.imageSmoothingQuality = "high";
 
           // Convert canvas to blob
-          const blob2 = await new Promise((resolve) =>
+          const blob2 = await new Promise<Blob | null>((resolve) =>
             canvas2.toBlob(resolve, "image/jpeg")
           );
+          const url2 = blob2 ? URL.createObjectURL(blob2) : null;
 
-          // Create object URL
-          // @ts-ignore
-          const url2 = URL.createObjectURL(blob2);
-          console.log(url2);
+          // // download the image
+          // const a = document.createElement("a");
+          // a.href = url2!;
+          // a.download = "bottom-image.jpg";
+          // a.click();
+          // return;
 
           // OCR
           setLoadingMessage("Preparing scanner");
@@ -428,7 +466,7 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
 
           setLoadingMessage("Scanning your details");
           const { data } = await worker.recognize(url);
-          const { data: data2 } = await worker.recognize(url2);
+          const { data: data2 } = await worker.recognize(url2!);
 
           await worker.terminate();
 
@@ -564,11 +602,10 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
                 semester: studentInfo.semester ? studentInfo.semester : 0,
                 yearLevel: studentInfo.yearLevel ? studentInfo.yearLevel : 0,
                 type: schedule.blockNumber.length > 0 ? true : false,
-                block: schedule.blockNumber.length > 0 ? schedule.blockNumber : "",
+                block:
+                  schedule.blockNumber.length > 0 ? schedule.blockNumber : "",
               },
             }));
-
-            console.log("student into atm: ", newStudent);
 
             // we can now proceed to the next step, at least, since we have the basic data
             // alert the user that we have processed some but not all of the data

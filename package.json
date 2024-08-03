@@ -34,6 +34,7 @@
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.7.3",
     "dayjs": "^1.11.11",
+    "image-js": "^0.35.6",
     "ionicons": "^7.0.0",
     "jotai": "^2.8.0",
     "pdfjs-dist": "^4.5.136",
@@ -85,6 +86,7 @@
     "terser": "^5.4.0",
     "typescript": "^5.1.6",
     "vite": "^5.0.0",
+    "vite-plugin-pwa": "^0.20.1",
     "vitest": "^0.34.6"
   },
   "description": "An Ionic project"

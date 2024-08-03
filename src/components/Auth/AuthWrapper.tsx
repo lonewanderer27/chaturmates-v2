@@ -14,39 +14,44 @@ const AuthWrapper = (props: RouteProps) => {
   const { profile, isLoading } = useProfile();
   const [alert] = useIonAlert();
 
-  useEffect(() => {
-    if (profile !== undefined && isLoading === false) {
-      console.log("profile:", profile);
-      console.log("isLoading:", isLoading);
-      if (
-        profile?.student[0] === null ||
-        profile?.professor[0] === null ||
-        profile?.student[0]?.verified === false ||
-        profile?.professor[0]?.verified === false
-      ) {
-        console.log(
-          "student or professor profile not set up for this account!"
-        );
-        console.log("student: ", profile?.student[0]);
-        console.log("professor: ", profile?.professor[0]);
-        if (window.location.pathname.includes("/setup") == false) {
-          // they haven't set up their profile yet
-          alert({
-            header: "Profile not set up",
-            message: "You need to set up your profile before you can continue.",
-            buttons: [
-              {
-                text: "OK",
-                handler: () => {
-                  window.location.href = "/setup";
-                },
-              },
-            ],
-          });
-        }
-      }
-    }
-  }, [session, profile]);
+  // useEffect(() => {
+  //   if (profile !== null && isLoading === false) {
+  //     console.log("profile:", profile);
+  //     console.log("isLoading:", isLoading);
+  //     console.log("student: ", profile?.student[0]);
+  //     console.log("professor: ", profile?.professor[0]);
+
+  //     try {
+  //       if (
+  //         window.location.pathname.includes("/setup") == false &&
+  //         window.location.pathname.includes("/continue") == false
+  //       ) {
+  //         const student = profile!.student[0];
+  //         const professor = profile!.professor[0];
+  //       }
+  //     } catch (e) {
+  //       console.log(
+  //         "student or professor profile not set up for this account!"
+  //       );
+
+  //       if (window.location.pathname.includes("/setup") == false) {
+  //         // they haven't set up their profile yet
+  //         alert({
+  //           header: "Profile not set up",
+  //           message: "You need to set up your profile before you can continue.",
+  //           buttons: [
+  //             {
+  //               text: "OK",
+  //               handler: () => {
+  //                 window.location.href = "/setup";
+  //               },
+  //             },
+  //           ],
+  //         });
+  //       }
+  //     }
+  //   }
+  // }, [session, profile, isLoading]);
 
   if (session !== undefined && session !== null && profile !== undefined) {
     // we're authenticated, so we can show the tabs

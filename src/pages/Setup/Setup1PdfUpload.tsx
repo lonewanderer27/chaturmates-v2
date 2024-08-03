@@ -703,7 +703,7 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
         {loading === true && (
           <IonLoading
             isOpen={loading === true}
-            spinner="lines"
+            spinner="crescent"
             message={loadingMessage}
           />
         )}

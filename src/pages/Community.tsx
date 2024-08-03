@@ -1,5 +1,5 @@
 import { IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonToolbar } from '@ionic/react'
-import { notificationsOutline, personOutline, searchOutline, accessibilityOutline } from 'ionicons/icons'
+import { notificationsOutline, personOutline, searchOutline, accessibilityOutline, personCircleOutline } from 'ionicons/icons'
 
 import NavBtn from '../components/NavBtn'
 import Sidebar from '../components/Sidebar'
@@ -26,6 +26,7 @@ export default function Community() {
                 <NavBtn
                   route="community/me"
                   avatarUrl={student?.avatar_url}
+                  icon={personCircleOutline}
                 />
                 <NavBtn
                   route="community/search"

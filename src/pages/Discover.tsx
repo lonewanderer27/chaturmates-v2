@@ -7,7 +7,11 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from "@ionic/react";
-import { notificationsOutline, searchOutline } from "ionicons/icons";
+import {
+  notificationsOutline,
+  personCircleOutline,
+  searchOutline,
+} from "ionicons/icons";
 
 import AdminPostsGrid from "../components/DiscoverPage/AdminPostsGrid";
 import NavBtn from "../components/NavBtn";
@@ -60,9 +64,13 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
             >
               Chat-Ur-Meyts
             </IonText>
-            
+
             <IonButtons slot="end">
-              <NavBtn route="/discover/me" avatarUrl={student?.avatar_url} />
+              <NavBtn
+                route="/discover/me"
+                avatarUrl={student?.avatar_url}
+                icon={personCircleOutline}
+              />
               <NavBtn route="/discover/search" icon={searchOutline} />
               <NavBtn route="/discover/inbox" icon={notificationsOutline} />
             </IonButtons>

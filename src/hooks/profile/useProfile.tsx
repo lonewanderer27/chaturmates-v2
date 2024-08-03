@@ -22,24 +22,25 @@ export default function useProfile() {
         .single();
       const response = res.data;
 
-      if (
-        (res.data?.students.length === 0 ||
-          res.data?.professors.length === 0) &&
-        (alerted === false && rt.routeInfo.pathname.includes("/setup") == false)
-      ) {
-        alert({
-          header: "Profile not set up",
-          message: "You need to set up your profile before you can continue.",
-          buttons: [
-            {
-              text: "OK",
-              handler: () => {
-                window.location.href = "/setup";
-              },
-            },
-          ],
-        });
-        setAlerted(() => true);
+      if (res.data?.students.length === 0 && res.data?.professors.length === 0) {
+        if (rt.routeInfo.pathname.includes("/setup") == false && rt.routeInfo.pathname.includes("/continue") == false) {
+          if (alerted == false) {
+            alert({
+              backdropDismiss: false,
+              header: "Profile Incomplete",
+              message: "You need to complete your profile before you can continue.",
+              buttons: [
+                {
+                  text: "Okay",
+                  handler: () => {
+                    rt.push("/setup");
+                  },
+                },
+              ],
+            });
+            setAlerted(true);
+          }
+        }
       }
 
       console.log("profile response:", response);

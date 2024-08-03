@@ -444,7 +444,12 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
             checks.academicInfoNotFound = true;
           }
 
-          if (schedule.subjects.length === 0) {
+          if (schedule.subjects.length > 0) {
+            // TODO: Validate subjects and check if they exist in the database
+            // and perhaps add it to the student's subjects
+            // but we ain't data scientists so we don't know how to fix the OCR engine
+            // so we'll just leave it as is
+          } else {
             checks.subjectsNotFound = true;
           }
 

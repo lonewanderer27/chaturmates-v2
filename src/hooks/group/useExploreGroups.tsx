@@ -10,6 +10,7 @@ const useExploreGroups = () => {
         .select("*, group_members!group_members_group_id_fkey(*)")
         .eq("admin_uni_group", false)
         .eq("deleted", false)
+        .neq("name", "")
 
       // from the list, get all the group_members
       console.log("explore groups", res);

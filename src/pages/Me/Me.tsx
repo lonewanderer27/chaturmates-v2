@@ -25,7 +25,7 @@ import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
 import { RouteComponentProps } from "react-router";
 import useSelfStudent from "../../hooks/student";
 import useSession from "../../hooks/auth/useSession";
-import { pencilOutline } from "ionicons/icons";
+import { colorWandOutline, pencilOutline } from "ionicons/icons";
 import useSelfGroups from "../../hooks/student/useSelfGroups";
 import useSelfFollowing from "../../hooks/student/useSelfFollowing";
 import { useToggleTheme } from "../../hooks/useToggleTheme";
@@ -51,6 +51,10 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
     rt.push(rt.routeInfo.pathname + "/update");
   };
 
+  const handleRecommendation = () => {
+    rt.push("/recommend");
+  }
+
   useIonViewWillEnter(() => {
     hideTabBar();
   });
@@ -64,6 +68,9 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
               <IonBackButton defaultHref="/community" text={""} />
             </IonButtons>
             <IonButtons slot="end">
+              <IonButton fill="clear" onClick={handleRecommendation}>
+                <IonIcon slot="start" src={colorWandOutline} />
+              </IonButton>
               <IonButton fill="clear" onClick={handleUpdate}>
                 {/* <IonIcon slot="start" src={pencilOutline} /> */}
                 <IonLabel>Edit</IonLabel>

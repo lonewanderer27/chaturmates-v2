@@ -16,7 +16,7 @@ const MeRoute: React.FC<RouteComponentProps> = ({ match }) => {
 
   return (
     <IonRouterOutlet id="me">
-      <Route path={match.url} component={Community} exact />
+      {/* <Route path={match.url} component={Me} exact /> */}
       <Route path={`${match.url}`} component={Me} exact />
       <Route path={`${match.url}/groups`} component={MeGroups} exact />
       <Route path={`${match.url}/following`} component={MeFollowing} exact />

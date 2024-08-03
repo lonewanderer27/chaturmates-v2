@@ -336,10 +336,10 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
           </IonRow>
           <IonRow>
             <IonCol>
-              <IonList>
+              <IonList className="rounded-xl">
                 {getValues("classes")?.map((c, index) => (
                   <IonItemSliding key={"class:" + index}>
-                    <IonItem>
+                    <IonItem className="rounded-xl">
                       <IonLabel>
                         <h3>
                           {subjects?.find((s) => s.id === c.subjectId)?.title}

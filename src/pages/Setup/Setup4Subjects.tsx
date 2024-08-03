@@ -181,7 +181,7 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
     console.log(getValues());
   };
 
-  const { handleNext } = useSetup();
+  const { handleNext, handleUpload } = useSetup();
   const [show, hide] = useIonLoading();
   const handlePageNext: SubmitHandler<NewStudentTypeSteps["step3"]> = async (
     data
@@ -193,8 +193,9 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
       step3: data,
     }));
 
-    // route to next page
-    handleNext();
+    // we're at the last step
+    // so we can now submit everything to the database
+    handleUpload();
   };
 
   const {
@@ -275,7 +276,7 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
 
     // success
     setValue("classes", [
-      ...(getValues("classes") ?? []),
+      ...getValues("classes") ?? [],
       {
         subjectId: getValues2("subjectId"),
         room: getValues2("room")!,
@@ -286,7 +287,7 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
         friday: getValues2("daysofweek").includes("friday"),
         saturday: getValues2("daysofweek").includes("saturday"),
         sunday: getValues2("daysofweek").includes("sunday"),
-        startTime: getValues2("startTime")!,
+        startTime: dayjs(getValues2("startTime")).format()!,
         endTime: getValues2("endTime")!,
       },
     ]);

@@ -4,10 +4,11 @@ import useSession from "../auth/useSession";
 import { useState, useEffect } from "react";
 import { useSteps } from "../useSteps";
 import { useHistory } from "react-router";
-import { AcademicYearType, CourseType } from "../../types";
+import { AcademicYearType, ClassType, CourseType } from "../../types";
 import client from "../../client";
 import { useAtom } from "jotai";
 import { newStudentAtom } from "../../atoms/student";
+import dayjs from "dayjs";
 
 export default function useSetup() {
   const [progress, setProgress] = useState<SetupProgressType["progress"]>([
@@ -171,9 +172,11 @@ export default function useSetup() {
         verified: true,
         year_level: newStudent.step2.yearLevel!,
       })
-      .select("*");
+      .select("*")
+      .single();
 
     if (error) {
+      console.error(error);
       showAlert({
         header: "Error",
         message:
@@ -183,6 +186,55 @@ export default function useSetup() {
       });
       return;
     }
+
+    const classesRaw = newStudent.step3.classes;
+    // create the classes object needed by supabase
+    const classes = classesRaw.map((c) => {
+      return {
+        student_id: data.id,
+        subject_id: c.subjectId,
+        start_time: dayjs(c.startTime).format("HH:mm:ss"),
+        end_time: dayjs(c.endTime).format("HH:mm:ss"),
+        room: c.room,
+        monday: c.monday,
+        tuesday: c.tuesday,
+        wednesday: c.wednesday,
+        thursday: c.thursday,
+        friday: c.friday,
+        saturday: c.saturday,
+        sunday: c.sunday,
+      };
+    });
+    console.log(classes);
+
+    // upload the classes
+    const { data: classesData, error: classesError } = await client
+      .from("classes")
+      .insert(classes)
+      .select("*");
+    console.log("added classes to db: ", classesData);
+
+    if (classesError) {
+      console.error(error);
+
+      // since there is an error, we should delete the student that we just created
+      const { error: deleteError } = await client
+        .from("students")
+        .delete()
+        .eq("id", data.id);
+
+      showAlert({
+        header: "Error",
+        message:
+          "An error occurred while uploading your classes. Please try again. \n\n" +
+          classesError.message,
+        buttons: ["OK"],
+      });
+      return;
+    }
+
+    // go to the finish page
+    rt.push("/setup/finish");
   };
 
   return {

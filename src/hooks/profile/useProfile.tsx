@@ -25,7 +25,7 @@ export default function useProfile() {
       if (
         (res.data?.students.length === 0 ||
           res.data?.professors.length === 0) &&
-        (alerted === false && rt.routeInfo.pathname !== "/setup")
+        (alerted === false && rt.routeInfo.pathname.includes("/setup") == false)
       ) {
         alert({
           header: "Profile not set up",

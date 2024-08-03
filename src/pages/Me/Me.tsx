@@ -111,21 +111,27 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
             </IonGrid>
           </IonCardContent>
         </IonCard>
-        <IonCard className="mt-4 mx-0 rounded-xl bg-slate-200 shadow-none">
-          <IonCardContent>
-            <div>
-              <IonText className="text-xs font-bold" color="dark">
-                BIO
-              </IonText>
-              <br />
-            </div>
-            <div className="">
-              <IonText className="text-sm" color="dark">
-                {student?.description}
-              </IonText>
-            </div>
-          </IonCardContent>
-        </IonCard>
+        {student?.description && (
+          <IonCard className="mt-4 mx-0 rounded-xl bg-slate-200 shadow-none">
+            <IonCardContent>
+              {student?.description && (
+                <>
+                  <div>
+                    <IonText className="text-xs font-bold" color="dark">
+                      BIO
+                    </IonText>
+                    <br />
+                  </div>
+                  <div className="">
+                    <IonText className="text-sm" color="dark">
+                      {student?.description}
+                    </IonText>
+                  </div>
+                </>
+              )}
+            </IonCardContent>
+          </IonCard>
+        )}
       </IonContent>
       <IonFooter>
         <IonToolbar className="p-2">

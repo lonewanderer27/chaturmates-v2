@@ -53,7 +53,7 @@ export type Database = {
           id: number
           monday: boolean
           professor_id: number | null
-          room_id: number
+          room: string
           saturday: boolean
           start_time: string
           student_id: number
@@ -71,7 +71,7 @@ export type Database = {
           id?: number
           monday: boolean
           professor_id?: number | null
-          room_id: number
+          room: string
           saturday: boolean
           start_time: string
           student_id: number
@@ -89,7 +89,7 @@ export type Database = {
           id?: number
           monday?: boolean
           professor_id?: number | null
-          room_id?: number
+          room?: string
           saturday?: boolean
           start_time?: string
           student_id?: number

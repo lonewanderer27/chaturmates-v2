@@ -62,7 +62,7 @@ const GroupPreview: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
           <IonToolbar>
             <IonButtons slot="start">
               <IonBackButton
-                defaultHref={"/" + rt.routeInfo.pushedByRoute}
+                defaultHref={"/" + rt.routeInfo.pathname.split("/")[1]}
                 text=""
               />
             </IonButtons>

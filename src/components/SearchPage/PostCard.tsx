@@ -38,14 +38,14 @@ export default function PostCard(
       onClick={handleClick}
     >
       <IonRow>
-        <IonCol size="1">
+        {props.group?.admin_uni_group === false && <IonCol size="1">
           <IonIcon
             className="postIcon ml-[-10px] text-3xl"
             src={props.icon}
           ></IonIcon>
-        </IonCol>
-        <IonCol className="flex ml-[10px] content-center">
-          <IonText>
+        </IonCol>}
+        <IonCol className="flex content-center">
+          <IonText className="ml-[-5px]">
             <span className="text-xl font-bold text-ellipsis line-clamp-1 my-auto">
               {props.group?.name ?? "Post"}
             </span>

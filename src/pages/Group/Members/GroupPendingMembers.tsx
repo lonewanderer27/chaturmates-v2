@@ -10,6 +10,7 @@ import {
   IonItem,
   IonLabel,
   IonList,
+  IonLoading,
   IonPage,
   IonRow,
   IonText,
@@ -23,10 +24,11 @@ import { FC } from "react";
 import { RouteComponentProps } from "react-router";
 import { hideTabBar } from "../../../utils/TabBar";
 import useGroupMembers from "../../../hooks/group/useGroupMembers";
-import useProtect from "../../../hooks/group/useProtect";
 import client from "../../../client";
 import { personCircleOutline } from "ionicons/icons";
 import useSelfStudentLite from "../../../hooks/student/useSelfStudentLite";
+import useAmIAMember from "../../../hooks/group/useAmIAMember";
+import GroupPreview from "../GroupPreview";
 
 type GroupPendingMembersPageProps = {
   vanity_url: string;
@@ -34,15 +36,13 @@ type GroupPendingMembersPageProps = {
 
 const GroupPendingMembers: FC<
   RouteComponentProps<GroupPendingMembersPageProps>
-> = ({ match }) => {
-  const { data, refetch, group } = useGroupMembers(match.params.vanity_url, false);
+> = (p) => {
+  const { data, refetch, group } = useGroupMembers(p.match.params.vanity_url, false);
   const { profile, student } = useSelfStudentLite();
 
   useIonViewWillEnter(() => {
     hideTabBar();
   });
-
-  useProtect(match.params.vanity_url);
 
   const handleApprove = async (event: React.MouseEvent<HTMLIonButtonElement, MouseEvent>, studentId: number, groupId: number) => {
     // prevent bubbling
@@ -88,6 +88,17 @@ const GroupPendingMembers: FC<
       return false;
     }
   };
+
+  const AIM = useAmIAMember(p.match.params.vanity_url);
+  if (AIM.isLoading) {
+    return <IonLoading isOpen={true} />;
+  }
+
+  if (AIM.isLoading === false) {
+    if (AIM.data === null || AIM.data?.approved === false) {
+      return <GroupPreview {...p} />
+    }
+  }
 
   return (
     <IonPage>

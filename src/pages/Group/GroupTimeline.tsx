@@ -12,6 +12,7 @@ import {
   IonImg,
   IonItem,
   IonLabel,
+  IonLoading,
   IonPage,
   IonRow,
   IonThumbnail,
@@ -35,18 +36,17 @@ import {
   shareOutline,
   shareSocialOutline,
 } from "ionicons/icons";
-import useProtect from "../../hooks/group/useProtect";
 import useAmIAMember from "../../hooks/group/useAmIAMember";
+import GroupPreview from "./GroupPreview";
 
 type GroupTimelinePageProps = {
   vanity_url: string;
 };
 
-const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
-  match,
-}) => {
-  const { data: infoLite } = useGroupInfoLite(match.params.vanity_url);
-  const { data } = useGroupMemsCount(match.params.vanity_url);
+const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = (p) => {
+  const { data: infoLite } = useGroupInfoLite(p.match.params.vanity_url);
+  const { data } = useGroupMemsCount(p.match.params.vanity_url);
+  
 
   const isValidUrl = useMemo(() => {
     try {
@@ -65,7 +65,16 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
     rt.push(rt.routeInfo.pathname + "/info");
   }
 
-  useProtect(match.params.vanity_url);
+  const AIM = useAmIAMember(p.match.params.vanity_url);
+  if (AIM.isLoading) {
+    return <IonLoading isOpen={true} />;
+  }
+
+  if (AIM.isLoading === false) {
+    if (AIM.data === null || AIM.data?.approved === false) {
+      return <GroupPreview {...p} />
+    }
+  }
 
   return (
     <IonPage>

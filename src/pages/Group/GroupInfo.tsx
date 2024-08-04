@@ -10,6 +10,7 @@ import {
   IonHeader,
   IonIcon,
   IonLabel,
+  IonLoading,
   IonPage,
   IonRow,
   IonSpinner,
@@ -21,21 +22,21 @@ import { FC } from "react";
 import { RouteComponentProps } from "react-router";
 import useGroupMemsCount from "../../hooks/group/useGroupMemsCount";
 import useGroupInfoLite from "../../hooks/group/useGroupInfoLite";
-import useProtect from "../../hooks/group/useProtect";
 import { Share } from '@capacitor/share';
 import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
 import { peopleOutline, shareSocialOutline } from "ionicons/icons";
 import useAmIAdmin from "../../hooks/group/useAmIAdmin";
 import dayjs from "dayjs";
+import useAmIAMember from "../../hooks/group/useAmIAMember";
+import GroupPreview from "./GroupPreview";
 
 type GroupInfoPageProps = {
   vanity_url: string;
 };
 
-const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = ({ match }) => {
-  const { data: infoLite } = useGroupInfoLite(match.params.vanity_url);
-  const { data: AmIAdmin, isLoading: AmIAdminLoading } = useAmIAdmin(match.params.vanity_url);
-  useProtect(match.params.vanity_url);
+const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
+  const { data: infoLite } = useGroupInfoLite(p.match.params.vanity_url);
+  const { data: AmIAdmin, isLoading: AmIAdminLoading } = useAmIAdmin(p.match.params.vanity_url);
 
   const rt = useIonRouter();
   const handleShare = async () => {
@@ -54,7 +55,7 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = ({ match }) => {
       "/" +
       rt.routeInfo.pathname.split("/")[1] +
       "/group/vu/" +
-      match.params.vanity_url +
+      p.match.params.vanity_url +
       "/members",
       "forward",
       "push"
@@ -65,12 +66,23 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = ({ match }) => {
       "/" +
       rt.routeInfo.pathname.split("/")[1] +
       "/group/vu/" +
-      match.params.vanity_url +
+      p.match.params.vanity_url +
       "/members/pending",
       "forward",
       "push"
     );
   };
+
+  const AIM = useAmIAMember(p.match.params.vanity_url);
+  if (AIM.isLoading) {
+    return <IonLoading isOpen={true} />;
+  }
+
+  if (AIM.isLoading === false) {
+    if (AIM.data === null || AIM.data?.approved === false) {
+      return <GroupPreview {...p} />
+    }
+  }
 
   return (
     <IonPage>

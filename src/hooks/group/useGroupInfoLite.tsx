@@ -7,7 +7,7 @@ const useGroupInfoLite = (vanity_url?: string) => {
     queryFn: async () => {
       const groupRes = await client
         .from("groups")
-        .select("name, description, avatar_url, cover_url, id")
+        .select("name, description, avatar_url, cover_url, id, created_at, vanity_id")
         .eq("vanity_id", vanity_url!)
         .single();
 

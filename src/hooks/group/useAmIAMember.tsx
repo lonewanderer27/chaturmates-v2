@@ -6,7 +6,7 @@ import client from '../../client';
 const useAmIAMember = (group_vanity_id: string) => {
   const { profile } = useSelfStudentLite();
   const query = useQuery({
-    queryKey: [group_vanity_id, "am_i_member"],
+    queryKey: [group_vanity_id, "am_i_member", profile?.id],
     queryFn: async () => {
       console.log("am i member", group_vanity_id, profile?.id);
 

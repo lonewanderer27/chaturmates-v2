@@ -70,7 +70,6 @@ import RecommendRoute from "./routes/RecommendRoute";
 import NotFound from "./routes/NotFound";
 import MeRoute from "./routes/MeRoute";
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { Preferences } from "@capacitor/preferences";
 import AccessibilitySettings from "./components/AccessibilitySettings";
 import useDraggableFab from "./hooks/useDraggableFab";
 
@@ -82,6 +81,7 @@ setupIonicReact({
 export const qClient = new QueryClient();
 const App = () => {
   const { fabRef } = useDraggableFab();
+  const accessibilityModalRef = useRef<HTMLIonInputElement>(null);
 
   return (
     <QueryClientProvider client={qClient}>
@@ -158,10 +158,9 @@ const App = () => {
             vertical="bottom"
             horizontal="end"
           >
-            <IonFabButton size="small">
+            <IonFabButton size="small" id="open-modal">
               <IonIcon
                 size="small"
-                id="open-modal"
                 icon={accessibilitySharp}
               ></IonIcon>
             </IonFabButton>

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { FC, RefObject, useRef } from 'react';
 import {
   IonModal,
   IonContent,
@@ -12,7 +12,7 @@ import {
 } from '@ionic/react';
 import { useToggleTheme } from '../hooks/useToggleTheme'; 
 
-const AccessibilitySettings: React.FC = () => {
+const AccessibilitySettings: FC = () => {
   const [darkMode, toggleDarkMode] = useToggleTheme('darkModeActivated', 'ion-palette-dark');
   const [highContrastMode, toggleHighContrastMode] = useToggleTheme('highContrastModeActivated', 'ion-palette-high-contrast');
   const [increaseFontMode, toggleFontMode] = useToggleTheme('increaseFontModeActivated', 'fontSize20');
@@ -23,10 +23,10 @@ const AccessibilitySettings: React.FC = () => {
   };
 
   return (
-    <IonModal id="settings-modal" ref={modal} trigger="open-modal">
+    <IonModal initialBreakpoint={0.3} breakpoints={[0, 0.3]} id="settings-modal" ref={modal} trigger="open-modal">
       <IonContent>
         <IonToolbar>
-          <IonTitle>Accessibility</IonTitle>
+          <IonTitle className='mt-1'>Accessibility</IonTitle>
           <IonButtons slot="end">
             <IonButton color="dark" onClick={() => dismiss()}>
               Close

@@ -1,21 +1,32 @@
 import {
+  IonAvatar,
   IonBackButton,
+  IonButton,
   IonButtons,
+  IonCol,
   IonContent,
   IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
   IonList,
   IonPage,
+  IonRow,
+  IonText,
   IonTitle,
   IonToolbar,
+  useIonRouter,
   useIonViewWillEnter,
 } from "@ionic/react";
 
 import { FC } from "react";
 import { RouteComponentProps } from "react-router";
-import StudentItem from "../../../components/SearchPage/StudentItem";
 import { hideTabBar } from "../../../utils/TabBar";
 import useGroupMembers from "../../../hooks/group/useGroupMembers";
 import useProtect from "../../../hooks/group/useProtect";
+import client from "../../../client";
+import { personCircleOutline } from "ionicons/icons";
+import useSelfStudentLite from "../../../hooks/student/useSelfStudentLite";
 
 type GroupPendingMembersPageProps = {
   vanity_url: string;
@@ -24,13 +35,59 @@ type GroupPendingMembersPageProps = {
 const GroupPendingMembers: FC<
   RouteComponentProps<GroupPendingMembersPageProps>
 > = ({ match }) => {
-  const { data } = useGroupMembers(match.params.vanity_url, true);
+  const { data, refetch, group } = useGroupMembers(match.params.vanity_url, false);
+  const { profile, student } = useSelfStudentLite();
 
   useIonViewWillEnter(() => {
     hideTabBar();
   });
 
   useProtect(match.params.vanity_url);
+
+  const handleApprove = async (event: React.MouseEvent<HTMLIonButtonElement, MouseEvent>, studentId: number, groupId: number) => {
+    // prevent bubbling
+    event.stopPropagation();
+
+    const res = await client
+      .from("group_members")
+      .update({
+        approved: true,
+      })
+      .eq("group_id", groupId)
+      .eq("student_id", studentId);
+
+    if (res.error) {
+      console.error(res.error);
+      return;
+    }
+
+    // refetch our group members
+    refetch();
+  };
+
+  const rt = useIonRouter();
+  const handleGoToStudent = (studentId: string, me: boolean) => {
+    // get the main pathname like /community
+    const mainPathname = rt.routeInfo.pathname.split("/")[1];
+
+    // if me is true, then we are this person
+    if (me) {
+      rt.push("/" + mainPathname + "/me");
+      return;
+    }
+
+    // otherwise we are looking at someone else
+    rt.push("/" + mainPathname + "/student/id/" + studentId);
+  };
+
+  const isValidUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  };
 
   return (
     <IonPage>
@@ -47,10 +104,36 @@ const GroupPendingMembers: FC<
             <IonTitle>Pending Members ({data?.length ?? "-"})</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonList>
+        <IonList className="mx-[-15px]">
           {data?.map((member) => {
-            const klasmeyt = member.students;
-            return <StudentItem student={klasmeyt!} key={klasmeyt!.id} />;
+            const cs = member.students;
+            // find it if it's me
+            const me = cs!.id === student?.id;
+            return (
+              <IonItem lines="inset" onClick={() => handleGoToStudent(member.student_id + "", me)} className="cursor-pointer" key={member.student_id}>
+                {cs!.avatar_url && isValidUrl(cs!.avatar_url) ? (
+                  <IonAvatar slot="start" className="mr-3 studentItemLogo">
+                    <img className="studentItemLogo" src={cs!.avatar_url} />
+                  </IonAvatar>
+                ) : (
+                  <IonIcon
+                    className="studentItemIcon"
+                    slot="start"
+                    icon={personCircleOutline}
+                  ></IonIcon>
+                )}
+                <IonRow className="ion-align-items-center ml-[-5px]">
+                  <IonCol>
+                    <IonText className="studentItemName truncate font-poppins">
+                      {cs!.full_name}
+                    </IonText>
+                  </IonCol>
+                </IonRow>
+                <IonButton slot="end" onClick={(event) => handleApprove(event, cs!.id, group!.id)}>
+                  <IonLabel>Approve</IonLabel>
+                </IonButton>
+              </IonItem>
+            );
           })}
         </IonList>
       </IonContent>

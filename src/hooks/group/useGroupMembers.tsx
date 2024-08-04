@@ -1,21 +1,24 @@
+import { useState } from "react";
 import client from "../../client";
 import { useQuery } from "@tanstack/react-query";
+import { GroupType } from "../../types";
 
 export default function useGroupMembers(vanity_url?: string, approved?: boolean) {
+  const [group, setGroup] = useState<GroupType | null>(null);
   const q = useQuery({
     queryKey: ["group_members", vanity_url, approved],
     queryFn: async () => {
       // Fetch the group_id using the vanity_url from the groups table
       const groupRes = await client
         .from("groups")
-        .select("id")
+        .select("*")
         .eq("vanity_id", vanity_url!)
         .single();
 
       if (!groupRes.data) {
         throw new Error("Group not found");
       }
-
+      setGroup(groupRes.data);
       const group_id = groupRes.data.id;
 
       // Fetch the group members using the group_id
@@ -30,5 +33,8 @@ export default function useGroupMembers(vanity_url?: string, approved?: boolean)
     enabled: !!vanity_url,
   });
 
-  return q;
+  return {
+    ...q,
+    group: group
+  }
 }

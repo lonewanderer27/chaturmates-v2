@@ -11,7 +11,7 @@ const AdminPostCard = (props: {
   const handleClick = () => {
     console.log("clicked");
     rt.push(
-      `${rt.routeInfo.pathname}/group/vu/${props.group?.vanity_id}/post/${props.post?.id}`,
+      `/${rt.routeInfo.pathname.split("/")[1]}/group/vu/${props.group?.vanity_id}/post/${props.post?.id}`,
       "forward",
       "replace"
     );

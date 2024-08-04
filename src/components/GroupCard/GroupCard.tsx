@@ -1,5 +1,4 @@
 import "./GroupCard.css";
-import { Avatar } from "flowbite-react";
 import {
   IonAvatar,
   IonBadge,
@@ -44,6 +43,7 @@ export default function GroupCard(props: GroupCardProps) {
       props.group.group_members.filter((m) => m.approved === true)
     );
   }, [props.group.group_members]);
+  console.log("approvedMembers", approvedMembers);
 
   return (
     <IonCol size="6" className="flex flex-column w-full cursor-pointer">
@@ -65,7 +65,7 @@ export default function GroupCard(props: GroupCardProps) {
             {props.group.name}
           </IonText>
         </IonRow>
-        <Avatar.Group>
+        {/* <Avatar.Group>
           {props.group.group_members.map((m, i) => {
             if (isValidUrl(m.avatar_url + "")) {
               return (
@@ -80,7 +80,30 @@ export default function GroupCard(props: GroupCardProps) {
           {approvedMembers.length > 4 && (
             <Avatar.Counter className="h-7 w-7" total={approvedMembers.length - 4} />
           )}
-        </Avatar.Group>
+        </Avatar.Group> */}
+        <div className="avatar-group -space-x-3 rtl:space-x-reverse ml-[-2px]">
+          {approvedMembers.map((m, i) => {
+            if (i <= 5)
+              return (
+                <div className="avatar">
+                  <div className="w-6 h-auto">
+                    {isValidUrl(m.avatar_url + "") ? (
+                      <img src={m.avatar_url + ""} />
+                    ) : (
+                      <IonIcon className="text-3xl m-[-3px]" icon={personCircleOutline} />
+                    )}
+                  </div>
+                </div>
+              )
+          })}
+          {approvedMembers.length > 6 && <div className="avatar placeholder">
+            <div className="bg-neutral text-neutral-content w-6 h-auto">
+              <IonText>
+                <span>+{approvedMembers.length - 6}</span>
+              </IonText>
+            </div>
+          </div>}
+        </div>
       </IonCard>
     </IonCol>
   );

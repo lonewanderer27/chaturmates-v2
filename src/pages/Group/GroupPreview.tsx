@@ -21,6 +21,7 @@ import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
 import useGroupInfoLite from "../../hooks/group/useGroupInfoLite";
 import useGroupMemsCount from "../../hooks/group/useGroupMemsCount";
 import useMePendingRequest from "../../hooks/group/useMePendingRequest";
+import dayjs from "dayjs";
 
 type GroupTimelinePageProps = {
   vanity_url: string;
@@ -41,9 +42,15 @@ const GroupPreview: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
 
   const rt = useIonRouter();
   const handleMembers = () => {
-    // go to member's page
-    // replace the /preview with /members
-    rt.push(rt.routeInfo.pathname.replace("/preview", "") + "/members/");
+    rt.push(
+      "/" +
+      rt.routeInfo.pathname.split("/")[1] +
+      "/group/vu/" +
+      match.params.vanity_url +
+      "/members",
+      "forward",
+      "push"
+    );
   };
 
   console.log("pushed by: ", rt.routeInfo.pushedByRoute);
@@ -106,6 +113,21 @@ const GroupPreview: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
                 )}
               </IonRow>
             </IonGrid>
+          </IonCardContent>
+        </IonCard>
+        <IonCard className="mt-4 mx-0 rounded-xl bg-slate-200 shadow-none">
+          <IonCardContent>
+            <div>
+              <IonText className="text-xs font-bold" color="dark">
+                CREATED ON
+              </IonText>
+              <br />
+            </div>
+            <div className="">
+              <IonText className="text-sm" color="dark">
+                {dayjs(infoLite?.created_at).format("MMMM D, YYYY")}
+              </IonText>
+            </div>
           </IonCardContent>
         </IonCard>
         <IonCard className="mt-4 mx-0 rounded-xl bg-slate-200 shadow-none">

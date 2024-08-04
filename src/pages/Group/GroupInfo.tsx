@@ -26,6 +26,7 @@ import { Share } from '@capacitor/share';
 import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
 import { peopleOutline, shareSocialOutline } from "ionicons/icons";
 import useAmIAdmin from "../../hooks/group/useAmIAdmin";
+import dayjs from "dayjs";
 
 type GroupInfoPageProps = {
   vanity_url: string;
@@ -146,6 +147,21 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = ({ match }) => {
                 )}
               </IonRow> */}
             </IonGrid>
+          </IonCardContent>
+        </IonCard>
+        <IonCard className="mt-4 mx-0 rounded-xl bg-slate-200 shadow-none">
+          <IonCardContent>
+            <div>
+              <IonText className="text-xs font-bold" color="dark">
+                CREATED ON
+              </IonText>
+              <br />
+            </div>
+            <div className="">
+              <IonText className="text-sm" color="dark">
+                {dayjs(infoLite?.created_at).format("MMMM D, YYYY")}
+              </IonText>
+            </div>
           </IonCardContent>
         </IonCard>
         <IonCard className="mt-4 mx-0 rounded-xl bg-slate-200 shadow-none">

@@ -3,7 +3,7 @@ import client from "../../client";
 export async function getGroupPostById(post_id: string) {
   const post = await client
     .from("group_posts")
-    .select("*, groups!group_posts_group_id_fkey(*)")
+    .select("*, groups!group_posts_group_id_fkey(*), student:students(*)")
     .eq("id", post_id)
     .single();
 

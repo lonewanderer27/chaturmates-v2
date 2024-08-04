@@ -51,6 +51,7 @@ import useHideTabs from "../../hooks/useHideTabs";
 import { useQuery } from "@tanstack/react-query";
 import useSelfStudent from "../../hooks/student";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Share } from "@capacitor/share";
 
 type GroupPostPageParams = {
   vanity_url: string;
@@ -80,6 +81,18 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
     },
     enabled: post_id !== undefined,
   });
+
+  const handleShare = async () => {
+    // share the url of this post
+    // along with short snippet of the content
+    // and the title of the post
+    await Share.share({
+      title: pquery.data?.title + "",
+      text: pquery.data?.content!.substring(0, 100) + "...",
+      url: window.location.href,
+      dialogTitle: "Share this post",
+    });
+  };
 
   const timestamp = useMemo(() => {
     if (pquery.data?.created_at) {
@@ -264,7 +277,7 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
               <IonButton className="ml-4" disabled>
                 <IonIcon icon={heartOutline} />
               </IonButton>
-              <IonButton className="ml-4" disabled>
+              <IonButton className="ml-4" onClick={handleShare}>
                 <IonIcon icon={shareSocialOutline} />
               </IonButton>
             </IonButtons>
@@ -279,10 +292,7 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
             {timestamp.toDateString()} {timestamp.getHours()}:
             {timestamp.getMinutes()}
           </IonCardSubtitle>
-          {/* Display the user that posted it here */}
-          {/* <div className='my-10'>
-            
-          </div> */}
+          {/* TODO: Display the user that posted it here */}
           {pquery.data?.image_url && <IonImg src={pquery.data?.image_url} />}
           {pquery.data?.content && (
             <IonCardContent className="px-0 pb-0 font-poppins">

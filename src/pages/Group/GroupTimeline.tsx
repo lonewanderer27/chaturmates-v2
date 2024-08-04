@@ -61,6 +61,9 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
   const handleMembers = () => {
     rt.push(rt.routeInfo.pathname + "/members");
   };
+  const handleInfo = () => {
+    rt.push(rt.routeInfo.pathname + "/info");
+  }
 
   useProtect(match.params.vanity_url);
 
@@ -72,11 +75,11 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
             <IonButtons slot="start">
               <IonBackButton defaultHref="/community" text="" />
             </IonButtons>
-            <IonButtons slot="end">
+            {/* <IonButtons slot="end">
               <IonButton>
                 <IonIcon icon={shareSocialOutline} />
               </IonButton>
-            </IonButtons>
+            </IonButtons> */}
           </IonToolbar>
         </IonHeader>
         <IonItem lines="none" className="mx-[-10px]">
@@ -99,10 +102,10 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
           </IonLabel>
         </IonItem>
         <div className="my-3">
-          <IonChip>
+          {/* <IonChip>
             <IonIcon icon={chatbubbleOutline} />
             <IonLabel>Chat</IonLabel>
-          </IonChip>
+          </IonChip> */}
           <IonChip onClick={handleMembers}>
             <IonIcon icon={peopleOutline} />
             <IonLabel>Members</IonLabel>
@@ -111,7 +114,7 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
             <IonIcon icon={listOutline} />
             <IonLabel>Rules</IonLabel>
           </IonChip> */}
-          <IonChip>
+          <IonChip onClick={handleInfo}>
             <IonIcon icon={informationOutline} />
             <IonLabel>About</IonLabel>
           </IonChip>

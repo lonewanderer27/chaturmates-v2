@@ -85,7 +85,7 @@ export default function Continue() {
               Continue with Email
               <IonIcon slot="start" src={mailOutline} />
             </IonButton>
-            {!Capacitor.isNativePlatform() && <IonButton
+            {Capacitor.isNativePlatform() === false && <IonButton
               onClick={handleGoogle}
               expand="block"
               fill="clear"

@@ -9,6 +9,7 @@ import useGoogle from "../hooks/auth/useGoogle";
 import useSession from "../hooks/auth/useSession";
 import { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Capacitor } from "@capacitor/core";
 
 export const formSchema = object().shape({
   email: string().email().required().label("Email").matches(/^[a-zA-Z0-9._%+-]+@adamson\.edu\.ph$/, "Must be an Adamson mail"),
@@ -84,7 +85,7 @@ export default function Continue() {
               Continue with Email
               <IonIcon slot="start" src={mailOutline} />
             </IonButton>
-            <IonButton
+            {!Capacitor.isNativePlatform() && <IonButton
               onClick={handleGoogle}
               expand="block"
               fill="clear"
@@ -93,7 +94,7 @@ export default function Continue() {
               color="light">
               <IonIcon slot="start" icon={logoGoogle} />
               Continue with Google
-            </IonButton>
+            </IonButton>}
           </div>
           <IonText color="light">
             By continuing, you confirm that you agree to our <span className="underline" onClick={handleTermsOfService}>Terms of Service</span> and <span className="underline" onClick={handlePrivacyPolicy}>Privacy Policy</span>.

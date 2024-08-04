@@ -16,9 +16,13 @@ import { useMemo } from "react";
 import useSelfStudent from "../../hooks/student";
 import { GroupType } from "../../types";
 import useAmIAMember from "../../hooks/group/useAmIAMember";
+import { ExpandedGroupMemberType } from "../../services/groups";
 
 export default function GroupItem(props: {
-  group: GroupType;
+  group: GroupType & {
+    memberCount?: number;
+    group_members: ExpandedGroupMemberType[];
+  };
   icon?: string;
   buttonLabel?: string;
   hideButton?: boolean;
@@ -78,10 +82,10 @@ export default function GroupItem(props: {
           <IonText className="groupName truncate font-poppins">
             {props.group.name}
           </IonText>
-          {/* <br />
+          <br />
           <IonText className="groupCount text-sm" color="medium">
-            {props.group.group_members.length} Members
-          </IonText> */}
+            {props.group.group_members.filter(m => m.approved).length} Members
+          </IonText>
         </IonCol>
       </IonRow>
       {props.hideButton === false && (

@@ -263,9 +263,9 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
   };
 
   return (
-    <IonPage id="sidebar-content">
+    <IonPage>
       <IonContent>
-        <IonHeader collapse="condense">
+        <IonHeader collapse="condense" className="px-2 pt-2">
           <IonToolbar className="px-3">
             <IonButtons slot="start">
               <IonBackButton
@@ -283,7 +283,7 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <IonCard className="rounded-3xl bg-slate-100 p-6 mx-[-3px] shadow-none">
+        <IonCard className="rounded-3xl p-6 mx-[-3px] mt-0 shadow-none" color="light">
           <IonCardSubtitle>{pquery.data?.groups?.name}</IonCardSubtitle>
           <IonCardTitle className="text-lg font-poppins">
             {pquery.data?.title}
@@ -303,7 +303,7 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
           )}
         </IonCard>
         <IonRow className="p-4">
-          <IonCol className=" flex items-center justify-start py-0">
+          <IonCol className=" flex items-center mt-0 justify-start py-0">
             <IonIcon src={chatboxOutline} className="text-xl" />{" "}
             <IonText className="ml-2">{cquery.data?.length ?? "-"}</IonText>
           </IonCol>
@@ -319,7 +319,7 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
           </IonCol>
         </IonRow>
         {cquery.data && cquery.data.length > 0 && (
-          <IonCard className="rounded-3xl bg-slate-100 p-6 mx-[-3px] mb-6 shadow-none">
+          <IonCard className="rounded-3xl mt-0 p-6 mx-[-3px] mb-6 shadow-none" color="light">
             {cquery.data.map((comment) => (
               <GroupPostComment
                 key={comment.id}

@@ -99,6 +99,8 @@ const App = () => {
                   <Route path="/recommend" component={RecommendRoute} />
                   <Route path="/inbox" component={Inbox} />
                   <Route path="/me" component={MeRoute} />
+                  <Route path="/undefined" component={() => <Redirect to="/discover" />} exact />
+                  <Route path="/null" component={() => <Redirect to="/discover" />} exact />
                   <Route
                     path="/"
                     component={() => <Redirect to="/discover" />}

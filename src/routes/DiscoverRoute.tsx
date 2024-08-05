@@ -24,6 +24,7 @@ import MeFollowing from "../pages/Me/MeFollowing";
 import MeGroups from "../pages/Me/MeGroups";
 import MeUpdate from "../pages/Me/MeUpdate";
 import GroupPreview from "../pages/Group/GroupPreview";
+import GroupCreateNewPost from "../pages/Group/GroupCreateNewPost";
 
 const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
   console.log(match);
@@ -105,6 +106,11 @@ const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
       <Route
         path={`${match.url}/group/vu/:vanity_url/post/:post_id`}
         component={GroupPostPage}
+        exact
+      />
+      <Route
+        path={`${match.url}/group/vu/:vanity_url/new-post`}
+        component={GroupCreateNewPost}
         exact
       />
       <Route path={`${match.url}/search`} component={SearchPage} />

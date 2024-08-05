@@ -528,6 +528,41 @@ export type Database = {
           },
         ]
       }
+      group_rules: {
+        Row: {
+          created_at: string
+          description: string | null
+          group_vanity_id: string
+          id: number
+          order: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          group_vanity_id: string
+          id?: number
+          order: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          group_vanity_id?: string
+          id?: number
+          order?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_rules_group_vanity_id_fkey"
+            columns: ["group_vanity_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["vanity_id"]
+          },
+        ]
+      }
       groups: {
         Row: {
           academic_year_id: number | null

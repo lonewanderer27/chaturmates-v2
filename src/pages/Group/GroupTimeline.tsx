@@ -6,6 +6,8 @@ import {
   IonChip,
   IonCol,
   IonContent,
+  IonFab,
+  IonFabButton,
   IonGrid,
   IonHeader,
   IonIcon,
@@ -18,6 +20,7 @@ import {
   IonThumbnail,
   IonToolbar,
   useIonRouter,
+  useIonViewWillEnter,
 } from "@ionic/react";
 
 import { FC, useMemo } from "react";
@@ -25,8 +28,13 @@ import { RouteComponentProps } from "react-router";
 import useGroupMemsCount from "../../hooks/group/useGroupMemsCount";
 import useGroupInfoLite from "../../hooks/group/useGroupInfoLite";
 import {
+  add,
+  addCircle,
+  addCircleOutline,
+  addCircleSharp,
   chatboxOutline,
   chatbubbleOutline,
+  ellipsisVerticalOutline,
   informationCircleOutline,
   informationOutline,
   listOutline,
@@ -38,6 +46,9 @@ import {
 } from "ionicons/icons";
 import useAmIAMember from "../../hooks/group/useAmIAMember";
 import GroupPreview from "./GroupPreview";
+import { hideTabBar } from "../../utils/TabBar";
+import useGroupRules from "../../hooks/group/useGroupRules";
+import GroupRules from "../../components/Group/GroupRules";
 
 type GroupTimelinePageProps = {
   vanity_url: string;
@@ -46,7 +57,10 @@ type GroupTimelinePageProps = {
 const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = (p) => {
   const { data: infoLite } = useGroupInfoLite(p.match.params.vanity_url);
   const { data } = useGroupMemsCount(p.match.params.vanity_url);
-  
+  const { data: groupRules } = useGroupRules(p.match.params.vanity_url);
+  useIonViewWillEnter(() => {
+    hideTabBar();
+  });
 
   const isValidUrl = useMemo(() => {
     try {
@@ -76,6 +90,10 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = (p) => {
     }
   }
 
+  const handleCreateNewPost = () => {
+    rt.push(rt.routeInfo.pathname + "/new-post");
+  }
+
   return (
     <IonPage>
       <IonContent className="ion-padding">
@@ -91,7 +109,7 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = (p) => {
             </IonButtons> */}
           </IonToolbar>
         </IonHeader>
-        <IonItem lines="none" className="mx-[-10px]">
+        <IonItem lines="none" className="mx-[-15px]" color="light">
           {infoLite?.avatar_url && isValidUrl ? (
             <IonThumbnail slot="start">
               <img src={infoLite?.avatar_url!} className="rounded-full" />
@@ -119,15 +137,30 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = (p) => {
             <IonIcon icon={peopleOutline} />
             <IonLabel>Members</IonLabel>
           </IonChip>
-          {/* <IonChip>
+          <IonChip id="group_rules">
             <IonIcon icon={listOutline} />
             <IonLabel>Rules</IonLabel>
-          </IonChip> */}
+          </IonChip>
           <IonChip onClick={handleInfo}>
             <IonIcon icon={informationOutline} />
             <IonLabel>About</IonLabel>
           </IonChip>
+          {/* <IonChip>
+            <IonIcon className="ml-[-4px]" icon={ellipsisVerticalOutline} />
+          </IonChip> */}
         </div>
+        <GroupRules rules={groupRules ?? []} />
+        <IonFab
+          slot="fixed"
+          vertical="bottom"
+          horizontal="end"
+          className="ion-padding"
+          onClick={handleCreateNewPost}
+        >
+          <IonFabButton>
+            <IonIcon src={add} />
+          </IonFabButton>
+        </IonFab>
       </IonContent>
     </IonPage>
   );

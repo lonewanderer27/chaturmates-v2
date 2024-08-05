@@ -15,6 +15,7 @@ export type GroupMemberType = Database["public"]["Tables"]["group_members"]["Row
 export type GroupChatUrlType = Database["public"]["Tables"]["group_chat_urls"]["Row"];
 export type GroupPostType = Database["public"]["Tables"]["group_posts"]["Row"];
 export type GroupCommentType = Database["public"]["Tables"]["group_comments"]["Row"];
+export type GroupRuleType = Database["public"]["Tables"]["group_rules"]["Row"];
 
 export type ThreadType = Database["public"]["Tables"]["threads"]["Row"];
 export type ThreadMessageType = Database["public"]["Tables"]["threads_messages"]["Row"];

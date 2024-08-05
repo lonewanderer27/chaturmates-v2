@@ -364,7 +364,6 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
             >
               Rules
             </IonButton> */}
-
             <IonButton
               slot="end"
               disabled={posting}
@@ -374,34 +373,6 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
             >
               <IonIcon src={sendSharp} slot="end"></IonIcon>
             </IonButton>
-
-            {/* 
-              TODO: Fill in the rules for now
-              TODO: Extract this component to separate file
-              TODO: Fetch rules of the group from database
-            */}
-            <IonModal
-              ref={modal}
-              trigger="group_rules"
-              initialBreakpoint={0.25}
-              breakpoints={[0, 0.25, 0.5, 0.75]}
-            >
-              <IonHeader collapse="condense" className="px-4">
-                <IonToolbar>
-                  <IonText className="font-poppins font-bold text-xl">
-                    Group Rules
-                  </IonText>
-                  <IonButton
-                    slot="end"
-                    fill="clear"
-                    onClick={() => modal.current?.dismiss()}
-                  >
-                    OK
-                  </IonButton>
-                </IonToolbar>
-              </IonHeader>
-              <IonContent className="ion-padding"></IonContent>
-            </IonModal>
           </IonToolbar>
         </IonGrid>
       </IonFooter>

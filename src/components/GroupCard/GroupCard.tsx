@@ -54,7 +54,9 @@ export default function GroupCard(props: GroupCardProps) {
         <IonRow>
           <IonAvatar>
             {props.group.avatar_url && isValidUrl(props.group.avatar_url) ? (
-              <img className="groupCardAvatar aspect-square" src={props.group.avatar_url} />
+              <div>
+                <img className="groupCardAvatar object-cover rounded-full aspect-square" src={props.group.avatar_url} />
+              </div>
             ) : (
               <IonIcon className="groupCardIcon" src={props.icon}></IonIcon>
             )}

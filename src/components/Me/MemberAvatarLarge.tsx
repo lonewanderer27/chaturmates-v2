@@ -1,4 +1,4 @@
-import { IonIcon, IonRow } from "@ionic/react";
+import { IonAvatar, IonIcon, IonImg, IonRow } from "@ionic/react";
 import { peopleCircle, person, personCircleOutline } from "ionicons/icons";
 import { isValidUrl } from "../../utils/ValidUrl";
 
@@ -8,7 +8,7 @@ const MemberAvatarLarge = (props: { avatarUrl: string | null | undefined }) => {
       {props.avatarUrl && isValidUrl(props.avatarUrl) ? (
         <>
           <div>
-            <img className="w-32 rounded-full" src={props.avatarUrl} />
+            <img className="w-32 object-cover rounded-full aspect-square" src={props.avatarUrl} />
           </div>
         </>
       ) : (

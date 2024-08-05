@@ -5,6 +5,7 @@ import {
   IonCard,
   IonCol,
   IonIcon,
+  IonImg,
   IonRow,
   IonText,
   useIonRouter,
@@ -43,7 +44,6 @@ export default function GroupCard(props: GroupCardProps) {
       props.group.group_members.filter((m) => m.approved === true)
     );
   }, [props.group.group_members]);
-  console.log("approvedMembers", approvedMembers);
 
   return (
     <IonCol size="6" className="flex flex-column w-full cursor-pointer">
@@ -54,7 +54,7 @@ export default function GroupCard(props: GroupCardProps) {
         <IonRow>
           <IonAvatar>
             {props.group.avatar_url && isValidUrl(props.group.avatar_url) ? (
-              <img className="groupCardAvatar" src={props.group.avatar_url} />
+              <img className="groupCardAvatar aspect-square" src={props.group.avatar_url} />
             ) : (
               <IonIcon className="groupCardIcon" src={props.icon}></IonIcon>
             )}
@@ -65,22 +65,6 @@ export default function GroupCard(props: GroupCardProps) {
             {props.group.name}
           </IonText>
         </IonRow>
-        {/* <Avatar.Group>
-          {props.group.group_members.map((m, i) => {
-            if (isValidUrl(m.avatar_url + "")) {
-              return (
-                <Avatar size={"xs"} img={m.avatar_url!} rounded stacked key={i} />
-              )
-            } else {
-              return (
-                <Avatar size={"xs"} rounded stacked key={i} />
-              )
-            }
-          })}
-          {approvedMembers.length > 4 && (
-            <Avatar.Counter className="h-7 w-7" total={approvedMembers.length - 4} />
-          )}
-        </Avatar.Group> */}
         <div className="avatar-group -space-x-3 rtl:space-x-reverse ml-[-2px]">
           {approvedMembers.map((m, i) => {
             if (i <= 5)

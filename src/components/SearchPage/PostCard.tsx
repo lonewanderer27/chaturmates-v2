@@ -11,6 +11,7 @@ import { ComponentProps } from "react";
 import { GroupPostTypeWGroupInfo } from "../../types/group/Post";
 import { GroupType } from "../../types";
 import { personCircleOutline } from "ionicons/icons";
+import { isValidUrl } from "../../utils/ValidUrl";
 
 type IonCardProps = ComponentProps<typeof IonCard>;
 
@@ -39,14 +40,21 @@ export default function PostCard(
     >
       <IonRow>
         {props.group?.admin_uni_group === false && <IonCol size="1">
-          <IonIcon
-            className="postIcon ml-[-10px] text-3xl"
-            src={props.icon}
-          ></IonIcon>
+          {isValidUrl(props.group?.avatar_url + "") ? (
+            <img
+              className="groupCardAvatar object-cover rounded-full aspect-square mt-1 ml-[-5px] "
+              src={props.group?.avatar_url + ""}
+            />
+          ) : (
+            <IonIcon
+              className="groupCardIcon"
+              src={props.icon}
+            ></IonIcon>
+          )}
         </IonCol>}
         <IonCol className="flex content-center">
           <IonText className="ml-[-5px]">
-            <span className="text-xl font-bold text-ellipsis line-clamp-1 my-auto">
+            <span className="text-lg font-bold text-ellipsis line-clamp-1 my-auto">
               {props.group?.name ?? "Post"}
             </span>
           </IonText>

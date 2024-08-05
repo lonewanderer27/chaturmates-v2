@@ -55,7 +55,7 @@ import {
   peopleOutline,
   peopleSharp,
 } from "ionicons/icons";
-
+import { Suspense, lazy } from "react";
 import AuthWrapper from "./components/Auth/AuthWrapper";
 import CommunityRoute from "./routes/CommunityRoute";
 import ContinueRoute from "./routes/ContinueRoute";
@@ -69,9 +69,10 @@ import ThreadsRoute from "./routes/ThreadsRoute";
 import RecommendRoute from "./routes/RecommendRoute";
 import NotFound from "./routes/NotFound";
 import MeRoute from "./routes/MeRoute";
-import React, { useEffect, useState, useRef, useCallback } from "react";
+
 import AccessibilitySettings from "./components/AccessibilitySettings";
 import useDraggableFab from "./hooks/useDraggableFab";
+import DefaultFallback from "./fallbacks";
 
 setupIonicReact({
   mode: "ios",
@@ -81,7 +82,6 @@ setupIonicReact({
 export const qClient = new QueryClient();
 const App = () => {
   const { fabRef } = useDraggableFab();
-  const accessibilityModalRef = useRef<HTMLIonInputElement>(null);
 
   return (
     <QueryClientProvider client={qClient}>
@@ -94,8 +94,8 @@ const App = () => {
                   <Route path="/discover" component={DiscoverRoute} />
                   <Route path="/community" component={CommunityRoute} />
                   <Route path="/threads" component={ThreadsRoute} />
-                  <Route path="/surveys" component={SurveysRoute} />
                   <Route path="/setup" component={SetupRoute} />
+                  <Route path="/surveys" component={SurveysRoute} />
                   <Route path="/recommend" component={RecommendRoute} />
                   <Route path="/inbox" component={Inbox} />
                   <Route path="/me" component={MeRoute} />

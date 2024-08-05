@@ -8,6 +8,7 @@ import {
   IonContent,
   IonFab,
   IonFabButton,
+  IonFooter,
   IonGrid,
   IonHeader,
   IonIcon,
@@ -17,6 +18,7 @@ import {
   IonLoading,
   IonPage,
   IonRow,
+  IonText,
   IonThumbnail,
   IonToolbar,
   useIonRouter,
@@ -157,11 +159,13 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = (p) => {
           className="ion-padding"
           onClick={handleCreateNewPost}
         >
-          <IonFabButton>
-            <IonIcon src={add} />
-          </IonFabButton>
+          <IonButton shape="round" fill="outline">
+            <IonIcon src={add} slot="start" />
+            <IonLabel>New Post</IonLabel>
+          </IonButton>
         </IonFab>
       </IonContent>
+      <IonFooter></IonFooter>
     </IonPage>
   );
 };

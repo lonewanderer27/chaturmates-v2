@@ -1,4 +1,4 @@
-import { IonLoading, IonRouterOutlet } from '@ionic/react'
+import { IonContent, IonFooter, IonLoading, IonPage, IonProgressBar, IonRouterOutlet, IonToolbar } from '@ionic/react'
 import React, { lazy, Suspense } from 'react'
 import { Route } from 'react-router'
 import { RouteComponentProps } from 'react-router'
@@ -14,7 +14,12 @@ const Setup2IntroduceYourself = lazy(() => import('../pages/Setup/Setup2Introduc
 const SetupRoute: React.FC<RouteComponentProps> = ({ match }) => {
   return (
     <IonRouterOutlet id="setup">
-      <Suspense fallback={<IonLoading message={"Setup is loading"} />}>
+      <Suspense fallback={<IonPage>
+        <IonContent/>
+        <IonFooter>
+          <IonProgressBar type="indeterminate" />
+        </IonFooter>
+      </IonPage>}>
         <Route path={match.url} component={Setup} exact />
         <Route path={`${match.url}/studentOrProf`} component={SetupStudentOrProf} exact />
         <Route path={`${match.url}/pdfUpload`} component={SetupPdfUpload} exact />

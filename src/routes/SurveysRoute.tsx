@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { Route, RouteComponentProps } from 'react-router';
 import { hideTabBar, showTabBar } from '../utils/TabBar';
 
-import { IonLoading, IonRouterOutlet } from '@ionic/react';
+import { IonContent, IonFooter, IonLoading, IonPage, IonProgressBar, IonRouterOutlet } from '@ionic/react';
 import useHideTabs from '../hooks/useHideTabs';
 
 const EnrollmentCert = React.lazy(() => import('../pages/Surveys/EnrollmentCert'));
@@ -12,9 +12,14 @@ const SurveysRoute: React.FC<RouteComponentProps> = ({ match }) => {
 
   return (
     <IonRouterOutlet id="surveys">
-      <React.Suspense fallback={<IonLoading message="Survey is loading" />}>
+      <Suspense fallback={<IonPage>
+        <IonContent />
+        <IonFooter>
+          <IonProgressBar type="indeterminate" />
+        </IonFooter>
+      </IonPage>}>
         <Route path={`${match.url}/enrollmentcert`} component={EnrollmentCert} exact />
-      </React.Suspense>
+      </Suspense>
     </IonRouterOutlet>
   );
 };

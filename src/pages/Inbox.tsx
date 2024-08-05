@@ -54,16 +54,15 @@ const Inbox: FC<RouteComponentProps> = () => {
             <IonButtons slot="start">
               <IonBackButton defaultHref="/discover" text={""} />
             </IonButtons>
-            <IonText
-              slot="start"
+            <IonTitle
               className="page-title font-poppins font-bold"
               color="secondary"
             >
               Inbox
-            </IonText>
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonSegment value={selectedSegment} onIonChange={handleSegmentChange}>
+        <IonSegment value={selectedSegment} onIonChange={handleSegmentChange} className="mt-4">
           <IonSegmentButton value={INBOX_CATEGORY.FOLLOWING}>
             Following
           </IonSegmentButton>

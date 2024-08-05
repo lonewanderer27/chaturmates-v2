@@ -71,7 +71,7 @@ export default function GroupCard(props: GroupCardProps) {
           {approvedMembers.map((m, i) => {
             if (i <= 5)
               return (
-                <div className="avatar">
+                <div className="avatar" key={m.id+i}>
                   <div className="w-6 h-auto">
                     {isValidUrl(m.avatar_url + "") ? (
                       <img src={m.avatar_url + ""} />

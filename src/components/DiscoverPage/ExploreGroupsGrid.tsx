@@ -20,8 +20,8 @@ export default function ExploreGroupsGrid() {
         <IonCol size="12">
           <IonRow>
             {exploreGroups &&
-              exploreGroups.map((group) => (
-                <GroupCard key={group.id} group={group} />
+              exploreGroups.map((group, i) => (
+                <GroupCard key={group.vanity_id+i} group={group} />
               ))}
             <AddGroupCard />
           </IonRow>

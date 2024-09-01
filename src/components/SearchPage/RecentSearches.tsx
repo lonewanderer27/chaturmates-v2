@@ -1,12 +1,14 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonChip } from '@ionic/react'
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonChip, IonSkeletonText } from '@ionic/react'
 
 import React from 'react'
 import RecentSearchItem from './RecentSearchItem';
 import { SearchHistoryType } from '../../types'
 import useSelfStudent from '../../hooks/student';
+import RecentSearchItemLoader from '../../loaders/RecentSearchItemLoader';
 
 const RecentSearches = (props: {
   searchHistory?: SearchHistoryType[];
+  isLoading?: boolean;
 }) => {
   const { student } = useSelfStudent();
 
@@ -24,9 +26,15 @@ const RecentSearches = (props: {
         <IonCardSubtitle>Recent Searches</IonCardSubtitle>
       </IonCardHeader>
       <IonCardContent className='px-4 my-0'>
-        {props.searchHistory?.slice(0, 7).map((search, index) => (
-          <RecentSearchItem historyId={search.id!} key={search + "index" + index} title={search.query} />
-        ))}
+        {!props.isLoading ? (
+          props.searchHistory?.slice(0, 7).map((search, index) => (
+            <RecentSearchItem historyId={search.id!} key={search + "index" + index} title={search.query} />
+          ))
+        ) : (
+          Array.from({ length: 10 }).map((_, i) => (
+            <RecentSearchItemLoader key={i} />
+          ))
+        )}
       </IonCardContent>
     </IonCard>
   )

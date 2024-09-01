@@ -7,6 +7,7 @@ import { useAtom } from "jotai";
 
 export default function SearchHistory(props: {
   searchHistory: SearchHistoryType[];
+  isLoading?: boolean;
 }) {
   const [showAll, setShowAll] = useAtom(showAllHistoryAtom);
 

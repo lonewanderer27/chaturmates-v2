@@ -40,7 +40,7 @@ export default function SearchPage() {
   };
 
   const [query, setQuery] = useAtom(searchQueryAtom);
-  const { searchHistory } = useSearchHistory();
+  const { searchHistory, isLoading: isSHLoading } = useSearchHistory();
   const { handleStudentsSearch, studentsResults } = useStudentSearch();
   const { handleGroupSearch, groupsResults } = useGroupSearch();
   const { handlePostSearch, groupPosts } = usePostSearch();
@@ -90,7 +90,7 @@ export default function SearchPage() {
         </IonHeader>
         {query.length == 0 && (
           <div className="mt-[-30px]">
-            <RecentSearches searchHistory={searchHistory} />
+            <RecentSearches searchHistory={searchHistory} isLoading={isSHLoading} />
           </div>
         )}
         {query.length != 0 && (

@@ -82,6 +82,7 @@ export default function useSearchHistory() {
 
   return {
     searchHistory: shQuery.data as SearchHistoryType[] | undefined,
+    isLoading: shQuery.isLoading,
     handleHide,
   };
 }

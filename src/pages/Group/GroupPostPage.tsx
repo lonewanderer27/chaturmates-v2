@@ -28,6 +28,7 @@ import {
   IonTitle,
   IonToolbar,
   useIonRouter,
+  useIonToast,
   useIonViewWillEnter,
 } from "@ionic/react";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
@@ -52,6 +53,8 @@ import { useQuery } from "@tanstack/react-query";
 import useSelfStudent from "../../hooks/student";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Share } from "@capacitor/share";
+import { Clipboard } from '@capacitor/clipboard';
+import { Capacitor } from "@capacitor/core";
 
 type GroupPostPageParams = {
   vanity_url: string;
@@ -82,16 +85,41 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
     enabled: post_id !== undefined,
   });
 
+  const [toast] = useIonToast();
   const handleShare = async () => {
     // share the url of this post
     // along with short snippet of the content
     // and the title of the post
-    await Share.share({
-      title: pquery.data?.title + "",
-      text: pquery.data?.content!.substring(0, 100) + "...",
-      url: window.location.href,
-      dialogTitle: "Share this post",
-    });
+    const title = pquery.data?.title + "";
+    const content = pquery.data?.content!.substring(0, 100) + "...";
+    const url = window.location.href;
+
+    if ((await Share.canShare()).value) {
+      await Share.share({
+        title: title,
+        text: content,
+        url: url,
+        dialogTitle: "Share this post",
+      });
+    } else {
+      // share is not available
+      // construct a text to copy to clipboard
+      // with the title, content, and url
+      const text = `${title}\n\n${content}\n\n${url}`;
+
+      // detect if we're on web
+      // if we are, then copy to clipboard
+      if (!Capacitor.isNativePlatform()) {
+        // copy to clipboard
+        const clipRes = await navigator.clipboard.writeText(text);
+        
+        // alert the user that the text has been copied
+        toast({
+          message: "Post link has been copied to clipboard",
+          duration: 2000,
+        })
+      }
+    }
   };
 
   const timestamp = useMemo(() => {
@@ -338,11 +366,10 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
             <Controller
               render={({ field }) => (
                 <IonTextarea
-                  className={`${
-                    getFieldState("comment").error
+                  className={`${getFieldState("comment").error
                       ? "ion-touched ion-invalid border-red-500"
                       : ""
-                  } text-sm`}
+                    } text-sm`}
                   disabled={posting}
                   value={field.value}
                   onIonChange={(e) => setValue("comment", e.detail.value ?? "")}

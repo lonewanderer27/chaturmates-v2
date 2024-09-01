@@ -17,6 +17,9 @@ importers:
       '@capacitor/cli':
         specifier: ^6.0.0
         version: 6.0.0
+      '@capacitor/clipboard':
+        specifier: ^6.0.1
+        version: 6.0.1(@capacitor/core@6.0.0)
       '@capacitor/core':
         specifier: ^6.0.0
         version: 6.0.0
@@ -905,6 +908,11 @@ packages:
     resolution: {integrity: sha512-6z30P0mr53l0VXPwFjzDVuKIt1991bqUSSfShTT2efWN+rBSGSAH2bPID6qSZornH1n5R5Lh/UHq/aGuW523MQ==}
     engines: {node: '>=18.0.0'}
     hasBin: true
+
+  '@capacitor/clipboard@6.0.1':
+    resolution: {integrity: sha512-aN6QsZD79Z605sK9YA8JtJLuD5vI/WrPzT/RCWUWBWPdFzhnRdT45dbsnQVvL2kzzm5aTsCAPepkdRqpvWwCGA==}
+    peerDependencies:
+      '@capacitor/core': ^6.0.0
 
   '@capacitor/core@6.0.0':
     resolution: {integrity: sha512-NvxIQsJcMiIV+Le1DilR2GGyQQbDInfXK1UywGROQ5mycdFlW5XoAPZ+MKnFGB123RoEgE3uhDGgwTXUmSlX9A==}
@@ -6884,6 +6892,10 @@ snapshots:
       xml2js: 0.5.0
     transitivePeerDependencies:
       - supports-color
+
+  '@capacitor/clipboard@6.0.1(@capacitor/core@6.0.0)':
+    dependencies:
+      '@capacitor/core': 6.0.0
 
   '@capacitor/core@6.0.0':
     dependencies:

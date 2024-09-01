@@ -79,6 +79,7 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
         <AdminPostsGrid
           group={iaQuery.data?.group}
           posts={iaQuery.data?.group_posts}
+          isLoading={iaQuery.isLoading}
         />
         <ExploreGroupsGrid />
       </IonContent>

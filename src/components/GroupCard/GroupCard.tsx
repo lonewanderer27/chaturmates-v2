@@ -33,7 +33,7 @@ export default function GroupCard(props: GroupCardProps) {
       rt.routeInfo.pathname.split("/")[1] +
       "/group/vu/" +
       props.group.vanity_id,
-      "forward",
+      "none",
       "push"
     );
   };

@@ -51,6 +51,7 @@ import GroupPreview from "./GroupPreview";
 import { hideTabBar } from "../../utils/TabBar";
 import useGroupRules from "../../hooks/group/useGroupRules";
 import GroupRules from "../../components/Group/GroupRules";
+import GroupTimelineLoader from "../../loaders/GroupTimelineLoader";
 
 type GroupTimelinePageProps = {
   vanity_url: string;
@@ -79,30 +80,30 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = (p) => {
   };
   const handleInfo = () => {
     rt.push(rt.routeInfo.pathname + "/info");
-  }
+  };
 
   const AIM = useAmIAMember(p.match.params.vanity_url);
   if (AIM.isLoading) {
-    return <IonLoading isOpen={true} />;
+    return <GroupTimelineLoader />;
   }
 
   if (AIM.isLoading === false) {
     if (AIM.data === null || AIM.data?.approved === false) {
-      return <GroupPreview {...p} />
+      return <GroupPreview {...p} />;
     }
   }
 
   const handleCreateNewPost = () => {
     rt.push(rt.routeInfo.pathname + "/new-post");
-  }
+  };
 
   return (
-    <IonPage>
+    <IonPage id="groupTimeline">
       <IonContent className="ion-padding">
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/community" text="" />
+              <IonBackButton defaultHref="/discover" text="" />
             </IonButtons>
             {/* <IonButtons slot="end">
               <IonButton>

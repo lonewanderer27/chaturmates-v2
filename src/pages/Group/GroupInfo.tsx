@@ -19,6 +19,7 @@ import {
   IonText,
   IonToolbar,
   useIonRouter,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import { FC, useState } from "react";
 import { RouteComponentProps } from "react-router";
@@ -32,6 +33,7 @@ import dayjs from "dayjs";
 import useAmIAMember from "../../hooks/group/useAmIAMember";
 import GroupPreview from "./GroupPreview";
 import useGroupRules from "../../hooks/group/useGroupRules";
+import { hideTabBar } from "../../utils/TabBar";
 
 type GroupInfoPageProps = {
   vanity_url: string;
@@ -90,6 +92,10 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
 
   const [showAllRules, setShowAllRules] = useState(false);
   const displayedRules = groupRules ? (showAllRules ? groupRules : groupRules.slice(0, 3)) : [];
+
+  useIonViewWillEnter(() => {
+    hideTabBar();
+  });
 
   return (
     <IonPage>

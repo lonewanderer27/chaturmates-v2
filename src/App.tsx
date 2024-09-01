@@ -44,7 +44,7 @@ import useDraggableFab from "./hooks/useDraggableFab";
 import { accessibilitySharp, chatboxEllipsesOutline, chatboxOutline, compassOutline, compassSharp, peopleOutline, peopleSharp } from "ionicons/icons";
 import AccessibilitySettings from "./components/AccessibilitySettings";
 
-const DiscoverRoute = lazy(() => import("./routes/DiscoverRoute"));
+import DiscoverRoute from "./routes/DiscoverRoute";
 const CommunityRoute = lazy(() => import("./routes/CommunityRoute"));
 const ThreadsRoute = lazy(() => import("./routes/ThreadsRoute"));
 const SetupRoute = lazy(() => import("./routes/SetupRoute"));

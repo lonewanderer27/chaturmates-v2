@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GroupPostType, GroupType } from "../../types";
-import { IonCard, IonImg, IonSkeletonText, useIonRouter } from "@ionic/react";
+import { createAnimation, IonCard, IonImg, IonSkeletonText, useIonRouter } from "@ionic/react";
+import type { Animation } from "@ionic/react";
 
 const AdminPostCard = (props: {
   group?: GroupType;
@@ -19,10 +20,26 @@ const AdminPostCard = (props: {
   };
 
   const [hasImageLoaded, setHasImageLoaded] = useState(false);
+  const imgEl = useRef<HTMLIonImgElement | null>(null);
+  const animation = useRef<Animation | null>(null);
+  useEffect(() => {
+    if (animation.current === null) {
+      animation.current = createAnimation()
+        .addElement(imgEl.current!)
+        .duration(300)
+        .fromTo("opacity", "0", "1")
+    }
+  }, [imgEl])
+  const handleImgLoad = () => {
+    setHasImageLoaded(true);
+    if (animation.current !== null) {
+      animation.current.play();
+    }
+  }
 
   return (
     <IonCard onClick={handleClick}>
-      <IonImg src={props.post?.image_url + ""} onIonImgDidLoad={() => setHasImageLoaded(true)} />
+      <IonImg ref={imgEl} src={props.post?.image_url + ""} onIonImgDidLoad={handleImgLoad} />
       <IonSkeletonText animated className="h-[225px] w-full my-[-2px]" style={{ display: hasImageLoaded ? "none" : "block" }} />
     </IonCard>
   );

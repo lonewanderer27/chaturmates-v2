@@ -52,15 +52,10 @@ export default function GroupCard(props: GroupCardProps) {
         onClick={handleView}
       >
         <IonRow>
-          <IonAvatar>
-            {props.group.avatar_url && isValidUrl(props.group.avatar_url) ? (
-              <div>
-                <img className="groupCardAvatar object-cover rounded-full aspect-square" src={props.group.avatar_url} />
-              </div>
-            ) : (
-              <IonIcon className="groupCardIcon" src={props.icon}></IonIcon>
-            )}
-          </IonAvatar>
+          {isValidUrl(props.group.avatar_url + "") && <IonAvatar>
+            <img className="groupCardAvatar object-cover rounded-full aspect-square" src={props.group.avatar_url!} />
+          </IonAvatar>}
+          {!isValidUrl(props.group.avatar_url + "") && <IonIcon className="groupCardIcon" src={props.icon}></IonIcon>}
         </IonRow>
         <IonRow className="my-2">
           <IonText className="text-ellipsis font-semibold text-lg font-poppins truncate">
@@ -71,7 +66,7 @@ export default function GroupCard(props: GroupCardProps) {
           {approvedMembers.map((m, i) => {
             if (i <= 5)
               return (
-                <div className="avatar" key={m.id+i}>
+                <div className="avatar" key={m.id + i}>
                   <div className="w-6 h-auto">
                     {isValidUrl(m.avatar_url + "") ? (
                       <img src={m.avatar_url + ""} />

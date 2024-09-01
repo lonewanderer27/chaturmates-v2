@@ -3,11 +3,16 @@ import {
   IonContent,
   IonHeader,
   IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonText,
   IonToolbar,
+  RefresherEventDetail,
   useIonViewWillEnter,
 } from "@ionic/react";
 import {
+  chevronDown,
+  chevronDownOutline,
   notificationsOutline,
   personCircleOutline,
   searchOutline,
@@ -48,6 +53,12 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
     enabled: !!student?.id,
   });
 
+  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
+    await query.refetch();
+    await iaQuery.refetch();
+    event.detail.complete();
+  };
+
   useIonViewWillEnter(() => {
     showTabBar();
   });
@@ -55,6 +66,14 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
   return (
     <IonPage id="discover-page">
       <IonContent className="ion-padding">
+
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent
+            refreshingSpinner="dots"
+            pullingText={"Pull to refresh"}
+          />
+        </IonRefresher>
+
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonText

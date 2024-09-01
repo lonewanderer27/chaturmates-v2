@@ -72,11 +72,12 @@ export default function Continue() {
         <IonContent className="ion-padding ">
           <video
             className="fixed z-[-10] top-0 left-0 min-w-full min-h-full w-auto h-auto transform object-cover"
-            src="/480.mp4"
             autoPlay
             muted
             loop
-          />
+          >
+            <source src="/480.mp4" type="video/mp4" />
+          </video>
           <IonImg src="/logo_w_name.png" className="w-32 mx-auto mt-28" />
         </IonContent>
         <IonFooter className="ion-padding text-center">

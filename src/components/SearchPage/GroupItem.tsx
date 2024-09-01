@@ -64,6 +64,8 @@ export default function GroupItem(props: {
     // TODO: Join functionality
   }
 
+  console.log("groupitem: group_members", props.group.group_members);
+
   return (
     <IonItem lines="inset" onClick={handleView} className="cursor-pointer">
       {props.group.avatar_url && isValidUrl ? (
@@ -84,7 +86,7 @@ export default function GroupItem(props: {
           </IonText>
           <br />
           <IonText className="groupCount text-sm" color="medium">
-            {props.group.group_members.filter(m => m.approved).length} Members
+            {props.group.group_members?.filter(m => m.approved).length} Members
           </IonText>
         </IonCol>
       </IonRow>

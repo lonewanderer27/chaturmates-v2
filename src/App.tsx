@@ -38,13 +38,13 @@ import { lazy, Suspense } from "react";
 import { Route, Redirect } from "react-router";
 import AuthWrapper from "./components/Auth/AuthWrapper";
 import DefaultFallback from "./fallbacks";
-import ContinueRoute from "./routes/ContinueRoute";
 import TabIconChangerWrapper from "./TabIconChangerWrapper";
 import useDraggableFab from "./hooks/useDraggableFab";
 import { accessibilitySharp, chatboxEllipsesOutline, chatboxOutline, compassOutline, compassSharp, peopleOutline, peopleSharp } from "ionicons/icons";
 import AccessibilitySettings from "./components/AccessibilitySettings";
 
 import DiscoverRoute from "./routes/DiscoverRoute";
+const ContinueRoute = lazy(() => import("./routes/ContinueRoute"));
 const CommunityRoute = lazy(() => import("./routes/CommunityRoute"));
 const ThreadsRoute = lazy(() => import("./routes/ThreadsRoute"));
 const SetupRoute = lazy(() => import("./routes/SetupRoute"));
@@ -95,7 +95,7 @@ const App = () => {
                   <Route path="/privacy-policy" component={NotFound} />
                 </TabIconChangerWrapper>
               </IonRouterOutlet>
-              <IonTabBar slot="bottom">
+              <IonTabBar slot="bottom" translucent>
                 <IonTabButton tab="discover" href="/discover">
                   <IonIcon
                     id="discoverTabButton"

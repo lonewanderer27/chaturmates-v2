@@ -65,7 +65,7 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
 
   return (
     <IonPage id="discover-page">
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding" fullscreen>
 
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent

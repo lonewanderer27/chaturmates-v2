@@ -19,6 +19,7 @@ import {
   IonText,
   IonToolbar,
   useIonRouter,
+  useIonToast,
   useIonViewWillEnter,
 } from "@ionic/react";
 import { FC, useState } from "react";
@@ -34,6 +35,7 @@ import useAmIAMember from "../../hooks/group/useAmIAMember";
 import GroupPreview from "./GroupPreview";
 import useGroupRules from "../../hooks/group/useGroupRules";
 import { hideTabBar } from "../../utils/TabBar";
+import { Capacitor } from "@capacitor/core";
 
 type GroupInfoPageProps = {
   vanity_url: string;
@@ -46,13 +48,41 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
 
   const rt = useIonRouter();
 
+  const [toast] = useIonToast();
   const handleShare = async () => {
-    await Share.share({
-      title: 'Share Group',
-      text: 'Check out this group in Chat-Ur-Meyts App!',
-      url: window.location.href,
-      dialogTitle: 'Share Group'
-    });
+    const title = infoLite?.name ?? "Group";
+    const content = infoLite?.description ?? "Check out this group in Chat-Ur-Meyts App!";
+
+    // for the url, remove the /info part
+    // so that the user will be redirected to the group page
+    const url = window.location.href.replace("/info", "");
+
+    if ((await Share.canShare()).value) {
+      await Share.share({
+        title: title,
+        text: content,
+        url: url,
+        dialogTitle: "Share this post",
+      });
+    } else {
+      // share is not available
+      // construct a text to copy to clipboard
+      // with the title, content, and url
+      const text = `${title}\n\n${content}\n\n${url}`;
+
+      // detect if we're on web
+      // if we are, then copy to clipboard
+      if (!Capacitor.isNativePlatform()) {
+        // copy to clipboard
+        const clipRes = await navigator.clipboard.writeText(text);
+        
+        // alert the user that the text has been copied
+        toast({
+          message: "Group information has been copied to clipboard",
+          duration: 2000,
+        })
+      }
+    }
   };
 
   const handleMembers = () => {

@@ -48,7 +48,7 @@ const AccessibilitySettings: FC = () => {
 
           <IonItem>
             <IonToggle checked={increaseFontMode} onIonChange={toggleFontMode} justify="space-between">
-              Increase Font size (20%)
+              Large Text
             </IonToggle>
           </IonItem>
         </IonList>

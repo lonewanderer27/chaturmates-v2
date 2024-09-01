@@ -1,5 +1,6 @@
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
+  createAnimation,
   IonBackButton,
   IonButton,
   IonButtons,
@@ -29,7 +30,8 @@ import {
   IonToolbar,
   useIonRouter,
   useIonToast,
-  useIonViewWillEnter,
+  Animation,
+  IonSkeletonText
 } from "@ionic/react";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { RouteComponentProps, useParams } from "react-router";
@@ -290,6 +292,24 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
     }
   };
 
+  const [hasImageLoaded, setHasImageLoaded] = useState(false);
+  const imgEl = useRef<HTMLIonImgElement | null>(null);
+  const animation = useRef<Animation | null>(null);
+  useEffect(() => {
+    if (animation.current === null) {
+      animation.current = createAnimation()
+        .addElement(imgEl.current!)
+        .duration(300)
+        .fromTo("opacity", "0", "1")
+    }
+  }, [imgEl])
+  const handleImgLoad = () => {
+    setHasImageLoaded(true);
+    if (animation.current !== null) {
+      animation.current.play();
+    }
+  }
+
   return (
     <IonPage>
       <IonContent>
@@ -321,7 +341,8 @@ const GroupPostPage: FC<RouteComponentProps<GroupPostPageParams>> = ({
             {timestamp.getMinutes()}
           </IonCardSubtitle>
           {/* TODO: Display the user that posted it here */}
-          {pquery.data?.image_url && <IonImg src={pquery.data?.image_url} />}
+          {pquery.data?.image_url && <IonImg ref={imgEl} src={pquery.data?.image_url} onIonImgDidLoad={handleImgLoad} />}
+          {pquery.data?.image_url && <IonSkeletonText animated className="h-[225px] w-full rounded-md" style={{ display: hasImageLoaded ? "none" : "block" }} />}
           {pquery.data?.content && (
             <IonCardContent className="px-0 pb-0 font-poppins">
               <IonText>

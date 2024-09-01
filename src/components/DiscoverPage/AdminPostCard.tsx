@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { GroupPostType, GroupType } from "../../types";
-import { IonCard, useIonRouter } from "@ionic/react";
+import { IonCard, IonImg, IonSkeletonText, useIonRouter } from "@ionic/react";
 
 const AdminPostCard = (props: {
   group?: GroupType;
@@ -17,9 +18,12 @@ const AdminPostCard = (props: {
     );
   };
 
+  const [hasImageLoaded, setHasImageLoaded] = useState(false);
+
   return (
     <IonCard onClick={handleClick}>
-      <img src={props.post?.image_url!} />
+      <IonImg src={props.post?.image_url + ""} onIonImgDidLoad={() => setHasImageLoaded(true)} />
+      <IonSkeletonText animated className="h-[225px] w-full my-[-2px]" style={{ display: hasImageLoaded ? "none" : "block" }} />
     </IonCard>
   );
 };

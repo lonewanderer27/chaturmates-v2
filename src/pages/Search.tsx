@@ -30,6 +30,7 @@ import usePostSearch from "../hooks/post/usePostSearch";
 import useSearch from "../hooks/search/useSearch";
 import useSearchHistory from "../hooks/search/useSearchHistory";
 import useStudentSearch from "../hooks/student/useStudentSearch";
+import { useRef } from "react";
 
 export default function SearchPage() {
   const rt = useIonRouter();
@@ -55,8 +56,14 @@ export default function SearchPage() {
     );
   };
 
+  const searchbarRef = useRef<HTMLIonSearchbarElement>(null);
   useIonViewWillEnter(() => {
     hideTabBar();
+
+    // focus on searchbar when opened
+    setTimeout(() => {
+      searchbarRef.current?.setFocus();
+    }, 300);
   });
 
   return (
@@ -65,6 +72,7 @@ export default function SearchPage() {
         <IonHeader collapse="condense">
           <IonToolbar className="mx-[-10px]">
             <IonSearchbar
+              ref={searchbarRef}
               className="custom px-0 mx-0 font-poppins font-semibold"
               debounce={750}
               onIonCancel={handleBack}

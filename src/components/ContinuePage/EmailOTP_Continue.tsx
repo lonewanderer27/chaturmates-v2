@@ -158,13 +158,13 @@ const EmailOTP_1_Continue = (props: {
   const onOTPSuccess = async (
     data:
       | {
-          user: User | null;
-          session: Session | null;
-        }
+        user: User | null;
+        session: Session | null;
+      }
       | {
-          user: null;
-          session: null;
-        }
+        user: null;
+        session: null;
+      }
   ) => {
     if (data.user !== null) {
       // fetch the user's profile
@@ -176,7 +176,7 @@ const EmailOTP_1_Continue = (props: {
         .single();
 
       console.log(profile);
-      
+
       // push the user to the home page
       window.location.href = "/";
     }
@@ -240,9 +240,6 @@ const EmailOTP_1_Continue = (props: {
                       value={value}
                       onIonChange={onChange}
                       onIonBlur={onBlur}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") handleSubmit(handleEmailOTPSuccess, handleError)();
-                      }}
                       placeholder="Enter your Adamson Email"
                       errorText={error?.message}
                     />
@@ -298,9 +295,12 @@ const EmailOTP_1_Continue = (props: {
                           handleSubmit(handleSubmitOTPSuccess, handleError);
                         }
                       }}
-                      onPaste={() =>
-                        handleSubmit(handleSubmitOTPSuccess, handleError)()
-                      }
+                      onPaste={() => {
+                        // wait for a bit before submitting
+                        setTimeout(() => {
+                          handleSubmit(handleSubmitOTPSuccess, handleError)();
+                        }, 500);
+                      }}
                       containerStyle={"flex flex-row justify-center mt-3"}
                       inputStyle={
                         "border-2 mx-1 rounded-lg w-25 font-poppins text-center text-5xl"
@@ -317,7 +317,7 @@ const EmailOTP_1_Continue = (props: {
                 name="code"
                 control={control}
               />
-              {}
+              { }
             </IonRow>
             <IonRow className="mt-4 ml-[-5px]">
               <IonCol size="12">

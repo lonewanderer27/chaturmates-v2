@@ -112,6 +112,7 @@ const EmailOTP_1_Continue = (props: {
     email: string;
     code?: string;
   }> = async (data) => {
+    console.log("handle submit otp success");
     // fail fast if the code is undefined
     if (!data.code) {
       setError("code", {
@@ -239,6 +240,9 @@ const EmailOTP_1_Continue = (props: {
                       value={value}
                       onIonChange={onChange}
                       onIonBlur={onBlur}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleSubmit(handleEmailOTPSuccess, handleError)();
+                      }}
                       placeholder="Enter your Adamson Email"
                       errorText={error?.message}
                     />
@@ -290,11 +294,12 @@ const EmailOTP_1_Continue = (props: {
                       onChange={(e) => {
                         onChange(e);
                         if (e.length === 6) {
+                          console.log("try to submit as we've reached length of 6");
                           handleSubmit(handleSubmitOTPSuccess, handleError);
                         }
                       }}
                       onPaste={() =>
-                        handleSubmit(handleSubmitOTPSuccess, handleError)
+                        handleSubmit(handleSubmitOTPSuccess, handleError)()
                       }
                       containerStyle={"flex flex-row justify-center mt-3"}
                       inputStyle={

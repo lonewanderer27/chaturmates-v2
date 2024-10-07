@@ -8,9 +8,11 @@ import {
   IonButton,
   IonList,
   IonItem,
-  IonToggle
+  IonToggle,
+  IonIcon
 } from '@ionic/react';
 import { useToggleTheme } from '../hooks/useToggleTheme'; 
+import { closeOutline } from 'ionicons/icons';
 
 const AccessibilitySettings: FC = () => {
   const [darkMode, toggleDarkMode] = useToggleTheme('darkModeActivated', 'ion-palette-dark');
@@ -29,7 +31,7 @@ const AccessibilitySettings: FC = () => {
           <IonTitle className='mt-1'>Accessibility</IonTitle>
           <IonButtons slot="end">
             <IonButton color="dark" onClick={() => dismiss()}>
-              Close
+              <IonIcon src={closeOutline}/>
             </IonButton>
           </IonButtons>
         </IonToolbar>

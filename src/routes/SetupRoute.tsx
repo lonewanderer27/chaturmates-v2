@@ -7,9 +7,10 @@ import Setup from '../pages/Setup'
 import SetupPdfUpload from '../pages/Setup/Setup1PdfUpload'
 import Setup3AcademicInformation from '../pages/Setup/Setup3AcademicInformation'
 import Setup4Subjects from '../pages/Setup/Setup4Subjects'
-import Setup6Finish from '../pages/Setup/Setup6Finish'
+import Setup6Finish from '../pages/Setup/SetupFinish'
 import SetupStudentOrProf from '../pages/Setup/Setup0StudentOrProf'
 import Setup2IntroduceYourself from '../pages/Setup/Setup2IntroduceYourself'
+import Setup5Hobbies from '../pages/Setup/Setup5Hobbies'
 
 const SetupRoute: React.FC<RouteComponentProps> = ({ match }) => {
   return (
@@ -20,6 +21,7 @@ const SetupRoute: React.FC<RouteComponentProps> = ({ match }) => {
       <Route path={`${match.url}/introduceYourself`} component={Setup2IntroduceYourself} exact />
       <Route path={`${match.url}/academicInformation`} component={Setup3AcademicInformation} exact />
       <Route path={`${match.url}/subjects`} component={Setup4Subjects} exact />
+      <Route path={`${match.url}/hobbies`} component={Setup5Hobbies} exact />
       <Route path={`${match.url}/finish`} component={Setup6Finish} exact />
     </IonRouterOutlet>
   )

@@ -33,4 +33,7 @@ export const NEW_STUDENT = {
       },
     ],
   },
+  step4: {
+    hobbies: [],
+  },
 };

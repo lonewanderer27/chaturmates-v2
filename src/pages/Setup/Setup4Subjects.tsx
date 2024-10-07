@@ -182,7 +182,7 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
     console.log(getValues());
   };
 
-  const { handleNext, handleUpload, uploading } = useSetup();
+  const { handleNext: next, handleUpload, uploading } = useSetup();
   const [show, hide] = useIonLoading();
   const handlePageNext: SubmitHandler<NewStudentTypeSteps["step3"]> = async (
     data
@@ -194,9 +194,12 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
       step3: data,
     }));
 
-    // we're at the last step
-    // so we can now submit everything to the database
+    // we can now submit our new student's data to the database
+    // we do it async so that we can show the next screen
     handleUpload();
+
+    // navigate to the interests screen
+    await next();
   };
 
   const {
@@ -665,14 +668,15 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
       <IonFooter>
         <IonToolbar className="p-4">
           {/* TODO */}
-          {/* <IonButton
+          <IonButton
             shape="round"
             slot="end"
             onClick={handleSubmit(handlePageNext, handlePageNextError)}
+            disabled={uploading}
           >
             Next
-          </IonButton> */}
-          <IonButton
+          </IonButton>
+          {/* <IonButton
             shape="round"
             slot="end"
             expand="block"
@@ -680,7 +684,7 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
             disabled={uploading}
           >
             COMPLETE
-          </IonButton>
+          </IonButton> */}
         </IonToolbar>
       </IonFooter>
       {uploading && (

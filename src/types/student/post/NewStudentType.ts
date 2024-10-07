@@ -37,4 +37,7 @@ export interface NewStudentTypeSteps {
       endTime: string,
     }[]
   },
+  step4: {
+    hobbies: number[]
+  }
 }

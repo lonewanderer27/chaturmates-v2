@@ -653,6 +653,69 @@ export type Database = {
           },
         ]
       }
+      hobbies: {
+        Row: {
+          category_id: number | null
+          created_at: string
+          created_by_student_id: number | null
+          id: number
+          ionicon_name: string | null
+          is_custom: boolean
+          title: string
+        }
+        Insert: {
+          category_id?: number | null
+          created_at?: string
+          created_by_student_id?: number | null
+          id?: number
+          ionicon_name?: string | null
+          is_custom?: boolean
+          title: string
+        }
+        Update: {
+          category_id?: number | null
+          created_at?: string
+          created_by_student_id?: number | null
+          id?: number
+          ionicon_name?: string | null
+          is_custom?: boolean
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hobbies_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "hobbies_category"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hobbies_created_by_student_id_fkey"
+            columns: ["created_by_student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hobbies_category: {
+        Row: {
+          created_at: string
+          id: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          title?: string
+        }
+        Relationships: []
+      }
       otp_codes: {
         Row: {
           code: string
@@ -1119,6 +1182,42 @@ export type Database = {
           },
         ]
       }
+      student_hobbies: {
+        Row: {
+          created_at: string
+          hobby_id: number
+          id: number
+          student_id: number
+        }
+        Insert: {
+          created_at?: string
+          hobby_id: number
+          id?: number
+          student_id: number
+        }
+        Update: {
+          created_at?: string
+          hobby_id?: number
+          id?: number
+          student_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_hobbies_hobby_id_fkey"
+            columns: ["hobby_id"]
+            isOneToOne: false
+            referencedRelation: "hobbies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_hobbies_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       students: {
         Row: {
           academic_year_id: number | null
@@ -1347,7 +1446,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_group_metadata: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          group_id: number
+          group_name: string
+          group_subjects: string[]
+          year_level: string
+          block: string
+        }[]
+      }
+      get_student_profile: {
+        Args: {
+          user_id: number
+        }
+        Returns: {
+          id: number
+          year_level: string
+          block: string
+          subjects: string[]
+        }[]
+      }
     }
     Enums: {
       daysofweek:

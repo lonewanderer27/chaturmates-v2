@@ -9,6 +9,7 @@ import client from "../../client";
 import { useAtom } from "jotai";
 import { newStudentAtom } from "../../atoms/student";
 import dayjs from "dayjs";
+import useSelfStudentLite from "../student/useSelfStudentLite";
 
 export default function useSetup() {
   const [progress, setProgress] = useState<SetupProgressType["progress"]>([
@@ -142,6 +143,9 @@ export default function useSetup() {
         rt.push("/setup/subjects");
         break;
       case "/setup/subjects":
+        rt.push("/setup/hobbies");
+        break;
+      case "/setup/hobbies":
         rt.push("/setup/finish");
         break;
     }
@@ -241,8 +245,67 @@ export default function useSetup() {
     setUploading(() => false);
 
     // go to the finish page
-    rt.push("/setup/finish");
+    // rt.push("/setup/finish");
   };
+
+  const { student, query: selfStudentQuery } = useSelfStudentLite();
+  const handleUploadInterests = async (hobbyIds: number[]) => {
+    setUploading(() => true);
+
+    // refresh the student data
+    selfStudentQuery.refetch();
+
+    // get the student id
+    const studentId = student!.id;
+
+    // create an object for each hobbyId
+    const hobbies = hobbyIds.map((hobby
+      : number) => ({
+        student_id: studentId,
+        hobby_id: hobby,
+        is_custom: false,
+      }))
+
+    // delete the existing hobbies for the student
+    const { error: deleteError } = await client.from('student_hobbies').delete().eq('student_id', studentId);
+
+    if (deleteError) {
+      console.error(deleteError);
+      showAlert({
+        header: "Error",
+        message:
+          "An error occurred while uploading your interests. Please try again. \n\n" +
+          deleteError.message,
+        buttons: ["OK"],
+      });
+      return;
+    }
+
+    // create the relationship between the student and the hobbies
+    const { error } = await client.from('student_hobbies').insert([...hobbies]);
+
+    if (error) {
+      console.error(error);
+      showAlert({
+        header: "Error",
+        message:
+          "An error occurred while uploading your interests. Please try again. \n\n" +
+          error.message,
+        buttons: ["OK"],
+      });
+      return;
+    }
+
+    setUploading(() => false);
+
+    // go to the finish page
+    await handleFinish();
+  }
+
+  async function handleFinish() {
+    // go to the finish page
+    await rt.push("/setup/finish");
+  }
 
   return {
     progress,
@@ -251,6 +314,8 @@ export default function useSetup() {
     handlePrev,
     handleNext,
     handleUpload,
+    handleUploadInterests,
+    handleFinish,
     uploading,
   };
 }

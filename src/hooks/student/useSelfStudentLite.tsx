@@ -20,7 +20,8 @@ const useSelfStudentLite = () => {
 
   return {
     profile: profile ?? null,
-    student: query.data ?? null
+    student: query.data ?? null,
+    query
   }
 }
 

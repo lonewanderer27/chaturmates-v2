@@ -1,7 +1,8 @@
 import { Controller, useForm } from "react-hook-form";
-import { IonButton, IonContent, IonFooter, IonIcon, IonImg, IonPage, IonText, IonTitle, useIonRouter } from "@ionic/react";
+import { IonButton, IonContent, IonFooter, IonIcon, IonImg, IonPage, IonText, IonTitle, useIonRouter, useIonViewWillEnter } from "@ionic/react";
 import { boolean, object, ref, string } from 'yup';
 import { chevronForward, logoGoogle, mailOutline, mailSharp } from "ionicons/icons";
+import { StatusBar } from '@capacitor/status-bar';
 
 import EmailOTP_1_Continue from "../components/ContinuePage/EmailOTP_Continue";
 import { NewStudentType } from "../types/student/post/NewStudentType";
@@ -65,43 +66,50 @@ export default function Continue() {
 
   }
 
+  useIonViewWillEnter(() => {
+    // if we're on the web, we can't use the status bar
+    if (Capacitor.isNativePlatform() === false) return;
+
+    // set the status bar to overlay the webview
+    StatusBar.setOverlaysWebView({ overlay: true });
+  }, []);
+
   return (
-    <>
-      <IonPage>
-        <EmailOTP_1_Continue open={open} setOpen={setOpen} />
-        <IonContent className="ion-padding ">
-          <video
-            className="fixed z-[-10] top-0 left-0 min-w-full min-h-full w-auto h-auto transform object-cover"
-            autoPlay
-            muted
-            loop
-          >
-            <source src="/480.mp4" type="video/mp4" />
-          </video>
-          <IonImg src="/logo_w_name.png" className="w-32 mx-auto mt-28" />
-        </IonContent>
-        <IonFooter className="ion-padding text-center">
-          <div className="mb-32">
-            <IonButton expand="block" fill="outline" color="light" onClick={handleContinue} shape="round">
-              Continue with Email
-              <IonIcon slot="start" src={mailOutline} />
-            </IonButton>
-            {Capacitor.isNativePlatform() === false && <IonButton
-              onClick={handleGoogle}
-              expand="block"
-              fill="clear"
-              size="small"
-              className="mt-4"
-              color="light">
-              <IonIcon slot="start" icon={logoGoogle} />
-              Continue with Google
-            </IonButton>}
-          </div>
-          <IonText color="light">
-            By continuing, you confirm that you agree to our <span className="underline" onClick={handleTermsOfService}>Terms of Service</span> and <span className="underline" onClick={handlePrivacyPolicy}>Privacy Policy</span>.
-          </IonText>
-        </IonFooter>
-        {/* <IonFooter className="ion-padding text-center">
+    <IonPage>
+      <EmailOTP_1_Continue open={open} setOpen={setOpen} />
+      <IonContent className="ion-padding ">
+        <video
+          className="fixed z-[-10] top-0 left-0 min-w-full min-h-full w-auto h-auto transform object-cover"
+          autoPlay
+          muted
+          loop
+        >
+          <source src="/480.mp4" type="video/mp4" />
+        </video>
+        <IonImg src="/logo_w_name.png" className="w-32 mx-auto mt-28" />
+      </IonContent>
+      <IonFooter className="ion-padding text-center">
+        <div className="mb-32">
+          <IonButton expand="block" fill="outline" color="light" onClick={handleContinue} shape="round">
+            Continue with Email
+            <IonIcon slot="start" src={mailOutline} />
+          </IonButton>
+          {Capacitor.isNativePlatform() === false && <IonButton
+            onClick={handleGoogle}
+            expand="block"
+            fill="clear"
+            size="small"
+            className="mt-4"
+            color="light">
+            <IonIcon slot="start" icon={logoGoogle} />
+            Continue with Google
+          </IonButton>}
+        </div>
+        <IonText color="light">
+          By continuing, you confirm that you agree to our <span className="underline" onClick={handleTermsOfService}>Terms of Service</span> and <span className="underline" onClick={handlePrivacyPolicy}>Privacy Policy</span>.
+        </IonText>
+      </IonFooter>
+      {/* <IonFooter className="ion-padding text-center">
           <div className="mb-32">
             <IonButton expand="block" fill="outline" color="light" onClick={handleGoogle} >
               <IonIcon slot="start" src={logoGoogle} />
@@ -122,7 +130,6 @@ export default function Continue() {
             By continuing, you confirm that you agree to our <span className="underline" onClick={handleTermsOfService}>Terms of Service</span> and <span className="underline" onClick={handlePrivacyPolicy}>Privacy Policy</span>.
           </IonText>
         </IonFooter> */}
-      </IonPage>
-    </>
+    </IonPage>
   )
 }

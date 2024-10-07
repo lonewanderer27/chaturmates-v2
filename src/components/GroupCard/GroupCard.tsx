@@ -10,11 +10,13 @@ import {
   IonText,
   useIonRouter,
 } from "@ionic/react";
-import { peopleCircleOutline, personCircleOutline } from "ionicons/icons";
+import { peopleCircleOutline, personCircle, personCircleOutline } from "ionicons/icons";
 import { isValidUrl } from "../../utils/ValidUrl";
 import { GroupMemberType, GroupType, StudentType } from "../../types";
 import useAmIAMember from "../../hooks/group/useAmIAMember";
 import { useEffect, useMemo, useState } from "react";
+import { getRandomColor } from "./ColorPalette";
+import { useToggleTheme } from "../../hooks/useToggleTheme";
 
 interface GT extends GroupType {
   group_members: GroupMemberType[];
@@ -38,12 +40,19 @@ export default function GroupCard(props: GroupCardProps) {
     );
   };
 
-  const [approvedMembers, setApprovedMembers] = useState<GroupMemberType[]>([]);
-  useEffect(() => {
-    setApprovedMembers(
-      props.group.group_members.filter((m) => m.approved === true)
-    );
-  }, [props.group.group_members]);
+  // Memoize approved members to avoid recalculating if group members don't change
+  const approvedMembers = useMemo(
+    () => props.group.group_members.filter((m) => m.approved === true),
+    [props.group.group_members]
+  );
+
+  // Generate and memoize random colors for each member without an avatar
+  const memberColors = useMemo(() => {
+    return approvedMembers.map(() => getRandomColor());
+  }, [approvedMembers]);
+
+  // get the current dark or light mode
+  const [darkMode] = useToggleTheme('darkModeActivated', 'ion-palette-dark');
 
   return (
     <IonCol size="6" className="flex flex-column w-full cursor-pointer">
@@ -71,7 +80,11 @@ export default function GroupCard(props: GroupCardProps) {
                     {isValidUrl(m.avatar_url + "") ? (
                       <img src={m.avatar_url + ""} />
                     ) : (
-                      <IonIcon className="text-3xl m-[-3px]" icon={personCircleOutline} />
+                      <IonIcon
+                        className="text-3xl m-[-3px]"
+                        icon={personCircle}
+                        style={{ color: memberColors[i] }}
+                      />
                     )}
                   </div>
                 </div>

@@ -62,7 +62,7 @@ export default function StudentItem(props: {
           {props.showType && (
             <IonText className="studentType text-sm mt-[-20px]" color="medium">
               <br />
-              {S(props?.student.type + "").capitalize().s}
+              {S(props.student.block ?? props.student.type).capitalize().s}
             </IonText>
           )}
         </IonCol>

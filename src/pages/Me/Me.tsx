@@ -92,7 +92,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
               </IonRow>
               <IonRow className="flex justify-center mt-1">
                 <IonText className="text-sm capitalize" color="dark">
-                  {student?.type ?? "-"}
+                  {student?.block ? student.block : "-"}
                 </IonText>
               </IonRow>
               <IonRow className="text-center mt-2">

@@ -1,10 +1,11 @@
 import { Redirect, Route, RouteComponentProps } from "react-router";
 
+import { lazy, useEffect } from "react";
+import Discover from "../pages/Discover";
+import { FC } from "react";
 import CreateGroupP1 from "../pages/Group/Create/CreateGroupP1";
 import CreateGroupP2 from "../pages/Group/Create/CreateGroupP2";
 import CreateGroupP3 from "../pages/Group/Create/CreateGroupP3";
-import Discover from "../pages/Discover";
-import { FC } from "react";
 import GroupAwaitingApproval from "../pages/Group/Members/GroupAwaitingApproval";
 // import GroupEditInfo from '../pages/Group/GroupEditInfo'
 import GroupInfo from "../pages/Group/GroupInfo";
@@ -39,7 +40,7 @@ const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
       {/* <Route path={`${match.url}/group`} component={GroupsRoute} /> */}
       <Route
         path={`${match.url}/group/create`}
-        render={() => <Redirect to={`${match.url}/groups/create/p1`} />}
+        render={() => <Redirect to={`${match.url}/group/create/p1`} />}
         exact
       />
       <Route

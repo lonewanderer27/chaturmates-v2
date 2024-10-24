@@ -140,9 +140,9 @@ export default function useSetup() {
         rt.push("/setup/academicInformation");
         break;
       case "/setup/academicInformation":
-        rt.push("/setup/subjects");
+        rt.push("/setup/classes");
         break;
-      case "/setup/subjects":
+      case "/setup/classes":
         rt.push("/setup/hobbies");
         break;
       case "/setup/hobbies":

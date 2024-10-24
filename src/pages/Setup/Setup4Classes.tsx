@@ -99,7 +99,7 @@ const validationSchema = Yup.object().shape({
   classes: Yup.array().of(classSchema).required("Classes are required"),
 });
 
-const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
+const Setup4Classes: FC<RouteComponentProps> = ({ match }) => {
   useIonViewWillEnter(() => {
     hideTabBar();
   });
@@ -698,4 +698,4 @@ const Setup4Subjects: FC<RouteComponentProps> = ({ match }) => {
   );
 };
 
-export default Setup4Subjects;
+export default Setup4Classes;

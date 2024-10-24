@@ -130,21 +130,23 @@ const GroupPreview: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
             </div>
           </IonCardContent>
         </IonCard>
-        <IonCard className="mt-4 mx-0 rounded-xl bg-slate-200 shadow-none">
-          <IonCardContent>
-            <div>
-              <IonText className="text-xs font-bold" color="dark">
-                DESCRIPTION
-              </IonText>
-              <br />
-            </div>
-            <div className="">
-              <IonText className="text-sm" color="dark">
-                {infoLite?.description}
-              </IonText>
-            </div>
-          </IonCardContent>
-        </IonCard>
+        {infoLite?.description && (
+          <IonCard className="mt-4 mx-0 rounded-xl bg-slate-200 shadow-none">
+            <IonCardContent>
+              <div>
+                <IonText className="text-xs font-bold" color="dark">
+                  DESCRIPTION
+                </IonText>
+                <br />
+              </div>
+              <div className="">
+                <IonText className="text-sm" color="dark">
+                  {infoLite?.description}
+                </IonText>
+              </div>
+            </IonCardContent>
+          </IonCard>
+        )}
       </IonContent>
     </IonPage>
   );

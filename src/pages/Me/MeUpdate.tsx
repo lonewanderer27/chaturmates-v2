@@ -121,6 +121,7 @@ const MeUpdate: FC<RouteComponentProps> = ({ match }) => {
                   onIonChange={onChange}
                   onIonBlur={onBlur}
                   errorText={error?.message}
+                  placeholder="Introduce yourself to your klasmeyts"
                 />
               )}
               name="description"

@@ -102,13 +102,13 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
       const newIds = prevIds.includes(hobbyId)
         ? prevIds.filter(id => id !== hobbyId)
         : [...prevIds, hobbyId];
-      
+
       if (newIds.length === 5 && prevIds.length < 5) {
         animateFooter(true);
       } else if (newIds.length < 5 && prevIds.length >= 5) {
         animateFooter(false);
       }
-      
+
       return newIds;
     });
   }
@@ -192,6 +192,24 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
               <IonText>
                 <h4>{getInterestMessage()}</h4>
               </IonText>
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol>
+              {hqR.data && hqR.data.filter(hq => hq.category_id === null).map(hq => (
+
+                <IonChip
+                  key={hq.id}
+                  color={isHobbySelected(hq.id) ? "primary" : undefined}
+                  onClick={() => toggleHobbySelection(hq.id)}
+                  className="outline outline-1"
+                >
+                  <IonText>
+                    <p>{hq.title}</p>
+                  </IonText>
+                </IonChip>
+
+              ))}
             </IonCol>
           </IonRow>
           {hcqR.data && hcqR.data.map((hc) => {

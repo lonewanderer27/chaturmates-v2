@@ -27,6 +27,7 @@ import {
   compassOutline,
   peopleCircleOutline,
 } from "ionicons/icons";
+import useMeGroups from "../hooks/group/useMeGroups";
 
 export default function Sidebar() {
   const rt = useIonRouter();
@@ -54,7 +55,7 @@ export default function Sidebar() {
     );
   };
 
-  const { data: meAdminGroups } = useMeAdminGroups();
+  const { data: meGroups } = useMeGroups();
 
   return (
     <IonMenu contentId="community-page" type="reveal">
@@ -76,7 +77,7 @@ export default function Sidebar() {
           <IonListHeader>
             <IonLabel>Your Groups</IonLabel>
           </IonListHeader>
-          {meAdminGroups?.map((group) => {
+          {meGroups?.map((group) => {
             if (group!.avatar_url && isValidUrl(group!.avatar_url)) {
               return (
                 <IonItem key={group!.id} onClick={() => handleGroup(group!.vanity_id)}>

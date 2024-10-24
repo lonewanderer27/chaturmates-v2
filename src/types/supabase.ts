@@ -572,6 +572,7 @@ export type Database = {
           course: number | null
           cover_url: string | null
           created_at: string
+          csv_id: number | null
           deleted: boolean
           description: string | null
           id: number
@@ -580,6 +581,7 @@ export type Database = {
           school_id: number
           semester: number | null
           vanity_id: string
+          year_level: number[] | null
         }
         Insert: {
           academic_year_id?: number | null
@@ -589,6 +591,7 @@ export type Database = {
           course?: number | null
           cover_url?: string | null
           created_at?: string
+          csv_id?: number | null
           deleted?: boolean
           description?: string | null
           id?: number
@@ -597,6 +600,7 @@ export type Database = {
           school_id: number
           semester?: number | null
           vanity_id: string
+          year_level?: number[] | null
         }
         Update: {
           academic_year_id?: number | null
@@ -606,6 +610,7 @@ export type Database = {
           course?: number | null
           cover_url?: string | null
           created_at?: string
+          csv_id?: number | null
           deleted?: boolean
           description?: string | null
           id?: number
@@ -614,6 +619,7 @@ export type Database = {
           school_id?: number
           semester?: number | null
           vanity_id?: string
+          year_level?: number[] | null
         }
         Relationships: [
           {
@@ -649,6 +655,45 @@ export type Database = {
             columns: ["semester"]
             isOneToOne: false
             referencedRelation: "semesters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      groups_tags: {
+        Row: {
+          created_at: string
+          group_id: number
+          id: number
+          order: number
+          tag_id: number
+        }
+        Insert: {
+          created_at?: string
+          group_id: number
+          id?: number
+          order: number
+          tag_id: number
+        }
+        Update: {
+          created_at?: string
+          group_id?: number
+          id?: number
+          order?: number
+          tag_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "groups_tags_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "groups_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
             referencedColumns: ["id"]
           },
         ]
@@ -859,15 +904,7 @@ export type Database = {
           id?: string
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       resources_collection: {
         Row: {
@@ -1225,6 +1262,7 @@ export type Database = {
           block: string | null
           course: number | null
           created_at: string
+          csv_id: number | null
           description: string | null
           full_name: string | null
           id: number
@@ -1243,6 +1281,7 @@ export type Database = {
           block?: string | null
           course?: number | null
           created_at?: string
+          csv_id?: number | null
           description?: string | null
           full_name?: string | null
           id?: number
@@ -1261,6 +1300,7 @@ export type Database = {
           block?: string | null
           course?: number | null
           created_at?: string
+          csv_id?: number | null
           description?: string | null
           full_name?: string | null
           id?: number
@@ -1340,6 +1380,45 @@ export type Database = {
           },
         ]
       }
+      students_subjects: {
+        Row: {
+          created_at: string
+          id: number
+          order: number
+          student_id: number
+          subject_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          order: number
+          student_id: number
+          subject_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          order?: number
+          student_id?: number
+          subject_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "students_subjects_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "students_subjects_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subjects: {
         Row: {
           created_at: string
@@ -1374,6 +1453,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      tags: {
+        Row: {
+          created_at: string
+          id: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          title?: string
+        }
+        Relationships: []
       }
       threads: {
         Row: {
@@ -1446,6 +1543,36 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_all_student_profiles: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: number
+          year_level: string
+          block: string
+          subjects: string
+          hobbies: string
+        }[]
+      }
+      get_group_members:
+        | {
+            Args: Record<PropertyKey, never>
+            Returns: {
+              id: number
+              student_id: number
+              group_id: number
+            }[]
+          }
+        | {
+            Args: {
+              p_group_id: number
+            }
+            Returns: {
+              student_id: number
+              student_name: string
+              year_level: string
+              block: string
+            }[]
+          }
       get_group_metadata: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -1566,4 +1693,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

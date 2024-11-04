@@ -8,7 +8,7 @@ import { FC } from "react";
 const RecommendRoute: FC<RouteComponentProps> = ({ match }) => {
   return (
     <IonRouterOutlet id="recommend">
-      <Route render={() => <Redirect to={`${match.url}/students`} />} />
+      <Route render={() => <Redirect to={`${match.url}/groups`} />} />
       <Route path={`${match.url}/pending`} component={RecommendPending} exact />
       <Route
         path={`${match.url}/students`}

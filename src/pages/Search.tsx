@@ -84,6 +84,9 @@ export default function SearchPage() {
                   handlePostSearch(e.detail.value!);
               }}
               value={query}
+              style={{
+                "--background": "var(--ion-background-color)",
+              }}
             ></IonSearchbar>
             <IonButton
               onClick={handleBack}

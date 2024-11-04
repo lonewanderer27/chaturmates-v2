@@ -22,6 +22,7 @@ import useGroupInfoLite from "../../hooks/group/useGroupInfoLite";
 import useGroupMemsCount from "../../hooks/group/useGroupMemsCount";
 import useMePendingRequest from "../../hooks/group/useMePendingRequest";
 import dayjs from "dayjs";
+import GroupAvatarLarge from "../../components/Group/GroupAvatarLarge";
 
 type GroupTimelinePageProps = {
   vanity_url: string;
@@ -68,7 +69,7 @@ const GroupPreview: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <MemberAvatarLarge avatarUrl={infoLite?.avatar_url} />
+        <GroupAvatarLarge avatarUrl={infoLite?.avatar_url} />
         <IonCard className="pt-16 mx-0 bg-slate-200  z-[-500] shadow-none">
           <IonCardContent>
             <IonGrid>

@@ -1255,6 +1255,71 @@ export type Database = {
           },
         ]
       }
+      student_recommend_groups: {
+        Row: {
+          created_at: string
+          group_ids: number[]
+          id: number
+          student_id: number
+        }
+        Insert: {
+          created_at?: string
+          group_ids: number[]
+          id?: number
+          student_id: number
+        }
+        Update: {
+          created_at?: string
+          group_ids?: number[]
+          id?: number
+          student_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_recommend_groups_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_unrecommend_groups: {
+        Row: {
+          created_at: string
+          group_id: number
+          id: number
+          student_id: number
+        }
+        Insert: {
+          created_at?: string
+          group_id: number
+          id?: number
+          student_id: number
+        }
+        Update: {
+          created_at?: string
+          group_id?: number
+          id?: number
+          student_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_unrecommend_groups_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_unrecommend_groups_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       students: {
         Row: {
           academic_year_id: number | null

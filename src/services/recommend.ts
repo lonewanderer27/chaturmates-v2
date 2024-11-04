@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { CourseType, GroupMemberType, GroupType, ProfileType, StudentType } from "../types";
+import { RealGroupsRes } from "../types/recommend/realGroup";
 
 // @ts-ignore
 export interface RecommendedStudentType extends StudentType {
@@ -36,6 +37,12 @@ const RecommendService = {
 
     return res.data;
   },
+  async getRealGroups(studentId: number) {
+    const res: AxiosResponse<RealGroupsRes> = 
+      await recommend.get(`/groups/sid/${studentId}`);
+      
+    return res.data;
+  }
 };
 
 export default RecommendService;

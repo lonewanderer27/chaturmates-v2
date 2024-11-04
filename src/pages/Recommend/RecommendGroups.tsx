@@ -21,6 +21,8 @@ import { FC } from "react";
 import { RouteComponentProps } from "react-router";
 import useRecommendGroups from "../../hooks/recommend/useRecommendGroups";
 import RecommendedGroupCard from "../../components/Recommend/GroupCard";
+import useRecommendRealGroups from "../../hooks/recommend/useRecommendRealGroups";
+import RealGroupCard from "../../components/Recommend/RealGroupCard";
 
 
 const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
@@ -30,7 +32,7 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
   const handleDone = () => {
     rt.push("/");
   };
-  const { data, isLoading } = useRecommendGroups();
+  const { data, isLoading } = useRecommendRealGroups();
   const handleStudents = () => {
     rt.push("/recommend/students");
   };
@@ -60,11 +62,12 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
             </IonCol>
           </IonRow>
           <IonRow className="mx-[-4px]">
-            {data?.groups.map((group, index) => (
+            {data?.map((group, index) => (
               <IonCol size="6" className="flex flex-column w-full">
-                <RecommendedGroupCard
+                <RealGroupCard
                   key={"recogroup: " + index}
-                  group={group}
+                  // @ts-ignore TODO: Fix this
+                  group={group} 
                 />
               </IonCol>
             ))}

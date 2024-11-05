@@ -88,7 +88,9 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
                 {topKNumbers.map((number) => (
                   <Picker.Item key={number} value={number} label={number.toString()}>
                     {({ selected }) => (
-                      <div style={{ color: selected ? '#26c072' : 'black' }}>{number}</div>
+                      <IonText style={{ color: selected ? '#0356e9' : 'black' }}>
+                        <h4>{number}</h4>
+                      </IonText>
                     )}
                   </Picker.Item>
                 ))}
@@ -109,27 +111,6 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
                 <IonButton fill="clear" id="open-change-topk">
                   Top: {finalTopK}
                 </IonButton>
-                {/* <IonRow>
-                <IonCol>
-                  <IonLabel style={{ whiteSpace: "nowrap" }}>
-                    Top K
-                  </IonLabel>
-                </IonCol>
-                <IonCol style={{ marginTop: "-40px", marginBottom: "-25px" }}>
-                  <Picker value={topK} onChange={setTopK} wheelMode="natural" height={100}>
-                    <Picker.Column name="topK">
-                      {topKNumbers.map((number) => (
-                        <Picker.Item key={number} value={number} label={number.toString()}>
-                          {({ selected }) => (
-                            <div style={{ color: selected ? '#26c072' : 'black' }}>{number}</div>
-                          )}
-                        </Picker.Item>
-                      ))}
-                    </Picker.Column>
-                  </Picker>
-                </IonCol>
-              </IonRow> */}
-
               </IonButtons>
             </IonToolbar>
           </IonHeader>

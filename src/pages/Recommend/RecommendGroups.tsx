@@ -166,7 +166,7 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
             />
           )
         }
-        <IonFooter className="p-2">
+        {/* <IonFooter className="p-2">
           <IonGrid>
             <IonRow>
               <IonCol size="5">
@@ -179,7 +179,6 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
                   <IonLabel>
                     <IonText>Done</IonText>
                   </IonLabel>
-                  {/* <IonIcon src={closeOutline} slot="start" /> */}
                 </IonButton>
               </IonCol>
               <IonCol>
@@ -192,12 +191,11 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
                   <IonLabel>
                     <IonText>View Students</IonText>
                   </IonLabel>
-                  {/* <IonIcon src={checkmarkOutline} slot="start" /> */}
                 </IonButton>
               </IonCol>
             </IonRow>
           </IonGrid>
-        </IonFooter>
+        </IonFooter> */}
       </IonPage >
     </>
   );

@@ -74,7 +74,7 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
               </IonTitle>
               <IonButtons slot="primary">
                 <IonButton onClick={handleRefreshRecommendations}>
-                  Refresh
+                  {topK.value === finalTopK ? "OK" : "Refresh"}
                 </IonButton>
               </IonButtons>
             </IonToolbar>

@@ -37,9 +37,13 @@ const RecommendService = {
 
     return res.data;
   },
-  async getRealGroups(studentId: number) {
+  async getRealGroups(studentId: number, topK: number = 10) {
     const res: AxiosResponse<RealGroupsRes> = 
-      await recommend.get(`/groups/sid/${studentId}`);
+      await recommend.get(`/groups/sid/${studentId}`, {
+        params: {
+          top_k: topK
+        }
+      });
       
     return res.data;
   }

@@ -17,8 +17,6 @@ export const StudentHobbies = {
         userId: userId
       }
     })
-
-    res.
   },
   async deleteStudentHobby(studentId: string, hobbyId: string, userId: string) {
     const res = await axios.delete(`${url}/`, {

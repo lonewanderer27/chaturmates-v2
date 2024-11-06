@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query"
-import client from "../../client"
+// import { useQuery } from "@tanstack/react-query"
+// import client from "../../client"
 
-const useStudentHobbies = () => {
-  const sHQ = useQuery({
-    queryKey: ["studentHobbies"],
-    queryFn: async() => {
-      // fetch the hobbies
-      const hobbies = await 
+// const useStudentHobbies = () => {
+//   const sHQ = useQuery({
+//     queryKey: ["studentHobbies"],
+//     queryFn: async() => {
+//       // fetch the hobbies
+//       const hobbies = await 
 
-      return hobbies.data
-    }
-  })
-}
+//       return hobbies.data
+//     }
+//   })
+// }

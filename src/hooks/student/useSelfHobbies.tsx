@@ -1,15 +1,18 @@
 import { useQuery } from "@tanstack/react-query"
 import client from "../../client"
+import useSelfStudentLite from "./useSelfStudentLite";
 
-const useStudentHobbies = (studentId: number) => {
-  const sHQ = useQuery({
-    queryKey: ["studentHobbies"],
+const useSelfHobbies = () => {
+  const { student } = useSelfStudentLite();
+
+  const ssHQ = useQuery({
+    queryKey: ["selfStudentHobbies"],
     queryFn: async() => {
-      // fetch the hobbies
+      // fetch the ids of the hobbies
       const rawHobbies = await client
         .from("student_hobbies")
         .select("*")
-        .eq("student_id", studentId)
+        .eq("student_id", student!.id)
 
       if (!rawHobbies.data) return []
 
@@ -21,13 +24,13 @@ const useStudentHobbies = (studentId: number) => {
 
       return hobbies.data
     },
-    enabled: !!studentId
+    enabled: !!student
   })
 
   return {
-    hobbies: sHQ.data ?? [],
-    query: sHQ
+    hobbies: ssHQ.data ?? [],
+    query: ssHQ
   }
 }
 
-export default useStudentHobbies;
+export default useSelfHobbies;

@@ -4,6 +4,7 @@ import {
   IonButtons,
   IonCard,
   IonCardContent,
+  IonChip,
   IonCol,
   IonContent,
   IonFooter,
@@ -29,10 +30,18 @@ import { colorWandOutline, pencilOutline } from "ionicons/icons";
 import useSelfGroups from "../../hooks/student/useSelfGroups";
 import useSelfFollowing from "../../hooks/student/useSelfFollowing";
 import { useToggleTheme } from "../../hooks/useToggleTheme";
+import useSelfHobbies from "../../hooks/student/useSelfHobbies";
+import useSelfSubjects from "../../hooks/student/useSelfSubjects";
+import string from "string";
 
 const Me: FC<RouteComponentProps> = ({ match }) => {
   const rt = useIonRouter();
   const { student } = useSelfStudent();
+  const { hobbies } = useSelfHobbies();
+  const { subjects } = useSelfSubjects();
+  console.log("my hobbies: \n", hobbies);
+  console.log("my subjects: \n", subjects);
+
   const { logout } = useSession();
 
   const { data: groups } = useSelfGroups();
@@ -79,7 +88,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
           </IonToolbar>
         </IonHeader>
         <MemberAvatarLarge avatarUrl={student?.avatar_url} />
-        <IonCard className="pt-16 mx-0 bg-slate-200  z-[-500] shadow-none">
+        <IonCard className="pt-16 mx-0  z-[-500] shadow-none">
           <IonCardContent>
             <IonGrid>
               <IonRow className="flex justify-end mt-[-70px] pb-4 top-0 ">
@@ -119,7 +128,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
           </IonCardContent>
         </IonCard>
         {student?.description && (
-          <IonCard className="mt-4 mx-0 rounded-xl bg-slate-200 shadow-none">
+          <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
             <IonCardContent>
               {student?.description && (
                 <>
@@ -136,6 +145,48 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
                   </div>
                 </>
               )}
+            </IonCardContent>
+          </IonCard>
+        )}
+        {subjects.length > 0 && (
+          <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
+            <IonCardContent>
+              <div className="mb-2">
+                <IonText className="text-xs font-bold" color="dark">
+                  SUBJECTS
+                </IonText>
+                <br />
+              </div>
+              <div className="mx-[-5px]">
+                {subjects.map((subject) => (
+                  <IonChip key={subject.id+subject.title} color="dark">
+                    <IonText>
+                      {string(subject.title.toLowerCase()).titleCase().s}
+                    </IonText>
+                  </IonChip>
+                ))}
+              </div>
+            </IonCardContent>
+          </IonCard>
+        )}
+        {hobbies.length > 0 && (
+          <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
+            <IonCardContent>
+              <div className="mb-2">
+                <IonText className="text-xs font-bold" color="dark">
+                  HOBBIES
+                </IonText>
+                <br />
+              </div>
+              <div className="mx-[-5px]">
+                {hobbies.map((hobby) => (
+                  <IonChip key={hobby.id+hobby.title} color="dark">
+                    <IonText>
+                      {hobby.title}
+                    </IonText>
+                  </IonChip>
+                ))}
+              </div>
             </IonCardContent>
           </IonCard>
         )}

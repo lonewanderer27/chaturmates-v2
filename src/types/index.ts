@@ -3,6 +3,7 @@ import { Database, Tables } from "./supabase";
 export type FollowType = Database["public"]["Tables"]["student_followers"]["Row"];
 
 export type StudentType = Database["public"]["Tables"]["students"]["Row"];
+export type StudentHobbyType = Database["public"]["Tables"]["student_hobbies"]["Row"];
 
 export type StudentRegType = Database['public']['Enums']['student_type']
 

@@ -4,19 +4,18 @@ import {
   IonButtons,
   IonCol,
   IonContent,
-  IonFooter,
-  IonGrid,
   IonHeader,
-  IonIcon,
-  IonLabel,
-  IonLoading,
   IonModal,
   IonPage,
   IonRow,
+  IonSelect,
+  IonSelectOption,
   IonText,
   IonTitle,
   IonToolbar,
   useIonRouter,
+  IonLoading,
+  IonGrid,
 } from "@ionic/react";
 import useHideTabs from "../../hooks/useHideTabs";
 import { FC, useRef, useState } from "react";
@@ -25,6 +24,10 @@ import Picker from "react-mobile-picker";
 import useRecommendRealGroups from "../../hooks/recommend/useRecommendRealGroups";
 import RealGroupCard from "../../components/Recommend/RealGroupCard";
 
+enum SortingOptions {
+  HIGH_TO_LOW = "high_to_low",
+  LOW_TO_HIGH = "low_to_high",
+}
 
 const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
   useHideTabs();
@@ -34,11 +37,15 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
   });
   const [finalTopK, setFinalTopK] = useState(() => topK.value);
   const { data, isLoading } = useRecommendRealGroups(finalTopK);
+  const [sortingOption, setSortingOption] = useState(SortingOptions.HIGH_TO_LOW);
+  const [isSorting, setIsSorting] = useState(false); // New state variable
+
+  const rt = useIonRouter();
+
   const handleStudents = () => {
     rt.push("/recommend/students");
   };
 
-  const rt = useIonRouter();
   const handleDone = () => {
     rt.push("/");
   };
@@ -46,32 +53,47 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
   const modal = useRef<HTMLIonModalElement>(null);
   const dismiss = () => {
     modal.current?.dismiss();
-  }
+  };
   const handleRefreshRecommendations = () => {
     // set our final top k value based on the top k value
-    setFinalTopK(topK.value)
+    setFinalTopK(topK.value);
 
     // dismiss the top k modal selector
     dismiss();
-  }
+  };
 
   const topKNumbers = Array.from({ length: 100 }, (_, i) => i + 1);
+
+  // Prepare the data for display based on the sorting option
+  const displayedData = [...(data || [])];
+
+  if (sortingOption === SortingOptions.LOW_TO_HIGH) {
+    displayedData.reverse();
+  }
+
+  // Handle sorting option change
+  const handleSortingChange = (value: SortingOptions) => {
+    setSortingOption(value);
+    setIsSorting(true); // Show loading indicator
+    setTimeout(() => {
+      setIsSorting(false); // Hide loading indicator after 1 second
+    }, 1000);
+  };
 
   return (
     <>
       <IonPage>
-        <IonModal 
-          ref={modal} 
+        <IonModal
+          ref={modal}
           trigger="open-change-topk"
-          initialBreakpoint={0.350}
-          breakpoints={[0.350]}
+          initialBreakpoint={0.35}
+          breakpoints={[0.35]}
           backdropDismiss={false}
+          handle={false}
         >
           <IonHeader>
             <IonToolbar>
-              <IonTitle>
-                Show Top Groups
-              </IonTitle>
+              <IonTitle>Show Top Groups</IonTitle>
               <IonButtons slot="primary">
                 <IonButton onClick={handleRefreshRecommendations}>
                   {topK.value === finalTopK ? "OK" : "Refresh"}
@@ -80,15 +102,22 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
             </IonToolbar>
           </IonHeader>
           <IonContent>
-            <Picker value={topK} onChange={(newVal) => {
-              console.log("picker: ", newVal)
-              setTopK(newVal)
-            }} wheelMode="natural">
+            <Picker
+              value={topK}
+              onChange={(newVal) => {
+                console.log("picker: ", newVal);
+                setTopK(newVal);
+              }}
+              wheelMode="natural"
+              onTouchMove={(e) => {
+                e.stopPropagation();
+              }}
+            >
               <Picker.Column name="value">
                 {topKNumbers.map((number) => (
                   <Picker.Item key={number} value={number} label={number.toString()}>
                     {({ selected }) => (
-                      <IonText style={{ color: selected ? '#0356e9' : 'black' }}>
+                      <IonText style={{ color: selected ? "#0356e9" : "black" }}>
                         <h4>{number}</h4>
                       </IonText>
                     )}
@@ -121,65 +150,64 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
                   <h3>Suggested Groups</h3>
                 </IonText>
                 <IonText>
-                  <p>Here are our top picks to join to!</p>
+                  <p>Here are our top picks to join!</p>
                 </IonText>
               </IonCol>
             </IonRow>
-            <IonRow className="mx-[-4px]">
-              {data?.map((group, index) => (
-                <IonCol size="6" className="flex flex-column w-full">
-                  <RealGroupCard
-                    key={"recogroup: " + index}
-                    // @ts-ignore TODO: Fix this
-                    group={group}
-                  />
-                </IonCol>
-              ))}
+            <IonRow>
+              <IonCol>
+                <IonSelect
+                  justify="end"
+                  placeholder="Sort"
+                  interface="action-sheet"
+                  value={sortingOption}
+                  onIonChange={(e) => handleSortingChange(e.detail.value)}
+                >
+                  <IonSelectOption value={SortingOptions.HIGH_TO_LOW}>
+                    Most Recommended
+                  </IonSelectOption>
+                  <IonSelectOption value={SortingOptions.LOW_TO_HIGH}>
+                    Least Recommended
+                  </IonSelectOption>
+                </IonSelect>
+              </IonCol>
             </IonRow>
+
+            {/* Display loading indicator during sorting */}
+            {isSorting ? (
+              <IonLoading
+                isOpen={isSorting}
+                spinner="lines"
+                message={"Sorting groups..."}
+              />
+            ) : (
+              <IonRow className="mx-[-4px]">
+                {displayedData.map((group, index) => (
+                  <IonCol
+                    size="6"
+                    className="flex flex-column w-full"
+                    key={`recogroup-${index}`}
+                  >
+                    <RealGroupCard
+                      // @ts-ignore TODO: Fix this
+                      group={group}
+                    />
+                  </IonCol>
+                ))}
+              </IonRow>
+            )}
           </IonGrid>
         </IonContent>
-        {
-          isLoading === true && (
-            <IonLoading
-              isOpen={isLoading === true}
-              spinner="lines"
-              message={"Loading group recommendations"}
-            />
-          )
-        }
-        {/* <IonFooter className="p-2">
-          <IonGrid>
-            <IonRow>
-              <IonCol size="5">
-                <IonButton
-                  onClick={handleDone}
-                  shape="round"
-                  expand="block"
-                  color="medium"
-                >
-                  <IonLabel>
-                    <IonText>Done</IonText>
-                  </IonLabel>
-                </IonButton>
-              </IonCol>
-              <IonCol>
-                <IonButton
-                  shape="round"
-                  expand="block"
-                  color="success"
-                  onClick={handleStudents}
-                >
-                  <IonLabel>
-                    <IonText>View Students</IonText>
-                  </IonLabel>
-                </IonButton>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        </IonFooter> */}
-      </IonPage >
+        {isLoading && (
+          <IonLoading
+            isOpen={isLoading}
+            spinner="lines"
+            message={"Loading group recommendations"}
+          />
+        )}
+      </IonPage>
     </>
   );
-}
+};
 
 export default RecommendGroups;

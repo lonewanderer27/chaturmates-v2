@@ -31,3 +31,5 @@ export type OtpCodeType = Tables<"otp_codes">;
 
 export type SchoolType = Tables<"schools">;
 export type AcademicYearType = Tables<"academic_years">;
+
+export type RemoteConfigType = Database["public"]["Tables"]["remote_configs"]["Row"];

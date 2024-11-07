@@ -906,6 +906,66 @@ export type Database = {
         }
         Relationships: []
       }
+      remote_config_audit: {
+        Row: {
+          action: string | null
+          audit_id: number
+          changed_at: string | null
+          config_id: string | null
+          feature_name: string | null
+          new_value: Json | null
+          old_value: Json | null
+        }
+        Insert: {
+          action?: string | null
+          audit_id?: number
+          changed_at?: string | null
+          config_id?: string | null
+          feature_name?: string | null
+          new_value?: Json | null
+          old_value?: Json | null
+        }
+        Update: {
+          action?: string | null
+          audit_id?: number
+          changed_at?: string | null
+          config_id?: string | null
+          feature_name?: string | null
+          new_value?: Json | null
+          old_value?: Json | null
+        }
+        Relationships: []
+      }
+      remote_configs: {
+        Row: {
+          created_at: string
+          enviroment: Database["public"]["Enums"]["environment"] | null
+          id: string
+          is_active: boolean
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          created_at?: string
+          enviroment?: Database["public"]["Enums"]["environment"] | null
+          id?: string
+          is_active?: boolean
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          created_at?: string
+          enviroment?: Database["public"]["Enums"]["environment"] | null
+          id?: string
+          is_active?: boolean
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       resources_collection: {
         Row: {
           created_at: string
@@ -1669,6 +1729,7 @@ export type Database = {
         | "Friday"
         | "Saturday"
         | "Sunday"
+      environment: "production" | "staging"
       reaction: "like" | "love" | "celebrate" | "insightful" | "curious"
       student_type: "regular" | "irregular"
     }

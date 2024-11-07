@@ -23,6 +23,7 @@ import { RouteComponentProps } from "react-router";
 import Picker from "react-mobile-picker";
 import useRecommendRealGroups from "../../hooks/recommend/useRecommendRealGroups";
 import RealGroupCard from "../../components/Recommend/RealGroupCard";
+import GroupCardLoader from "../../loaders/GroupCardLoader";
 
 enum SortingOptions {
   HIGH_TO_LOW = "high_to_low",
@@ -174,12 +175,20 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
             </IonRow>
 
             {/* Display loading indicator during sorting */}
-            {isSorting ? (
-              <IonLoading
-                isOpen={isSorting}
-                spinner="lines"
-                message={"Sorting groups..."}
-              />
+            {(isSorting || isLoading) ? (
+              <IonRow className="mx-[-4px]">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <IonCol
+                    size="12"
+                    className="flex flex-column w-full"
+                    key={`recogroup-${i}`}
+                  >
+                    {Array.from({ length: 2 }).map((_, i) => (
+                      <GroupCardLoader key={i} />
+                    ))}
+                  </IonCol>
+                ))}
+              </IonRow>
             ) : (
               <IonRow className="mx-[-4px]">
                 {displayedData.map((group, index) => (
@@ -198,13 +207,13 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
             )}
           </IonGrid>
         </IonContent>
-        {isLoading && (
+        {/* {isLoading && (
           <IonLoading
             isOpen={isLoading}
             spinner="lines"
             message={"Loading group recommendations"}
           />
-        )}
+        )} */}
       </IonPage>
     </>
   );

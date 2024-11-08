@@ -133,7 +133,7 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
             <IonToolbar>
               <IonButtons slot="secondary">
                 <IonBackButton
-                  defaultHref={"/" + match.path.split("/")[1]}
+                  defaultHref="/discover/me"
                   text=""
                 />
               </IonButtons>

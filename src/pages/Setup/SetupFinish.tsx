@@ -29,7 +29,7 @@ const Setup6Finish: FC<RouteComponentProps> = () => {
   const handleNext = () => {
     // TODO: We should have a better way to handle this
     // for example, what if the recommendation is not available?
-    rt.push("/recommend");
+    rt.push("/recommend/groups");
   }
 
   return (

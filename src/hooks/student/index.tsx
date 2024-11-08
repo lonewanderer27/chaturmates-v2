@@ -28,15 +28,13 @@ export default function useSelfStudent() {
   const query = useQuery({
     queryKey: ["student, profile id:", profile?.id],
     queryFn: async () => {
-      const res = (
-        await client
-          .from("students")
-          .select("*, schools(*), academic_years(*)")
-          .eq("profile_id", profile!.id)
-          .single()
-      ).data;
+      const res = await client
+      .from("students")
+      .select("*, schools(*), academic_years(*)")
+      .eq("profile_id", profile!.id)
+      .single()
       console.log("useSelfStudent res", res);
-      return res;
+      return res.data;
     },
     enabled: !!profile && !!session,
   });

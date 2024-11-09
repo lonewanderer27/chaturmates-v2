@@ -70,28 +70,29 @@ const allowedValues = [
 
 const classSchemaInput = Yup.object().shape({
   subjectId: Yup.number().required("Subject is required"),
-  room: Yup.string().required("Room is required"),
+  room: Yup.string().optional(),
   daysofweek: Yup.array()
     .of(Yup.string().oneOf(allowedValues, "Invalid value").required())
-    .required("Days is required")
-    .min(1, "At least one day is required"),
-  startTime: Yup.string().required("Start time is required"),
-  endTime: Yup.string().required("End time is required"),
+    .min(0)
+    .ensure()
+    .optional(),
+  startTime: Yup.string().optional(),
+  endTime: Yup.string().optional(),
 });
 
 // Define the schema for individual class objects
 const classSchema = Yup.object().shape({
   subjectId: Yup.number().required("Subject ID is required"),
-  room: Yup.string().required("Room is required"),
-  monday: Yup.boolean().required("Monday is required"),
-  tuesday: Yup.boolean().required("Tuesday is required"),
-  wednesday: Yup.boolean().required("Wednesday is required"),
-  thursday: Yup.boolean().required("Thursday is required"),
-  friday: Yup.boolean().required("Friday is required"),
-  saturday: Yup.boolean().required("Saturday is required"),
-  sunday: Yup.boolean().required("Sunday is required"),
-  startTime: Yup.string().required("Start time is required"),
-  endTime: Yup.string().required("End time is required"),
+  room: Yup.string().optional(),
+  monday: Yup.boolean().optional(),
+  tuesday: Yup.boolean().optional(),
+  wednesday: Yup.boolean().optional(),
+  thursday: Yup.boolean().optional(),
+  friday: Yup.boolean().optional(),
+  saturday: Yup.boolean().optional(),
+  sunday: Yup.boolean().optional(),
+  startTime: Yup.string().optional(),
+  endTime: Yup.string().optional(),
 });
 
 // Define the main validation schema
@@ -214,12 +215,15 @@ const Setup4Classes: FC<RouteComponentProps> = ({ match }) => {
     formState: { errors: errors2 },
   } = useForm<{
     subjectId: number;
-    room: string;
-    daysofweek: string[];
-    startTime: string;
-    endTime: string;
+    room?: string;
+    daysofweek?: string[];
+    startTime?: string;
+    endTime?: string;
   }>({
     resolver: yupResolver(classSchemaInput),
+    defaultValues: {
+      daysofweek: [],
+    },
   });
 
   const handleClassAddError: SubmitErrorHandler<{
@@ -236,10 +240,10 @@ const Setup4Classes: FC<RouteComponentProps> = ({ match }) => {
 
   const handleAddClass: SubmitHandler<{
     subjectId: number;
-    room: string;
-    daysofweek: string[];
-    startTime: string;
-    endTime: string;
+    room?: string;
+    daysofweek?: string[];
+    startTime?: string;
+    endTime?: string;
   }> = async (data) => {
     console.log("handleNext");
     console.log(data);
@@ -278,19 +282,21 @@ const Setup4Classes: FC<RouteComponentProps> = ({ match }) => {
       return;
     }
 
+    const daysofweek = getValues2("daysofweek") ?? [];
+
     // success
     setValue("classes", [
       ...(getValues("classes") ?? []),
       {
         subjectId: getValues2("subjectId"),
         room: getValues2("room")!,
-        monday: getValues2("daysofweek").includes("monday"),
-        tuesday: getValues2("daysofweek").includes("tuesday"),
-        wednesday: getValues2("daysofweek").includes("wednesday"),
-        thursday: getValues2("daysofweek").includes("thursday"),
-        friday: getValues2("daysofweek").includes("friday"),
-        saturday: getValues2("daysofweek").includes("saturday"),
-        sunday: getValues2("daysofweek").includes("sunday"),
+        monday: daysofweek.includes("monday"),
+        tuesday: daysofweek.includes("tuesday"),
+        wednesday: daysofweek.includes("wednesday"),
+        thursday: daysofweek.includes("thursday"),
+        friday: daysofweek.includes("friday"),
+        saturday: daysofweek.includes("saturday"),
+        sunday: daysofweek.includes("sunday"),
         startTime: dayjs(getValues2("startTime")).format()!,
         endTime: getValues2("endTime")!,
       },
@@ -359,8 +365,8 @@ const Setup4Classes: FC<RouteComponentProps> = ({ match }) => {
                             saturday: c.saturday,
                             sunday: c.sunday,
                           })}{" "}
-                          | {dayjs(c.startTime).format("hh:mm A")} -{" "}
-                          {dayjs(c.endTime).format("hh:mm A")}
+                          | {dayjs(c.startTime).isValid() && dayjs(c.startTime).format("hh:mm A")} -{" "}
+                          {dayjs(c.endTime).isValid() && dayjs(c.endTime).format("hh:mm A")}
                         </p>
                       </IonLabel>
                     </IonItem>
@@ -487,9 +493,9 @@ const Setup4Classes: FC<RouteComponentProps> = ({ match }) => {
                       justify="space-between"
                       onIonChange={(e) => {
                         console.log(e.detail.value);
-                        setValue2("daysofweek", e.detail.value);
+                        setValue2("daysofweek", e.detail.value ?? []);
                       }}
-                      value={getValues2("daysofweek")}
+                      value={getValues2("daysofweek") ?? []}
                     >
                       <IonSelectOption value="monday">Monday</IonSelectOption>
                       <IonSelectOption value="tuesday">Tuesday</IonSelectOption>

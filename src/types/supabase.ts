@@ -48,14 +48,14 @@ export type Database = {
         Row: {
           code: string | null
           created_at: string
-          end_time: string
+          end_time: string | null
           friday: boolean
           id: number
           monday: boolean
           professor_id: number | null
-          room: string
+          room: string | null
           saturday: boolean
-          start_time: string
+          start_time: string | null
           student_id: number
           subject_id: number
           sunday: boolean
@@ -66,32 +66,32 @@ export type Database = {
         Insert: {
           code?: string | null
           created_at?: string
-          end_time: string
-          friday: boolean
-          id?: number
-          monday: boolean
-          professor_id?: number | null
-          room: string
-          saturday: boolean
-          start_time: string
-          student_id: number
-          subject_id: number
-          sunday: boolean
-          thursday: boolean
-          tuesday: boolean
-          wednesday: boolean
-        }
-        Update: {
-          code?: string | null
-          created_at?: string
-          end_time?: string
+          end_time?: string | null
           friday?: boolean
           id?: number
           monday?: boolean
           professor_id?: number | null
-          room?: string
+          room?: string | null
           saturday?: boolean
-          start_time?: string
+          start_time?: string | null
+          student_id: number
+          subject_id: number
+          sunday?: boolean
+          thursday?: boolean
+          tuesday?: boolean
+          wednesday?: boolean
+        }
+        Update: {
+          code?: string | null
+          created_at?: string
+          end_time?: string | null
+          friday?: boolean
+          id?: number
+          monday?: boolean
+          professor_id?: number | null
+          room?: string | null
+          saturday?: boolean
+          start_time?: string | null
           student_id?: number
           subject_id?: number
           sunday?: boolean
@@ -126,16 +126,19 @@ export type Database = {
       coe_scans: {
         Row: {
           created_at: string
+          file_path: string
           id: number
           student_id: number
         }
         Insert: {
           created_at?: string
+          file_path: string
           id?: number
           student_id: number
         }
         Update: {
           created_at?: string
+          file_path?: string
           id?: number
           student_id?: number
         }
@@ -281,6 +284,81 @@ export type Database = {
             columns: ["official_professor_id"]
             isOneToOne: false
             referencedRelation: "professors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      draft_students: {
+        Row: {
+          academic_year_id: number | null
+          avatar_url: string | null
+          block: string | null
+          coe_file_path: string | null
+          completed: boolean
+          course_id: number | null
+          created_at: string
+          description: string | null
+          full_name: string | null
+          id: number
+          pending: boolean
+          school_email: string | null
+          student_no: string | null
+          type: boolean | null
+          updated_at: string
+          user_id: string
+          year_level: number | null
+        }
+        Insert: {
+          academic_year_id?: number | null
+          avatar_url?: string | null
+          block?: string | null
+          coe_file_path?: string | null
+          completed?: boolean
+          course_id?: number | null
+          created_at?: string
+          description?: string | null
+          full_name?: string | null
+          id?: number
+          pending?: boolean
+          school_email?: string | null
+          student_no?: string | null
+          type?: boolean | null
+          updated_at?: string
+          user_id: string
+          year_level?: number | null
+        }
+        Update: {
+          academic_year_id?: number | null
+          avatar_url?: string | null
+          block?: string | null
+          coe_file_path?: string | null
+          completed?: boolean
+          course_id?: number | null
+          created_at?: string
+          description?: string | null
+          full_name?: string | null
+          id?: number
+          pending?: boolean
+          school_email?: string | null
+          student_no?: string | null
+          type?: boolean | null
+          updated_at?: string
+          user_id?: string
+          year_level?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "draft_students_academic_year_id_fkey"
+            columns: ["academic_year_id"]
+            isOneToOne: false
+            referencedRelation: "academic_years"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_students_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
             referencedColumns: ["id"]
           },
         ]

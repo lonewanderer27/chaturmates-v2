@@ -25,16 +25,16 @@ export interface NewStudentTypeSteps {
   step3: {
     classes: {
       subjectId: number,
-      room: string,
-      monday: boolean,
-      tuesday: boolean,
-      wednesday: boolean,
-      thursday: boolean,
-      friday: boolean,
-      saturday: boolean,
-      sunday: boolean,
-      startTime: string,
-      endTime: string,
+      room?: string,
+      monday?: boolean,
+      tuesday?: boolean,
+      wednesday?: boolean,
+      thursday?: boolean,
+      friday?: boolean,
+      saturday?: boolean,
+      sunday?: boolean,
+      startTime?: string,
+      endTime?: string,
     }[]
   },
   step4: {

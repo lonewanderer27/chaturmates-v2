@@ -242,6 +242,43 @@ export default function useSetup() {
       return;
     }
 
+    // create the raw subjects object needed by supabase
+    const subjects = classesRaw.map((c, index) => {
+      return {
+        student_id: data.id,
+        subject_id: c.subjectId,
+        order: index+1,
+      }
+    })
+    console.log("subjects: ", subjects);
+
+    // upload the subjects
+    const { data: subjectsData, error: subjectsError } = await client
+      .from("students_subjects")
+      .insert(subjects)
+      .select("*");
+    console.log("added subjects to db: ", subjectsData);
+
+    if (subjectsError) {
+      console.error(error);
+      setUploading(() => false);
+
+      // since there is an error, we should delete the subjects that we just created
+      const { error: deleteError } = await client
+        .from("students")
+        .delete()
+        .in("id", [data.id]);
+
+      showAlert({
+        header: "Error",
+        message:
+          "An error occurred while uploading your subjects. Please try again. \n\n" +
+          subjectsError.message,
+        buttons: ["OK"],
+      });
+      return;
+    }
+
     setUploading(() => false);
 
     // go to the finish page

@@ -1,16 +1,16 @@
-import { IonContent, IonFooter, IonLoading, IonPage, IonProgressBar, IonRouterOutlet, IonToolbar } from '@ionic/react'
+import { IonRouterOutlet } from '@ionic/react'
 import React, { Suspense } from 'react'
 import { Route } from 'react-router'
 import { RouteComponentProps } from 'react-router'
 
-const Setup = React.lazy(() => import('../pages/Setup'));
+import Setup from '../pages/Setup'
+import SetupStudentOrProf from '../pages/Setup/Setup0StudentOrProf'
 const SetupPdfUpload = React.lazy(() => import('../pages/Setup/Setup1PdfUpload'));
+const Setup2IntroduceYourself = React.lazy(() => import('../pages/Setup/Setup2IntroduceYourself'));
 const Setup3AcademicInformation = React.lazy(() => import('../pages/Setup/Setup3AcademicInformation'));
 const Setup4Classes = React.lazy(() => import('../pages/Setup/Setup4Classes'));
-const Setup6Finish = React.lazy(() => import('../pages/Setup/SetupFinish'));
-const SetupStudentOrProf = React.lazy(() => import('../pages/Setup/Setup0StudentOrProf'));
-const Setup2IntroduceYourself = React.lazy(() => import('../pages/Setup/Setup2IntroduceYourself'));
 const Setup5Hobbies = React.lazy(() => import('../pages/Setup/Setup5Hobbies'));
+import Setup6Finish from '../pages/Setup/SetupFinish'
 
 const SetupRoute: React.FC<RouteComponentProps> = ({ match }) => {
   return (

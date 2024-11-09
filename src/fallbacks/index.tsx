@@ -1,12 +1,12 @@
-import { IonContent, IonFooter, IonPage, IonProgressBar } from "@ionic/react"
+import { IonContent, IonHeader, IonPage, IonProgressBar } from "@ionic/react"
 
 const DefaultFallback = () => {
   return (
     <IonPage>
-      <IonContent />
-      <IonFooter>
+      <IonHeader>
         <IonProgressBar type="indeterminate" />
-      </IonFooter>
+      </IonHeader>
+      <IonContent />
     </IonPage>
   )
 }

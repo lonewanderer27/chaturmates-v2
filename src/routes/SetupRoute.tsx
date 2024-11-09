@@ -1,5 +1,5 @@
 import { IonRouterOutlet } from '@ionic/react'
-import React, { Suspense } from 'react'
+import React from 'react'
 import { Route } from 'react-router'
 import { RouteComponentProps } from 'react-router'
 

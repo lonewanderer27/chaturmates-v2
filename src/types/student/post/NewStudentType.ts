@@ -20,7 +20,7 @@ export interface NewStudentTypeSteps {
     yearLevel: number,
     academicYear: number,
     type: boolean                   // isRegular,
-    block: string,
+    block?: string,
   },
   step3: {
     classes: {

@@ -50,7 +50,7 @@ const validationSchema = object().shape({
   yearLevel: number().required("Year Level is required"),
   academicYear: number().required("Academic Year is required"),
   type: boolean().required("Type is required"),
-  block: string().required("Block No. is required"),
+  block: string().optional(),
 });
 
 const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
@@ -129,8 +129,7 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
         newStudent.step2.type !== undefined
           ? newStudent.step2.type
           : undefined,
-      block:
-        newStudent.step2.block.length > 0 ? newStudent.step2.block : undefined,
+      block: newStudent.step2.block,
     },
   });
   const [checking, setChecking] = useState(() => false);

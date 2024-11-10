@@ -59,7 +59,7 @@ type GroupTimelinePageProps = {
 
 const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = (p) => {
   const { data: infoLite } = useGroupInfoLite(p.match.params.vanity_url);
-  const { data } = useGroupMemsCount(p.match.params.vanity_url);
+  // const { data } = useGroupMemsCount(p.match.params.vanity_url);
   const { data: groupRules } = useGroupRules(p.match.params.vanity_url);
   useIonViewWillEnter(() => {
     hideTabBar();
@@ -126,7 +126,7 @@ const GroupTimeline: FC<RouteComponentProps<GroupTimelinePageProps>> = (p) => {
           )}
           <IonLabel>
             <h3 className="font-semibold">
-              <IonIcon src={peopleOutline} /> {data}
+              <IonIcon src={peopleOutline} /> {infoLite?.approx_members_count}
             </h3>
             <h1 className="font-bold">{infoLite?.name}</h1>
           </IonLabel>

@@ -18,35 +18,33 @@ import {
   IonToolbar,
   useIonRouter,
   useIonViewWillEnter,
+  createAnimation, // Import createAnimation
 } from "@ionic/react";
-import { hideTabBar, showTabBar } from "../../utils/TabBar";
+import { hideTabBar } from "../../utils/TabBar";
 
-import { FC } from "react";
+import { FC, useEffect, useRef } from "react";
 import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
 import { RouteComponentProps } from "react-router";
 import useSelfStudent from "../../hooks/student";
 import useSession from "../../hooks/auth/useSession";
-import { colorWandOutline, pencilOutline } from "ionicons/icons";
+import { colorWandOutline } from "ionicons/icons";
 import useSelfGroups from "../../hooks/student/useSelfGroups";
 import useSelfFollowing from "../../hooks/student/useSelfFollowing";
-import { useToggleTheme } from "../../hooks/useToggleTheme";
 import useSelfHobbies from "../../hooks/student/useSelfHobbies";
 import useSelfSubjects from "../../hooks/student/useSelfSubjects";
 import string from "string";
+import LoaderCard from "../../components/Me/LoaderCard";
 
 const Me: FC<RouteComponentProps> = ({ match }) => {
   const rt = useIonRouter();
-  const { student } = useSelfStudent();
-  const { hobbies } = useSelfHobbies();
-  const { subjects } = useSelfSubjects();
-  console.log("my hobbies: \n", hobbies);
-  console.log("my subjects: \n", subjects);
+  const { student, query: studentQuery } = useSelfStudent();
+  const { hobbies, query: hobbiesQuery } = useSelfHobbies();
+  const { subjects, query: subjectsQuery } = useSelfSubjects();
 
   const { logout } = useSession();
 
   const { data: groups } = useSelfGroups();
   const { data: following } = useSelfFollowing();
-  console.log("following", following);
 
   const handleFollowing = () => {
     rt.push(rt.routeInfo.pathname + "/following");
@@ -62,11 +60,98 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
 
   const handleRecommendation = () => {
     rt.push(rt.routeInfo.pathname + "/recommend/groups");
-  }
+  };
 
   useIonViewWillEnter(() => {
     hideTabBar();
   });
+
+  // Create refs for each section and loader
+  const descriptionRef = useRef<HTMLDivElement>(null);
+  const subjectsRef = useRef<HTMLDivElement>(null);
+  const hobbiesRef = useRef<HTMLDivElement>(null);
+
+  const descriptionLoaderRef = useRef<HTMLDivElement>(null);
+  const subjectsLoaderRef = useRef<HTMLDivElement>(null);
+  const hobbiesLoaderRef = useRef<HTMLDivElement>(null);
+
+  // Animate description when data is loaded
+  useEffect(() => {
+    if (student?.description && descriptionRef.current) {
+      const animation = createAnimation()
+        .addElement(descriptionRef.current)
+        .duration(500)
+        .easing('ease-in-out')
+        .fromTo('opacity', '0', '1')
+        .fromTo('transform', 'translateY(20px)', 'translateY(0px)');
+      animation.play();
+    }
+  }, [student?.description]);
+
+  // Animate subjects when data is loaded
+  useEffect(() => {
+    if (subjects.length > 0 && subjectsRef.current) {
+      const animation = createAnimation()
+        .addElement(subjectsRef.current)
+        .duration(500)
+        .easing('ease-in-out')
+        .fromTo('opacity', '0', '1')
+        .fromTo('transform', 'translateY(20px)', 'translateY(0px)');
+      animation.play();
+    }
+  }, [subjects]);
+
+  // Animate hobbies when data is loaded
+  useEffect(() => {
+    if (hobbies.length > 0 && hobbiesRef.current) {
+      const animation = createAnimation()
+        .addElement(hobbiesRef.current)
+        .duration(500)
+        .easing('ease-in-out')
+        .fromTo('opacity', '0', '1')
+        .fromTo('transform', 'translateY(20px)', 'translateY(0px)');
+      animation.play();
+    }
+  }, [hobbies]);
+
+  // Animate description loader when loading starts
+  useEffect(() => {
+    if ((studentQuery.isLoading || student == null) && descriptionLoaderRef.current) {
+      const animation = createAnimation()
+        .addElement(descriptionLoaderRef.current)
+        .duration(500)
+        .easing('ease-in-out')
+        .fromTo('opacity', '0', '1')
+        .fromTo('transform', 'translateY(-20px)', 'translateY(0px)');
+      animation.play();
+    }
+  }, [studentQuery.isLoading, student]);
+
+  // Animate subjects loader when loading starts
+  useEffect(() => {
+    if ((subjectsQuery.isLoading || subjects == null) && subjectsLoaderRef.current) {
+      const animation = createAnimation()
+        .addElement(subjectsLoaderRef.current)
+        .duration(500)
+        .easing('ease-in-out')
+        .fromTo('opacity', '0', '1')
+        .fromTo('transform', 'translateY(-20px)', 'translateY(0px)');
+      animation.play();
+    }
+  }, [subjectsQuery.isLoading, subjects]);
+
+  // Animate hobbies loader when loading starts
+  useEffect(() => {
+    if ((hobbiesQuery.isLoading || hobbies == null) && hobbiesLoaderRef.current) {
+      const animation = createAnimation()
+        .addElement(hobbiesLoaderRef.current)
+        .duration(500)
+        .easing('ease-in-out')
+        .fromTo('opacity', '0', '1')
+        .fromTo('transform', 'translateY(-20px)', 'translateY(0px)');
+      animation.play();
+    }
+  }, [hobbiesQuery.isLoading, hobbies]);
 
   return (
     <IonPage id="MePage">
@@ -81,7 +166,6 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
                 <IonIcon slot="start" src={colorWandOutline} />
               </IonButton>
               <IonButton fill="clear" onClick={handleUpdate}>
-                {/* <IonIcon slot="start" src={pencilOutline} /> */}
                 <IonLabel>Edit</IonLabel>
               </IonButton>
             </IonButtons>
@@ -127,68 +211,92 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
             </IonGrid>
           </IonCardContent>
         </IonCard>
+
+        {/* Description Section with Animation */}
         {student?.description && (
-          <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
-            <IonCardContent>
-              {student?.description && (
-                <>
-                  <div>
-                    <IonText className="text-xs font-bold" color="dark">
-                      BIO
-                    </IonText>
-                    <br />
-                  </div>
-                  <div className="">
-                    <IonText className="text-sm" color="dark">
-                      {student?.description}
-                    </IonText>
-                  </div>
-                </>
-              )}
-            </IonCardContent>
-          </IonCard>
+          <div ref={descriptionRef}>
+            <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
+              <IonCardContent>
+                <div>
+                  <IonText className="text-xs font-bold" color="dark">
+                    BIO
+                  </IonText>
+                  <br />
+                </div>
+                <div className="">
+                  <IonText className="text-sm" color="dark">
+                    {student?.description}
+                  </IonText>
+                </div>
+              </IonCardContent>
+            </IonCard>
+          </div>
         )}
+        {/* Description Loader with Animation */}
+        {(studentQuery.isLoading || student == null) && (
+          <div ref={descriptionLoaderRef}>
+            <LoaderCard showParagraph hideChips />
+          </div>
+        )}
+
+        {/* Subjects Section with Animation */}
         {subjects.length > 0 && (
-          <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
-            <IonCardContent>
-              <div className="mb-2">
-                <IonText className="text-xs font-bold" color="dark">
-                  SUBJECTS
-                </IonText>
-                <br />
-              </div>
-              <div className="mx-[-5px]">
-                {subjects.map((subject) => (
-                  <IonChip key={subject.id+subject.title} color="dark">
-                    <IonText>
-                      {string(subject.title.toLowerCase()).titleCase().s}
-                    </IonText>
-                  </IonChip>
-                ))}
-              </div>
-            </IonCardContent>
-          </IonCard>
+          <div ref={subjectsRef}>
+            <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
+              <IonCardContent>
+                <div className="mb-2">
+                  <IonText className="text-xs font-bold" color="dark">
+                    SUBJECTS
+                  </IonText>
+                  <br />
+                </div>
+                <div className="mx-[-5px]">
+                  {subjects.map((subject) => (
+                    <IonChip key={subject.id + subject.title} color="dark">
+                      <IonText>
+                        {string(subject.title.toLowerCase()).titleCase().s}
+                      </IonText>
+                    </IonChip>
+                  ))}
+                </div>
+              </IonCardContent>
+            </IonCard>
+          </div>
         )}
+        {/* Subjects Loader with Animation */}
+        {(subjectsQuery.isLoading || subjects == null) && (
+          <div ref={subjectsLoaderRef}>
+            <LoaderCard />
+          </div>
+        )}
+
+        {/* Hobbies Section with Animation */}
         {hobbies.length > 0 && (
-          <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
-            <IonCardContent>
-              <div className="mb-2">
-                <IonText className="text-xs font-bold" color="dark">
-                  HOBBIES
-                </IonText>
-                <br />
-              </div>
-              <div className="mx-[-5px]">
-                {hobbies.map((hobby) => (
-                  <IonChip key={hobby.id+hobby.title} color="dark">
-                    <IonText>
-                      {hobby.title}
-                    </IonText>
-                  </IonChip>
-                ))}
-              </div>
-            </IonCardContent>
-          </IonCard>
+          <div ref={hobbiesRef}>
+            <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
+              <IonCardContent>
+                <div className="mb-2">
+                  <IonText className="text-xs font-bold" color="dark">
+                    HOBBIES
+                  </IonText>
+                  <br />
+                </div>
+                <div className="mx-[-5px]">
+                  {hobbies.map((hobby) => (
+                    <IonChip key={hobby.id + hobby.title} color="dark">
+                      <IonText>{hobby.title}</IonText>
+                    </IonChip>
+                  ))}
+                </div>
+              </IonCardContent>
+            </IonCard>
+          </div>
+        )}
+        {/* Hobbies Loader with Animation */}
+        {(hobbiesQuery.isLoading || hobbies == null) && (
+          <div ref={hobbiesLoaderRef}>
+            <LoaderCard />
+          </div>
         )}
       </IonContent>
       <IonFooter>
@@ -196,7 +304,6 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
           <IonButton
             color="medium"
             onClick={logout}
-            // shape="round"
             expand="block"
             fill="outline"
           >

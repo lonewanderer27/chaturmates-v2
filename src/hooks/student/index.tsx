@@ -28,33 +28,48 @@ export default function useSelfStudent() {
   const query = useQuery({
     queryKey: ["student, profile id:", profile?.id],
     queryFn: async () => {
+      if (!profile?.id) return null;
+
       const res = await client
-      .from("students")
-      .select("*, schools(*), academic_years(*)")
-      .eq("profile_id", profile!.id)
-      .single()
+        .from('students')
+        .select(`
+          *,
+          schools(*),
+          academic_years(*),
+          followers:student_followers!student_followers_follower_id_fkey(follower_id(*)),
+          following:student_followers!student_followers_following_id_fkey(following_id(*)),
+          groups:group_members(group_id(*))
+        `)
+        .eq('profile_id', profile.id)
+        .single();
+
       console.log("useSelfStudent res", res);
-      return res.data;
+
+      // Extract followers, following, and groups from the nested relationships
+      const followers = res.data?.followers?.map((f) => f.follower_id) || [];
+      const following = res.data?.following?.map((f) => f.following_id) || [];
+      const groups = res.data?.groups?.map((g) => g.group_id) || [];
+
+      return {
+        student: res.data,
+        followers,
+        following,
+        groups,
+        school: res.data?.schools,
+        academic_year: res.data?.academic_years,
+      };
     },
     enabled: !!profile && !!session,
   });
 
-  const query2 = useQuery({
-    queryKey: ["student", query.data?.id],
-    queryFn: async () => {
-      const res = (await getStudentById(query.data?.id + "")).data;
-      return res;
-    },
-    enabled: !!query.data?.id,
-  });
-
   return {
     profile: profile,
-    student: query.data ?? null,
-    groups: query2.data?.groups ?? null,
-    followers: query2.data?.followers ?? null,
-    following: query2.data?.following ?? null,
-    school: query.data?.schools ?? null,
-    academic_year: query.data?.academic_years ?? null,
+    student: query.data?.student ?? null,
+    groups: query.data?.groups ?? null,
+    followers: query.data?.followers ?? null,
+    following: query.data?.following ?? null,
+    school: query.data?.school ?? null,
+    academic_year: query.data?.academic_year ?? null,
+    query
   };
 }

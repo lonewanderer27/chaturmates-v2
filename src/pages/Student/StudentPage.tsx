@@ -73,7 +73,7 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
           </IonToolbar>
         </IonHeader>
         <MemberAvatarLarge avatarUrl={student?.avatar_url} />
-        <IonCard className="pt-16 bg-slate-200 rounded-xl  z-[-500] shadow-none mx-0">
+        <IonCard className="pt-16 rounded-xl  z-[-500] shadow-none mx-0">
           <IonCardContent>
             <IonGrid>
               <IonRow className="flex justify-center">

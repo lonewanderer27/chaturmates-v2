@@ -233,7 +233,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
           </div>
         )}
         {/* Description Loader with Animation */}
-        {(studentQuery.isLoading || student == null) && (
+        {(studentQuery.isLoading === true || student === null) && (
           <div ref={descriptionLoaderRef}>
             <LoaderCard showParagraph hideChips />
           </div>
@@ -264,7 +264,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
           </div>
         )}
         {/* Subjects Loader with Animation */}
-        {(subjectsQuery.isLoading || subjects == null) && (
+        {(subjectsQuery.isLoading || subjects === null) && (
           <div ref={subjectsLoaderRef}>
             <LoaderCard />
           </div>

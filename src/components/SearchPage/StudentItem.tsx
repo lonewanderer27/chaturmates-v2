@@ -2,9 +2,6 @@ import "./StudentItem.css";
 
 import { IonAvatar, IonCol, IonIcon, IonItem, IonRow, IonText, useIonRouter, } from "@ionic/react";
 import { mail, personCircleOutline } from "ionicons/icons";
-
-import ItemListButton from "../ItemListButton";
-import S from "string";
 import { StudentType } from "../../types";
 import { useMemo } from "react";
 
@@ -62,7 +59,7 @@ export default function StudentItem(props: {
           {props.showType && (
             <IonText className="studentType text-sm mt-[-20px]" color="medium">
               <br />
-              {S(props.student.block ?? props.student.type).capitalize().s}
+              {props.student.type === "regular" ? "Block " + props.student.block?.toUpperCase() : "Irregular"}
             </IonText>
           )}
         </IonCol>

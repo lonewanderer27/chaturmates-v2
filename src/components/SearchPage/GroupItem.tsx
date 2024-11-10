@@ -86,13 +86,14 @@ export default function GroupItem(props: {
           </IonText>
           <br />
           <IonText className="groupCount text-sm" color="medium">
-            {props.group.group_members?.filter(m => m.approved).length} Members
+            {props.group.approx_members_count} Members
           </IonText>
         </IonCol>
       </IonRow>
       {props.hideButton === false && (
         <>
           {/* Only show join button if group is not found in the groups array */}
+          {/* @ts-ignore */}
           {groups && groups.find((group) => group.id === props.group.id) ? (
             <ItemListButton buttonLabel={"Visit"} />
           ) : (

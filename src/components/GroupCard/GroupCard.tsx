@@ -93,7 +93,7 @@ export default function GroupCard(props: GroupCardProps) {
           {approvedMembers.length > 6 && <div className="avatar placeholder">
             <div className="bg-neutral text-neutral-content w-6 h-auto">
               <IonText>
-                <span>+{approvedMembers.length - 6}</span>
+                <span>+{props.group.approx_members_count - 6}</span>
               </IonText>
             </div>
           </div>}

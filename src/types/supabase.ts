@@ -645,6 +645,7 @@ export type Database = {
         Row: {
           academic_year_id: number | null
           admin_uni_group: boolean
+          approx_members_count: number
           avatar_url: string | null
           college: number | null
           course: number | null
@@ -664,6 +665,7 @@ export type Database = {
         Insert: {
           academic_year_id?: number | null
           admin_uni_group?: boolean
+          approx_members_count?: number
           avatar_url?: string | null
           college?: number | null
           course?: number | null
@@ -683,6 +685,7 @@ export type Database = {
         Update: {
           academic_year_id?: number | null
           admin_uni_group?: boolean
+          approx_members_count?: number
           avatar_url?: string | null
           college?: number | null
           course?: number | null

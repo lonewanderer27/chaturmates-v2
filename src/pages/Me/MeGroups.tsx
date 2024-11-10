@@ -22,7 +22,7 @@ import { FC } from "react";
 import { RouteComponentProps } from "react-router";
 import useStudentGroups from "../../hooks/student/useStudentGroups";
 
-const MeGroups: FC<RouteComponentProps> = () => {
+const MeGroups: FC<RouteComponentProps> = ({ match }) => {
   const { student, groups } = useSelfStudent();
 
   useIonViewWillEnter(() => {
@@ -45,6 +45,7 @@ const MeGroups: FC<RouteComponentProps> = () => {
           </IonToolbar>
         </IonHeader>
         <IonList className="mx-[-15px]">
+          {/* @ts-ignore */}
           {groups?.map((group) => <GroupItem group={group} key={group.id} />)}
         </IonList>
       </IonContent>

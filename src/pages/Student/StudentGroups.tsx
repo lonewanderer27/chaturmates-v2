@@ -15,6 +15,8 @@ import GroupItem from "../../components/SearchPage/GroupItem";
 import { RouteComponentProps } from "react-router";
 import { hideTabBar } from "../../utils/TabBar";
 import useStudentGroups from "../../hooks/student/useStudentGroups";
+import useSelfStudentLite from "../../hooks/student/useSelfStudentLite";
+import useStudentInfo from "../../hooks/student/useStudentInfo";
 
 type StudentGroupsPageProps = {
   student_id: string;
@@ -23,6 +25,7 @@ type StudentGroupsPageProps = {
 const StudentGroups: FC<RouteComponentProps<StudentGroupsPageProps>> = ({
   match,
 }) => {
+  const { data: student } = useStudentInfo(match.params.student_id);
   const { data: groups } = useStudentGroups(match.params.student_id);
   useIonViewWillEnter(() => {
     hideTabBar();
@@ -40,7 +43,7 @@ const StudentGroups: FC<RouteComponentProps<StudentGroupsPageProps>> = ({
                 text={""}
               />
             </IonButtons>
-            <IonTitle>Their Groups ({groups?.length ?? "-"})</IonTitle>
+            <IonTitle>{student?.full_name?.split(" ")[0] ?? "Their"} Groups ({groups?.length ?? "-"})</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonList className="mx-[-15px]">

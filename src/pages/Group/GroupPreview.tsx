@@ -84,7 +84,7 @@ const GroupPreview: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
                   color="light"
                   onClick={handleMembers}
                 >
-                  Members
+                  {infoLite?.approx_members_count} Members
                 </IonButton>
                 {PRLoading === false && pendingRequest ? (
                   <IonButton

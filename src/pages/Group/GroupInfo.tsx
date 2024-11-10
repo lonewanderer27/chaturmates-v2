@@ -43,6 +43,7 @@ type GroupInfoPageProps = {
 
 const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
   const { data: infoLite } = useGroupInfoLite(p.match.params.vanity_url);
+  console.log(infoLite)
   const { data: AmIAdmin, isLoading: AmIAdminLoading } = useAmIAdmin(p.match.params.vanity_url);
   const { data: groupRules } = useGroupRules(p.match.params.vanity_url);
 
@@ -155,7 +156,7 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
               <IonRow className="pt-[10px] flex justify-center">
                 <IonChip onClick={handleMembers}>
                   <IonIcon icon={peopleOutline} />
-                  <IonLabel>Members</IonLabel>
+                  <IonLabel>{infoLite?.approx_members_count} Members</IonLabel>
                 </IonChip>
                 {AmIAdminLoading === false && AmIAdmin ? (
                   <IonChip onClick={handlePendingMembers}>

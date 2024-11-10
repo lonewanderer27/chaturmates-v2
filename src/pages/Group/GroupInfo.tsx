@@ -76,7 +76,7 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
       if (!Capacitor.isNativePlatform()) {
         // copy to clipboard
         const clipRes = await navigator.clipboard.writeText(text);
-        
+
         // alert the user that the text has been copied
         toast({
           message: "Group information has been copied to clipboard",
@@ -147,7 +147,7 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
           </IonToolbar>
         </IonHeader>
         <MemberAvatarLarge avatarUrl={infoLite?.avatar_url} />
-        <IonCard className="pt-16 mx-0 bg-slate-200  z-[-500] shadow-none">
+        <IonCard className="pt-16 mx-0 z-[-500] shadow-none">
           <IonCardContent>
             <IonGrid>
               <IonRow className="flex justify-center">
@@ -188,24 +188,26 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
             </IonLabel>
           </IonItem>
         </IonList>
-        <IonList className="rounded-xl px-1 mt-4" color="light">
-          <IonListHeader>
-            <IonLabel className="uppercase text-xs">RULES</IonLabel>
-            {groupRules && groupRules.length > 3 && (
-              <IonButton size="small" onClick={() => setShowAllRules(!showAllRules)}>
-                {showAllRules ? "Show Less" : "See All"}
-              </IonButton>
-            )}
-          </IonListHeader>
-          {displayedRules.map((rule, i) => (
-            <IonItem key={i}>
-              <IonLabel>
-                <h3>{rule.title}</h3>
-                <p>{rule.description}</p>
-              </IonLabel>
-            </IonItem>
-          ))}
-        </IonList>
+        {groupRules && groupRules.length > 0 && (
+          <IonList className="rounded-xl px-1 mt-4" color="light">
+            <IonListHeader>
+              <IonLabel className="uppercase text-xs">RULES</IonLabel>
+              {groupRules && groupRules.length > 3 && (
+                <IonButton size="small" onClick={() => setShowAllRules(!showAllRules)}>
+                  {showAllRules ? "Show Less" : "See All"}
+                </IonButton>
+              )}
+            </IonListHeader>
+            {displayedRules.map((rule, i) => (
+              <IonItem key={i}>
+                <IonLabel>
+                  <h3>{rule.title}</h3>
+                  <p>{rule.description}</p>
+                </IonLabel>
+              </IonItem>
+            ))}
+          </IonList>
+        )}
       </IonContent>
     </IonPage>
   );

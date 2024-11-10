@@ -16,6 +16,7 @@ import {
   useIonRouter,
   IonLoading,
   IonGrid,
+  IonSkeletonText,
 } from "@ionic/react";
 import useHideTabs from "../../hooks/useHideTabs";
 import { FC, useRef, useState } from "react";
@@ -155,7 +156,7 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
                 </IonText>
               </IonCol>
             </IonRow>
-            <IonRow>
+            {(!isLoading && displayedData.length !== 0) && <IonRow>
               <IonCol>
                 <IonSelect
                   justify="end"
@@ -172,7 +173,12 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
                   </IonSelectOption>
                 </IonSelect>
               </IonCol>
-            </IonRow>
+            </IonRow>}
+            {isLoading && <IonRow>
+              <IonCol className="flex justify-end">
+                <IonSkeletonText animated className="h-[20px] w-[175px] rounded-xl" />
+              </IonCol>
+            </IonRow>}
 
             {/* Display loading indicator during sorting */}
             {(isSorting || isLoading) ? (

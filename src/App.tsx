@@ -53,7 +53,6 @@ const SurveysRoute = lazy(() => import("./routes/SurveysRoute"));
 import RecommendRoute from "./routes/RecommendRoute";
 // const RecommendRoute = lazy(() => import("./routes/RecommendRoute"));
 const Inbox = lazy(() => import("./pages/Inbox"));
-const MeRoute = lazy(() => import("./routes/MeRoute"));
 const NotFound = lazy(() => import("./routes/NotFound"));
 
 setupIonicReact({
@@ -81,7 +80,6 @@ const App = () => {
                     <Route path="/surveys" component={SurveysRoute} />
                     <Route path="/recommend" component={RecommendRoute} />
                     <Route path="/inbox" component={Inbox} />
-                    <Route path="/me" component={MeRoute} />
                     <Route path="/undefined" component={() => <Redirect to="/discover" />} exact />
                     <Route path="/null" component={() => <Redirect to="/discover" />} exact />
                     <Route

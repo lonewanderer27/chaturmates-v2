@@ -61,7 +61,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
   };
 
   const handleRecommendation = () => {
-    rt.push("/recommend");
+    rt.push(rt.routeInfo.pathname + "/recommend/groups");
   }
 
   useIonViewWillEnter(() => {
@@ -69,7 +69,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
   });
 
   return (
-    <IonPage>
+    <IonPage id="MePage">
       <IonContent className="ion-padding">
         <IonHeader collapse="condense">
           <IonToolbar>

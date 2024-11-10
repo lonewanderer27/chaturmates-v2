@@ -26,6 +26,7 @@ import MeGroups from "../pages/Me/MeGroups";
 import MeUpdate from "../pages/Me/MeUpdate";
 import GroupPreview from "../pages/Group/GroupPreview";
 import GroupCreateNewPost from "../pages/Group/GroupCreateNewPost";
+import RecommendGroups from "../pages/Recommend/RecommendGroups";
 
 const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
   console.log(match);
@@ -37,6 +38,8 @@ const DiscoverRoute: FC<RouteComponentProps> = ({ match }) => {
       <Route path={`${match.url}/me/groups`} component={MeGroups} exact />
       <Route path={`${match.url}/me/following`} component={MeFollowing} exact />
       <Route path={`${match.url}/me/update`} component={MeUpdate} exact />
+      <Route path={`${match.url}/me/recommend`} render={() => <Redirect to={`${match.url}/me/recommend/groups`} />} exact />
+      <Route path={`${match.url}/me/recommend/groups`} component={RecommendGroups} exact />
       {/* <Route path={`${match.url}/group`} component={GroupsRoute} /> */}
       <Route
         path={`${match.url}/group/create`}

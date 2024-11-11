@@ -213,7 +213,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
         </IonCard>
 
         {/* Description Section with Animation */}
-        {student?.description && (
+        {(student?.description && studentQuery.isLoading == false) && (
           <div ref={descriptionRef}>
             <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
               <IonCardContent>

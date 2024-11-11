@@ -33,6 +33,7 @@ import GroupCardLoader from "../../loaders/GroupCardLoader";
 import { funnelOutline, gridOutline, listOutline } from "ionicons/icons";
 import RealGroupListItem from "../../components/Recommend/RealGroupListItem";
 import GroupListItemLoader from "../../loaders/GroupListItemLoader";
+import "./TopKModal.css";
 
 enum SortingOptions {
   HIGH_TO_LOW = "high_to_low",
@@ -100,12 +101,13 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
     <>
       <IonPage>
         <IonModal
+          id="TopKModal"
           ref={modal}
           trigger="open-change-topk"
-          initialBreakpoint={0.35}
-          breakpoints={[0.35]}
-          backdropDismiss={false}
-          handle={false}
+          // initialBreakpoint={0.35}
+          // breakpoints={[0.35]}
+          // backdropDismiss={false}
+          // handle={false}
         >
           <IonHeader>
             <IonToolbar>

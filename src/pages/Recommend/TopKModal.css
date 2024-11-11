@@ -1,0 +1,5 @@
+ion-modal#TopKModal {
+  --height: 270px;
+  --border-radius: 6px;
+  --width: 90%;
+}

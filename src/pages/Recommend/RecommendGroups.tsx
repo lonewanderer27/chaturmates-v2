@@ -206,13 +206,13 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
                   >
                     Top {finalTopK}
                   </IonButton>
-                  <IonButton id="triggerShowMode" fill="clear" className="m-[-5px] mr-[-20px]" >
+                  <IonButton id="open-show-mode" onClick={handleShowMode} fill="clear" className="m-[-5px] mr-[-20px]" >
                     <IonIcon src={funnelOutline} />
                   </IonButton>
                 </>}
                 {isLoading &&
                   <IonSkeletonText animated className="h-[20px] mt-3 w-[100px] rounded-xl" />}
-                <IonPopover onClick={handleShowMode} trigger="triggerShowMode" triggerAction="click" dismissOnSelect>
+                <IonPopover trigger="open-show-mode" ref={displayModePopover} dismissOnSelect>
                   <IonList>
                     <IonItem lines="full" onClick={() => setShowMode(ShowModes.LIST)}>
                       <IonIcon src={listOutline} slot="start" />

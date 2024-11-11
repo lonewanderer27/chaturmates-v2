@@ -22,12 +22,12 @@ const RealGroupListItem = (props: { group: RecommendGroupType2 }) => {
     <IonItem lines="none" className='my-2 rounded-lg' onClick={handleClick}>
       {props.group.avatar_url && isValidUrl(props.group.avatar_url + "") ? (
         <img
-          className="rounded-full w-[50px] h-auto mx-auto"
+          className="rounded-full w-[60px] h-auto mx-auto"
           src={props.group.avatar_url!}
           slot="start"
         />
       ) : (
-        <IonIcon src={peopleCircleOutline} className="text-5xl" slot="start" />
+        <IonIcon src={peopleCircleOutline} className="text-6xl" slot="start" />
       )}
       <IonLabel>{props.group.name}</IonLabel>
     </IonItem>

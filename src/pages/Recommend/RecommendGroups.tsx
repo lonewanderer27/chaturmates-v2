@@ -67,9 +67,12 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
     rt.push("/");
   };
 
-  const modal = useRef<HTMLIonModalElement>(null);
+  const topKModal = useRef<HTMLIonModalElement>(null);
+  const handleOpenTopKModal = () => {
+    topKModal.current?.present();
+  }
   const dismiss = () => {
-    modal.current?.dismiss();
+    topKModal.current?.dismiss();
   };
   const handleRefreshRecommendations = () => {
     // set our final top k value based on the top k value
@@ -97,12 +100,17 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
     }, 1000);
   };
 
+  const displayModePopover = useRef<HTMLIonPopoverElement>(null);
+  const handleShowMode = () => {
+    displayModePopover.current?.present();
+  };
+
   return (
     <>
       <IonPage>
         <IonModal
           id="TopKModal"
-          ref={modal}
+          ref={topKModal}
           trigger="open-change-topk"
         // initialBreakpoint={0.35}
         // breakpoints={[0.35]}
@@ -190,7 +198,12 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
               </IonCol>
               <IonCol className="flex justify-end">
                 {(!isLoading && displayedData.length !== 0) && <>
-                  <IonButton fill="clear" id="open-change-topk" className="m-[-5px] mr-[-20px]">
+                  <IonButton
+                    fill="clear"
+                    id="open-change-topk"
+                    className="m-[-5px] mr-[-20px]"
+                    onClick={handleOpenTopKModal}
+                  >
                     Top {finalTopK}
                   </IonButton>
                   <IonButton id="triggerShowMode" fill="clear" className="m-[-5px] mr-[-20px]" >
@@ -198,8 +211,8 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
                   </IonButton>
                 </>}
                 {isLoading &&
-                  <IonSkeletonText animated className="h-[20px] mt-3 w-[90px] rounded-xl" />}
-                <IonPopover trigger="triggerShowMode" triggerAction="click" dismissOnSelect>
+                  <IonSkeletonText animated className="h-[20px] mt-3 w-[100px] rounded-xl" />}
+                <IonPopover onClick={handleShowMode} trigger="triggerShowMode" triggerAction="click" dismissOnSelect>
                   <IonList>
                     <IonItem lines="full" onClick={() => setShowMode(ShowModes.LIST)}>
                       <IonIcon src={listOutline} slot="start" />

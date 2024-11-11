@@ -17,6 +17,11 @@ import {
   IonLoading,
   IonGrid,
   IonSkeletonText,
+  IonIcon,
+  IonPopover,
+  IonList,
+  IonItem,
+  IonLabel,
 } from "@ionic/react";
 import useHideTabs from "../../hooks/useHideTabs";
 import { FC, useRef, useState } from "react";
@@ -25,10 +30,18 @@ import Picker from "react-mobile-picker";
 import useRecommendRealGroups from "../../hooks/recommend/useRecommendRealGroups";
 import RealGroupCard from "../../components/Recommend/RealGroupCard";
 import GroupCardLoader from "../../loaders/GroupCardLoader";
+import { funnelOutline, gridOutline, listOutline } from "ionicons/icons";
+import RealGroupListItem from "../../components/Recommend/RealGroupListItem";
+import GroupListItemLoader from "../../loaders/GroupListItemLoader";
 
 enum SortingOptions {
   HIGH_TO_LOW = "high_to_low",
   LOW_TO_HIGH = "low_to_high",
+}
+
+enum ShowModes {
+  LIST = "list",
+  GRID = "grid",
 }
 
 const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
@@ -38,9 +51,10 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
     value: 10,
   });
   const [finalTopK, setFinalTopK] = useState(() => topK.value);
+  const [showMode, setShowMode] = useState(() => ShowModes.LIST);
   const { data, isLoading } = useRecommendRealGroups(finalTopK);
   const [sortingOption, setSortingOption] = useState(SortingOptions.HIGH_TO_LOW);
-  const [isSorting, setIsSorting] = useState(false); // New state variable
+  const [isSorting, setIsSorting] = useState(false);
 
   const rt = useIonRouter();
 
@@ -139,16 +153,13 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
                 />
               </IonButtons>
               <IonButtons slot="primary">
-                <IonButton fill="clear" id="open-change-topk">
-                  Top: {finalTopK}
-                </IonButton>
               </IonButtons>
             </IonToolbar>
           </IonHeader>
           <IonGrid className="mt-[10px]">
             <IonRow className="pb-[20px]">
               <IonCol className="text-center">
-                <IonText>
+                <IonText color="primary">
                   <h3>Suggested Groups</h3>
                 </IonText>
                 <IonText>
@@ -156,61 +167,99 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
                 </IonText>
               </IonCol>
             </IonRow>
-            {(!isLoading && displayedData.length !== 0) && <IonRow>
-              <IonCol>
-                <IonSelect
-                  justify="end"
-                  placeholder="Sort"
-                  interface="action-sheet"
-                  value={sortingOption}
-                  onIonChange={(e) => handleSortingChange(e.detail.value)}
-                >
-                  <IonSelectOption value={SortingOptions.HIGH_TO_LOW}>
-                    Most Recommended
-                  </IonSelectOption>
-                  <IonSelectOption value={SortingOptions.LOW_TO_HIGH}>
-                    Least Recommended
-                  </IonSelectOption>
-                </IonSelect>
+            <IonRow>
+              <IonCol size="8">
+                {(!isLoading && displayedData.length !== 0) &&
+                  <IonSelect
+                    placeholder="Sort"
+                    interface="action-sheet"
+                    value={sortingOption}
+                    onIonChange={(e) => handleSortingChange(e.detail.value)}
+                  >
+                    <IonSelectOption value={SortingOptions.HIGH_TO_LOW}>
+                      Most Recommended
+                    </IonSelectOption>
+                    <IonSelectOption value={SortingOptions.LOW_TO_HIGH}>
+                      Least Recommended
+                    </IonSelectOption>
+                  </IonSelect>}
+                {isLoading &&
+                  <IonSkeletonText animated className="h-[20px] mt-3 mb-[-5px] w-[150px] rounded-xl" />}
               </IonCol>
-            </IonRow>}
-            {isLoading && <IonRow>
               <IonCol className="flex justify-end">
-                <IonSkeletonText animated className="h-[20px] w-[175px] rounded-xl" />
+                <IonButton fill="clear" id="open-change-topk" className="m-[-5px] mr-[-20px]">
+                  Top {finalTopK}
+                </IonButton>
+                <IonButton id="triggerShowMode" fill="clear" className="m-[-5px] mr-[-20px]" >
+                  <IonIcon src={funnelOutline} />
+                </IonButton>
+                <IonPopover trigger="triggerShowMode" triggerAction="click">
+                  <IonList>
+                    <IonItem lines="full" onClick={() => setShowMode(ShowModes.LIST)}>
+                      <IonIcon src={listOutline} slot="start" />
+                      <IonLabel>List</IonLabel>
+                    </IonItem>
+                    <IonItem lines="none" onClick={() => setShowMode(ShowModes.GRID)}>
+                      <IonIcon src={gridOutline} slot="start" />
+                      <IonLabel>Grid</IonLabel>
+                    </IonItem>
+                  </IonList>
+                </IonPopover>
               </IonCol>
-            </IonRow>}
-
-            {/* Display loading indicator during sorting */}
-            {(isSorting || isLoading) ? (
-              <IonRow className="mx-[-4px]">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <IonCol
-                    size="12"
-                    className="flex flex-column w-full"
-                    key={`recogroup-${i}`}
-                  >
-                    {Array.from({ length: 2 }).map((_, i) => (
-                      <GroupCardLoader key={i} />
-                    ))}
-                  </IonCol>
-                ))}
-              </IonRow>
-            ) : (
-              <IonRow className="mx-[-4px]">
-                {displayedData.map((group, index) => (
-                  <IonCol
-                    size="6"
-                    className="flex flex-column w-full"
-                    key={`recogroup-${index}`}
-                  >
-                    <RealGroupCard
+            </IonRow>
+            {showMode === ShowModes.GRID && <>
+              {/* Display loading indicator during sorting */}
+              {(isSorting || isLoading) ? (
+                <IonRow className="mx-[-4px]">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <IonCol
+                      size="12"
+                      className="flex flex-column w-full"
+                      key={`recogroup-${i}`}
+                    >
+                      {Array.from({ length: 2 }).map((_, i) => (
+                        <GroupCardLoader key={i} />
+                      ))}
+                    </IonCol>
+                  ))}
+                </IonRow>
+              ) : (
+                <IonRow className="mx-[-4px]">
+                  {displayedData.map((group, index) => (
+                    <IonCol
+                      size="6"
+                      className="flex flex-column w-full"
+                      key={`recogroup-${index}`}
+                    >
+                      <RealGroupCard
+                        // @ts-ignore TODO: Fix this
+                        group={group}
+                      />
+                    </IonCol>
+                  ))}
+                </IonRow>
+              )}
+            </>}
+            {showMode === ShowModes.LIST && <>
+              {/* Display loading indicator during sorting */}
+              {(isSorting || isLoading) ? (
+                <>
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <GroupListItemLoader />
+                  ))}
+                </>
+              ) : (
+                <>
+                  {displayedData.map((group, index) => (
+                    <RealGroupListItem
                       // @ts-ignore TODO: Fix this
                       group={group}
+                      key={index}
                     />
-                  </IonCol>
-                ))}
-              </IonRow>
-            )}
+                  ))}
+                </>
+              )}
+            </>}
           </IonGrid>
         </IonContent>
         {/* {isLoading && (

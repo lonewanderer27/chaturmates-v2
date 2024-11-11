@@ -19,7 +19,7 @@ const RealGroupListItem = (props: { group: RecommendGroupType2 }) => {
   };
 
   return (
-    <IonItem lines="none" className='my-2 rounded-lg'>
+    <IonItem lines="none" className='my-2 rounded-lg' onClick={handleClick}>
       {props.group.avatar_url && isValidUrl(props.group.avatar_url + "") ? (
         <img
           className="rounded-full w-[50px] h-auto mx-auto"

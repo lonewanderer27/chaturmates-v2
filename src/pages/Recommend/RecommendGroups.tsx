@@ -104,10 +104,10 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
           id="TopKModal"
           ref={modal}
           trigger="open-change-topk"
-          // initialBreakpoint={0.35}
-          // breakpoints={[0.35]}
-          // backdropDismiss={false}
-          // handle={false}
+        // initialBreakpoint={0.35}
+        // breakpoints={[0.35]}
+        // backdropDismiss={false}
+        // handle={false}
         >
           <IonHeader>
             <IonToolbar>
@@ -186,16 +186,20 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
                     </IonSelectOption>
                   </IonSelect>}
                 {isLoading &&
-                  <IonSkeletonText animated className="h-[20px] mt-3 mb-[-5px] w-[150px] rounded-xl" />}
+                  <IonSkeletonText animated className="h-[20px] mt-3 w-[150px] rounded-xl" />}
               </IonCol>
               <IonCol className="flex justify-end">
-                <IonButton fill="clear" id="open-change-topk" className="m-[-5px] mr-[-20px]">
-                  Top {finalTopK}
-                </IonButton>
-                <IonButton id="triggerShowMode" fill="clear" className="m-[-5px] mr-[-20px]" >
-                  <IonIcon src={funnelOutline} />
-                </IonButton>
-                <IonPopover trigger="triggerShowMode" triggerAction="click">
+                {(!isLoading && displayedData.length !== 0) && <>
+                  <IonButton fill="clear" id="open-change-topk" className="m-[-5px] mr-[-20px]">
+                    Top {finalTopK}
+                  </IonButton>
+                  <IonButton id="triggerShowMode" fill="clear" className="m-[-5px] mr-[-20px]" >
+                    <IonIcon src={funnelOutline} />
+                  </IonButton>
+                </>}
+                {isLoading &&
+                  <IonSkeletonText animated className="h-[20px] mt-3 w-[90px] rounded-xl" />}
+                <IonPopover trigger="triggerShowMode" triggerAction="click" dismissOnSelect>
                   <IonList>
                     <IonItem lines="full" onClick={() => setShowMode(ShowModes.LIST)}>
                       <IonIcon src={listOutline} slot="start" />

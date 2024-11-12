@@ -12,6 +12,7 @@ import {
   IonTitle,
   IonToolbar,
   RefresherEventDetail,
+  useIonRouter,
   useIonViewWillEnter,
 } from "@ionic/react";
 import {
@@ -81,6 +82,11 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
     console.log("student info found: ", draftStudentRQ.data);
   }
 
+  const rt = useIonRouter();
+  const handleSetup = () => {
+    rt.push("/setup", "forward", "replace")
+  }
+
   return (
     <IonPage id="discover-page">
       <IonModal
@@ -100,7 +106,7 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
         </IonHeader>
         <IonContent className='ion-padding text-center'>
           Looks like you haven't started the setup process yet. Completing your student profile is mandatory to access all features.
-          <IonButton expand="block" className="mt-5">
+          <IonButton expand="block" className="mt-5" onClick={handleSetup}>
             Tap here to begin!
           </IonButton>
         </IonContent>

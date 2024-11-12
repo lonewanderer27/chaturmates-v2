@@ -11,7 +11,7 @@ const schema = object({
   email: string().email().required().label("Email").matches(/^[a-zA-Z0-9._%+-]+@adamson\.edu\.ph$/, "Must be an Adamson Email")
 })
 
-export default function EmailOTPPass_1_Continue(props: {
+export default function ManualEmailOTP_Continue(props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {

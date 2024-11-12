@@ -105,7 +105,7 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
           </IonToolbar>
         </IonHeader>
         <IonContent className='ion-padding text-center'>
-          Looks like you haven't started the setup process yet. Completing your student profile is mandatory to access all features.
+          Looks like you haven't completed the setup process yet. A complete student profile is mandatory to access all features.
           <IonButton expand="block" className="mt-5" onClick={handleSetup}>
             Tap here to begin!
           </IonButton>

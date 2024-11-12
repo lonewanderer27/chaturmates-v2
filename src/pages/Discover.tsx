@@ -1,11 +1,15 @@
 import {
+  IonButton,
   IonButtons,
   IonContent,
+  IonFooter,
   IonHeader,
+  IonModal,
   IonPage,
   IonRefresher,
   IonRefresherContent,
   IonText,
+  IonTitle,
   IonToolbar,
   RefresherEventDetail,
   useIonViewWillEnter,
@@ -26,8 +30,9 @@ import { showTabBar } from "../utils/TabBar";
 import { useQuery } from "@tanstack/react-query";
 import useSelfStudent from "../hooks/student";
 import ExploreGroupsGrid from "../components/DiscoverPage/ExploreGroupsGrid";
-import { FC } from "react";
+import { FC, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
+import useSelfDraftStudent from "../hooks/student/useSelfDraftStudent";
 
 const Discover: FC<RouteComponentProps> = ({ match }) => {
   const { student } = useSelfStudent();
@@ -63,17 +68,50 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
     showTabBar();
   });
 
+  const [showModal, setShowModal] = useState(false);
+  const setupModal = useRef<HTMLIonModalElement>(null);
+  const draftStudentRQ = useSelfDraftStudent();
+  console.log("draftStudentRQ", draftStudentRQ.data);
+
+  if (draftStudentRQ.data === null && !showModal && !draftStudentRQ.isLoading) {
+    console.log("no student info found");
+    setShowModal(true);
+    console.log("open setup modal");
+  } else {
+    console.log("student info found: ", draftStudentRQ.data);
+  }
+
   return (
     <IonPage id="discover-page">
+      <IonModal
+        ref={setupModal}
+        isOpen={showModal}
+        initialBreakpoint={0.3}
+        breakpoints={[0.3]}
+        canDismiss={false}
+        backdropDismiss={false}
+        handle={false}>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>
+              Setup Required
+            </IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent className='ion-padding text-center'>
+          Looks like you haven't started the setup process yet. Completing your student profile is mandatory to access all features.
+          <IonButton expand="block" className="mt-5">
+            Tap here to begin!
+          </IonButton>
+        </IonContent>
+      </IonModal>
       <IonContent className="ion-padding" fullscreen>
-
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent
             refreshingSpinner="dots"
             pullingText={"Pull to refresh"}
           />
         </IonRefresher>
-
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonText

@@ -171,14 +171,33 @@ const EmailOTP_1_Continue = (props: {
       // if the user is not null
       const { data: profile } = await client
         .from("profiles")
-        .select("*, students(*), professors(*)")
+        .select("*")
         .eq("id", data.user?.id)
         .single();
 
       console.log(profile);
 
-      // push the user to the home page
-      window.location.href = "/";
+      // try to fetch if there's a draft student for the user
+      // that is also complete
+      const draftStudent = await client
+        .from("draft_students")
+        .select("*")
+        .eq("user_id", profile!.id)
+        .eq("completed", true)
+        .limit(1)
+        .maybeSingle()
+
+      if (draftStudent.data === null) {
+        // if there's no draft student that's complete, 
+        // redirect to setup page
+        console.log("No complete student info")
+        window.location.href = "/setup"
+      } else {
+        // if there's a draft student that's complete,
+        // redirect to the root page
+        console.log("Student info found: ", draftStudent.data);
+        window.location.href = "/"
+      }
     }
   };
 

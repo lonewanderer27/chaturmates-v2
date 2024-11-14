@@ -1,7 +1,6 @@
 import md5 from 'md5';
 import client from '../../client'
 import { NewStudentTypeSteps } from '../../types/student/post/NewStudentType'
-import useProfile from '../profile/useProfile'
 import Image from 'image-js';
 import { StudentRegType } from '../../types';
 import dayjs from 'dayjs';
@@ -19,7 +18,6 @@ const useSetupDraftStudent = () => {
   const [uploading, setUploading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState("");
   const rt = useIonRouter();
-  // const { profile } = useProfile();
   const { session } = useSession();
   const { flags } = useFeatureFlags();
 

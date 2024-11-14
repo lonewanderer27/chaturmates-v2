@@ -13,11 +13,13 @@ const useSelfDraftStudent = () => {
         .select("*")
         .eq("user_id", session?.user.id!)
         .limit(1)
-        .maybeSingle()
+        .single();
 
       if (error) {
+        console.error(error);
         throw new Error(error.message);  // Throwing an error for React Query to catch
       }
+
       return data;
     },
     enabled: !!session,

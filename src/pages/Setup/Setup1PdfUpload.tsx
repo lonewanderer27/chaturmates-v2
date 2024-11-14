@@ -36,6 +36,7 @@ import useFetchCourses from "../../hooks/setup/useFetchCourses";
 import { CourseType } from "../../types";
 import Image from "image-js";
 import useSetupDraftStudent from "../../hooks/setup/useSetupDraftStudent";
+import useFeatureFlags from "../../hooks/useFeatureFlags";
 
 PDFJS.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -71,6 +72,7 @@ const rejectStyle = {
 };
 
 const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
+  const FF = useFeatureFlags();
   const [alert] = useIonAlert();
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
@@ -889,6 +891,9 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
     rt.push("/setup/introduceYourself");
   };
 
+  const enableManualStudentInfoUpload = FF.flags["enableManualStudentInfoUpload"]?.value as unknown as boolean;
+  console.info("Enable manual student info upload: ", enableManualStudentInfoUpload);
+
   return (
     <>
       <IonPage>
@@ -958,7 +963,7 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
             </IonRow>
           </IonGrid>
         </IonContent>
-        <IonFooter className="ion-padding flex justify-center text-center">
+        {enableManualStudentInfoUpload && <IonFooter className="ion-padding flex justify-center text-center">
           <IonText color="medium" className="text-xs">
             <p>
               Don't want to upload? <br />{" "}
@@ -970,7 +975,7 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
               </span>
             </p>
           </IonText>
-        </IonFooter>
+        </IonFooter>}
         {loading === true && (
           <IonLoading
             isOpen={loading === true}

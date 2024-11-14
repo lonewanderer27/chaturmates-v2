@@ -1,8 +1,7 @@
 import client from "../../client";
 import { useQuery } from "@tanstack/react-query";
 import useSession from "../auth/useSession";
-
-export default function useProfile() {
+export default function useProfileLite() {
   const { session } = useSession();
 
   const { data: profile, isLoading } = useQuery({
@@ -10,11 +9,9 @@ export default function useProfile() {
     queryFn: async () => {
       const res = await client
         .from("profiles")
-        .select(
-          "*, students(*), professors(*), professor:professors(*), student:students(*, schools(*), academic_years(*))"
-        )
+        .select("*")
         .eq("id", session!.user.id)
-        .maybeSingle();
+        .single();
       const response = res.data;
 
       console.log("profile response:", response);
@@ -25,7 +22,6 @@ export default function useProfile() {
 
   return {
     profile,
-    student: profile?.student,
     isLoading,
   };
 }

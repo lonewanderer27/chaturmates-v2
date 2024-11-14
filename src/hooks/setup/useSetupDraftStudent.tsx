@@ -155,7 +155,12 @@ const useSetupDraftStudent = () => {
     const updatedDraftStudent = await client
       .from("draft_students")
       .update({
-        ...data,
+        student_no: data.student_no,
+        course_id: data.course_id,
+        year_level: data.year_level,
+        academic_year_id: data.academic_year_id,
+        type: data.type,
+        block: data.type === "regular" ? data.block?.replace(" ", "") : "Irregular",
       })
       .eq("id", sessionId)
       .select("*")
@@ -355,7 +360,7 @@ const useSetupDraftStudent = () => {
           year_level: draftStudent.data.year_level,
           academic_year_id: draftStudent.data.academic_year_id,
           type: draftStudent.data.type,
-          block: draftStudent.data.block,
+          block: draftStudent.data.type === "regular" ? draftStudent.data.block?.replace(" ", "") : "Irregular",
           description: draftStudent.data.description,
           full_name: draftStudent.data.full_name,
           school_email: (await client.auth.getUser()).data.user?.email,
@@ -385,7 +390,7 @@ const useSetupDraftStudent = () => {
           type: draftStudent.data.type,
           course: draftStudent.data.course_id,
           year_level: draftStudent.data.year_level,
-          block: draftStudent.data.block,
+          block: draftStudent.data.type === "regular" ? draftStudent.data.block?.replace(" ", "") : "Irregular",
         })
 
       if (newStudent.error) {

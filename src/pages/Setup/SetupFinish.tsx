@@ -25,6 +25,7 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import StudentLoading from "../../assets/studentLoading.lottie";
 import useRecommendRealGroups from "../../hooks/recommend/useRecommendRealGroups";
 import useSelfDraftStudent from "../../hooks/student/useSelfDraftStudent";
+import useSelfSetupDraftStudent from "../../hooks/setup/useSelfSetupDraftStudent";
 
 enum FinishPageState {
   UPLOADING = "uploading",
@@ -40,7 +41,7 @@ const Setup6Finish: FC<RouteComponentProps> = () => {
 
   const rt = useIonRouter();
   const RRG = useRecommendRealGroups(10);
-  const DSRQ = useSelfDraftStudent();
+  const DSRQ = useSelfSetupDraftStudent();
   const { handleCompleteStudent, simulateCompleteStudent, uploading, loadingMsg, uploadProgress } = useSetupDraftStudent();
   const handleNext = () => {
     // TODO: We should have a better way to handle this

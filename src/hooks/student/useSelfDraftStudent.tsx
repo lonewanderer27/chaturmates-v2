@@ -1,17 +1,17 @@
-import useProfile from '../profile/useProfile';
 import { useQuery } from '@tanstack/react-query';
 import client from '../../client';
+import useSession from '../auth/useSession';
 
 const useSelfDraftStudent = () => {
-  const { profile } = useProfile();
+  const { session } = useSession();
 
   const draftStudentQuery = useQuery({
-    queryKey: ['draftStudent', profile?.id],
+    queryKey: ['draftStudent', session?.user.id!],
     queryFn: async () => {
       const { data, error } = await client
         .from("draft_students")
         .select("*")
-        .eq("user_id", profile!.id)
+        .eq("user_id", session?.user.id!)
         .limit(1)
         .maybeSingle()
 
@@ -20,7 +20,7 @@ const useSelfDraftStudent = () => {
       }
       return data;
     },
-    enabled: !!profile,
+    enabled: !!session,
     retry: 2
   });
 

@@ -16,7 +16,7 @@ export default function useProfile() {
           "*, students(*), professors(*), professor:professors(*), student:students(*, schools(*), academic_years(*))"
         )
         .eq("id", session!.user.id)
-        .single();
+        .maybeSingle();
       const response = res.data;
 
       console.log("profile response:", response);

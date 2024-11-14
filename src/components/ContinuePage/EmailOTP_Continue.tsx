@@ -56,7 +56,7 @@ const schema = object({
     .matches(/^[0-9]{6}$/, "Must be a 6-digit code"),
 });
 
-const EmailOTP_1_Continue = (props: {
+const EmailOTP_Continue = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
@@ -224,6 +224,7 @@ const EmailOTP_1_Continue = (props: {
       initialBreakpoint={0.5}
       backdropDismiss={false}
       handle={false}
+      canDismiss={state !== EmailOTP_Continue_Enum.VerifyOTP}
     >
       <IonHeader>
         <IonToolbar>
@@ -357,4 +358,4 @@ const EmailOTP_1_Continue = (props: {
   );
 };
 
-export default EmailOTP_1_Continue;
+export default EmailOTP_Continue;

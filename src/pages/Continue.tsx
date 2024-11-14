@@ -3,7 +3,7 @@ import { boolean, object, ref, string } from 'yup';
 import { logoGoogle, mailOutline } from "ionicons/icons";
 import { StatusBar } from '@capacitor/status-bar';
 
-import EmailOTP_1_Continue from "../components/ContinuePage/EmailOTP_Continue";
+import EmailOTP_Continue from "../components/ContinuePage/EmailOTP_Continue";
 import useGoogle from "../hooks/auth/useGoogle";
 import useSession from "../hooks/auth/useSession";
 import { useState } from "react";
@@ -60,7 +60,7 @@ export default function Continue() {
 
   return (
     <IonPage>
-      <EmailOTP_1_Continue open={open} setOpen={setOpen} />
+      <EmailOTP_Continue open={open} setOpen={setOpen} />
       <IonContent className="ion-padding">
         <video
           className="fixed z-[-10] top-0 left-0 min-w-full min-h-full w-auto h-auto transform object-cover"

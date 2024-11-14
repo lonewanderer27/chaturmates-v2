@@ -13,7 +13,7 @@ const useSelfDraftStudent = () => {
         .select("*")
         .eq("user_id", session?.user.id!)
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error(error);

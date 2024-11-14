@@ -46,6 +46,7 @@ import useFetchAcademicYears from "../../hooks/setup/useFetchAcademicYears";
 import { caretDown, closeOutline } from "ionicons/icons";
 import useSetupDraftStudent from "../../hooks/setup/useSetupDraftStudent";
 import useSelfDraftStudent from "../../hooks/student/useSelfDraftStudent";
+import useSelfSetupDraftStudent from "../../hooks/setup/useSelfSetupDraftStudent";
 
 const validationSchema = object().shape({
   studentNo: number().required("Student No. is required"),
@@ -144,7 +145,7 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
     console.log(errors);
     console.log(getValues());
   };
-  const ds = useSelfDraftStudent();
+  const ds = useSelfSetupDraftStudent();
   const { handleDraftAcademicInfo, setUploading, uploading } = useSetupDraftStudent();
   const handleNext: SubmitHandler<NewStudentTypeSteps["step2"]> = async (
     data

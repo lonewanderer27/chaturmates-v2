@@ -24,6 +24,7 @@ import client from "../client";
 import useSession from "../hooks/auth/useSession";
 import useSelfDraftStudent from "../hooks/student/useSelfDraftStudent";
 import useSetupDraftStudent from "../hooks/setup/useSetupDraftStudent";
+import useSelfSetupDraftStudent from "../hooks/setup/useSelfSetupDraftStudent";
 
 const Setup: FC<RouteComponentProps> = () => {
   const { session } = useSession();
@@ -40,7 +41,7 @@ const Setup: FC<RouteComponentProps> = () => {
 
     // if there's none then create a new draft student record
     // and set the id to be of sessionId in the query params
-    if (ds.data === undefined) {
+    if (ds.data === null && session !== null) {
       (async () => {
         const newDraftStudent = await client
           .from("draft_students")

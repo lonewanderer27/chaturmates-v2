@@ -32,6 +32,7 @@ import { SubmitHandler, SubmitErrorHandler } from "react-hook-form";
 import { hideTabBar } from "../../utils/TabBar";
 import useSetupDraftStudent from "../../hooks/setup/useSetupDraftStudent";
 import useSelfDraftStudent from "../../hooks/student/useSelfDraftStudent";
+import useSelfSetupDraftStudent from "../../hooks/setup/useSelfSetupDraftStudent";
 
 // VS = Validation Schema
 export const VSIntroduceYourself = object().shape({
@@ -44,7 +45,7 @@ const Setup2IntroduceYourself: FC<RouteComponentProps> = ({ match }) => {
     hideTabBar();
   });
 
-  const ds = useSelfDraftStudent();
+  const ds = useSelfSetupDraftStudent();
 
   const [newStudent, setNewStudent] = useAtom(newStudentAtom);
   const {

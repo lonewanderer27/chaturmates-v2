@@ -15,6 +15,7 @@ import * as Yup from 'yup'
 import useSetupDraftStudent from '../../hooks/setup/useSetupDraftStudent'
 import useSelfDraftStudent from '../../hooks/student/useSelfDraftStudent'
 import { hideTabBar } from '../../utils/TabBar'
+import useSelfSetupDraftStudent from '../../hooks/setup/useSelfSetupDraftStudent'
 
 // Define the main validation schema
 const validationSchema = Yup.object().shape({
@@ -142,7 +143,7 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
 
   const { handleDraftHobbies, handleNext: next, uploading } = useSetupDraftStudent();
   const setNewStudent = useSetAtom(newStudentAtom);
-  const ds = useSelfDraftStudent();
+  const ds = useSelfSetupDraftStudent();
   const handlePageNext: SubmitHandler<NewStudentTypeSteps['step4']> = async (data) => {
     console.log("selected hobbies", selectedHobbyIds);
 

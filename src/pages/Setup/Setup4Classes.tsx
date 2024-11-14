@@ -57,6 +57,7 @@ import GenerateAbbreviatedDays from "../../utils/GenerateAbbreviatedDays";
 import useSetup from "../../hooks/setup/useSetup";
 import useSetupDraftStudent from "../../hooks/setup/useSetupDraftStudent";
 import useSelfDraftStudent from "../../hooks/student/useSelfDraftStudent";
+import useSelfSetupDraftStudent from "../../hooks/setup/useSelfSetupDraftStudent";
 
 // Define the specific subset of strings
 const allowedValues = [
@@ -181,7 +182,7 @@ const Setup4Classes: FC<RouteComponentProps> = ({ match }) => {
     console.log(getValues());
   };
 
-  const ds = useSelfDraftStudent();
+  const ds = useSelfSetupDraftStudent();
   const { handleDraftClasses, uploading, handleNext } = useSetupDraftStudent();
   const handlePageNext: SubmitHandler<NewStudentTypeSteps["step3"]> = async (
     data

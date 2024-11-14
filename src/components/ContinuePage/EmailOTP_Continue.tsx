@@ -37,29 +37,36 @@ import IsLocalHost from "../../utils/IsLocalHost";
 import { User, Session } from "@supabase/supabase-js";
 import { useAtom } from "jotai";
 import { disableAuthWrapper } from "../../atoms/setup";
-
-const schema = object({
-  email: string()
-    .email()
-    .required()
-    .test(
-      "is-adamson-or-allowed",
-      `${"Email must be an Adamson email"} ${IsLocalHost() ? " or an allowed test email" : ""}`,
-      (value) => {
-        if (!value) return false;
-        const domain = value.split("@")[1];
-        return domain === "adamson.edu.ph" || testEmails.includes(value);
-      }
-    ),
-  code: string()
-    .label("Code")
-    .matches(/^[0-9]{6}$/, "Must be a 6-digit code"),
-});
+import useFeatureFlags from "../../hooks/useFeatureFlags";
 
 const EmailOTP_Continue = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const { flags, loading, error } = useFeatureFlags();
+
+  // Extract allowed test emails from the feature flags
+  const allowedTestEmails = flags["allowed_test_emails"]?.value as unknown as string[];
+  console.info("Allowed Test Emails", allowedTestEmails);
+
+  const schema = object({
+    email: string()
+      .email()
+      .required()
+      .test(
+        "is-adamson-or-allowed",
+        `${"Email must be an Adamson email"} ${IsLocalHost() ? " or an allowed test email" : ""}`,
+        (value) => {
+          if (!value) return false;
+          const domain = value.split("@")[1];
+          return domain === "adamson.edu.ph" || allowedTestEmails.includes(value);
+        }
+      ),
+    code: string()
+      .label("Code")
+      .matches(/^[0-9]{6}$/, "Must be a 6-digit code"),
+  });
+
   const [disableAuth, setDisableAuth] = useAtom(disableAuthWrapper);
 
   const rt = useIonRouter();

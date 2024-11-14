@@ -11,6 +11,7 @@ import useFeatureFlags from '../useFeatureFlags';
 import useSelfStudentLite from '../student/useSelfStudentLite';
 import { useAtomValue } from 'jotai';
 import { newStudentAtom } from '../../atoms/student';
+import useSession from '../auth/useSession';
 
 const useSetupDraftStudent = () => {
   const [enableUploadProgress, setEnableUploadProgress] = useState(false);
@@ -18,7 +19,8 @@ const useSetupDraftStudent = () => {
   const [uploading, setUploading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState("");
   const rt = useIonRouter();
-  const { profile } = useProfile();
+  // const { profile } = useProfile();
+  const { session } = useSession();
   const { flags } = useFeatureFlags();
 
   const [steps, setSteps] = useState<string[]>([
@@ -73,7 +75,7 @@ const useSetupDraftStudent = () => {
     const newDraftStudent = await client
       .from("draft_students")
       .insert({
-        user_id: profile!.id,
+        user_id: session?.user.id!,
         completed: false,
         school_email: (await client.auth.getUser()).data.user?.email,
       })
@@ -92,7 +94,7 @@ const useSetupDraftStudent = () => {
     const coeHash = await md5(COEImage.toBuffer())
     console.log("MD5 Hash of COE Image: ", coeHash)
 
-    const storagePath = `users/${profile!.id}/${coeHash}.png`
+    const storagePath = `users/${session?.user.id!}/${coeHash}.png`
 
     const coeBlob = await COEImage.toBlob()
 
@@ -337,7 +339,7 @@ const useSetupDraftStudent = () => {
     const existingStudent = await client
       .from("students")
       .select("*")
-      .eq("profile_id", profile!.id)
+      .eq("profile_id", session?.user.id!)
       .maybeSingle()
 
     console.log("Existing Student: ", existingStudent);
@@ -376,7 +378,7 @@ const useSetupDraftStudent = () => {
         .insert({
           school: 1,
           student_no: draftStudent.data.student_no,
-          profile_id: profile!.id,
+          profile_id: session?.user.id!,
           school_email: (await client.auth.getUser()).data.user?.email!,
           verified: true,
           academic_year_id: draftStudent.data.academic_year_id,

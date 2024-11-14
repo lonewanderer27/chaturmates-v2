@@ -9,13 +9,14 @@ import {
   IonGrid,
   IonHeader,
   IonInput,
+  IonItem,
   IonLabel,
+  IonList,
   IonPage,
   IonRow,
   IonSpinner,
   IonText,
   IonTextarea,
-  IonTitle,
   IonToolbar,
   useIonRouter,
   useIonViewWillEnter,
@@ -23,16 +24,14 @@ import {
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { RouteComponentProps } from "react-router";
-import { NewGroupInputs } from "../../types/group/NewGroup";
 import { NewStudentTypeSteps } from "../../types/student/post/NewStudentType";
 import { object, string } from "yup";
-import { NEW_STUDENT } from "../../constants/student";
 import { useAtom } from "jotai";
 import { newStudentAtom } from "../../atoms/student";
 import { SubmitHandler, SubmitErrorHandler } from "react-hook-form";
-import { useSteps } from "../../hooks/useSteps";
-import useSetup from "../../hooks/setup/useSetup";
 import { hideTabBar } from "../../utils/TabBar";
+import useSetupDraftStudent from "../../hooks/setup/useSetupDraftStudent";
+import useSelfDraftStudent from "../../hooks/student/useSelfDraftStudent";
 
 // VS = Validation Schema
 export const VSIntroduceYourself = object().shape({
@@ -45,12 +44,12 @@ const Setup2IntroduceYourself: FC<RouteComponentProps> = ({ match }) => {
     hideTabBar();
   });
 
+  const ds = useSelfDraftStudent();
+
   const [newStudent, setNewStudent] = useAtom(newStudentAtom);
-  const rt = useIonRouter();
   const {
     register,
     handleSubmit,
-    setError,
     getFieldState,
     formState: { errors },
   } = useForm<NewStudentTypeSteps["step1"]>({
@@ -60,21 +59,22 @@ const Setup2IntroduceYourself: FC<RouteComponentProps> = ({ match }) => {
       // if there is, set the default values to that
       // else, set the default values to an empty object
       return {
-        fullName: newStudent.step1.fullName || "",
-        description: newStudent.step1.description || "",
+        fullName: newStudent.step1.fullName || ds.data?.full_name || "",
+        description: newStudent.step1.description || ds.data?.description || "",
       };
     },
   });
-  const { handleNext: next } = useSetup();
+  const { handleNext: next } = useSetupDraftStudent();
 
   const [checking, setChecking] = useState(() => false);
   const handleError: SubmitErrorHandler<NewStudentTypeSteps["step1"]> = (
     errors,
-    event
   ) => {
     console.log("handleError");
     console.log(errors);
   };
+  const { handleDraftIntroduceYourself } = useSetupDraftStudent();
+
   const handleNext: SubmitHandler<NewStudentTypeSteps["step1"]> = async (
     data
   ) => {
@@ -85,6 +85,16 @@ const Setup2IntroduceYourself: FC<RouteComponentProps> = ({ match }) => {
       ...prev,
       step1: data,
     }));
+
+    // update the draft student record with the data
+    await handleDraftIntroduceYourself({
+      full_name: data.fullName,
+      description: data.description,
+    }, ds.data?.id!);
+
+    // refetch the draft student record
+    await ds.refetch();
+
     setChecking(() => false);
 
     // route to next page
@@ -113,60 +123,61 @@ const Setup2IntroduceYourself: FC<RouteComponentProps> = ({ match }) => {
               </IonText>
             </IonCol>
           </IonRow>
-          <IonRow>
-            <IonCol>
+          <IonList className="rounded-xl">
+            <IonItem lines="none" className="mb-[-10px]">
               <IonLabel>
                 <IonText className="font-poppins font-semibold text-lg">
                   Full Name
                 </IonText>
               </IonLabel>
+            </IonItem>
+            <IonItem lines="full">
               <IonInput
-                className={`custom my-2 text-lg ${
-                  getFieldState("fullName").isTouched ? "ion-touched" : ""
-                } ${
-                  errors.fullName
+                className={`my-2 text-lg ${getFieldState("fullName").isTouched ? "ion-touched" : ""
+                  } ${errors.fullName
                     ? "ion-touched ion-invalid border-red-500"
                     : ""
-                }`}
+                  }`}
                 type="text"
                 errorText={errors.fullName?.message}
                 placeholder="Enter your full name"
                 {...register("fullName")}
               />
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
+            </IonItem>
+            <IonItem lines="none" className="mb-[-10px]">
               <IonLabel>
                 <IonText className="font-poppins font-semibold text-lg">
                   Description
                 </IonText>
               </IonLabel>
+            </IonItem>
+            <IonItem>
               <IonTextarea
-                className={`custom my-2 text-lg ${
-                  getFieldState("fullName").isTouched ? "ion-touched" : ""
-                } ${
-                  errors.description
+                className={`my-2 text-lg ${getFieldState("fullName").isTouched ? "ion-touched" : ""
+                  } ${errors.description
                     ? "ion-touched ion-invalid border-red-500"
                     : ""
-                }`}
+                  }`}
                 errorText={errors.description?.message}
-                placeholder="Tell us about yourself"
+                placeholder="Introduce yourself to fellow klasmeyts"
                 rows={5}
                 {...register("description")}
               />
-            </IonCol>
-          </IonRow>
+            </IonItem>
+          </IonList>
         </IonGrid>
       </IonContent>
       <IonFooter>
         <IonToolbar className="p-4 flex justify-end">
           <IonButton
             shape="round"
-            onClick={handleSubmit(handleNext, handleError)}
             slot="end"
+            size="small"
+            onClick={handleSubmit(handleNext, handleError)}
           >
-            {checking ? <IonSpinner name="dots" /> : <span>Next</span>}
+            <IonText className="py-3">
+              {checking ? <IonSpinner name="dots" /> : <span>Next</span>}
+            </IonText>
           </IonButton>
         </IonToolbar>
       </IonFooter>

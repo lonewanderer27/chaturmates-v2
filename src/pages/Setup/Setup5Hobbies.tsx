@@ -1,17 +1,20 @@
-import { createAnimation, IonBackButton, IonButton, IonButtons, IonChip, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonModal, IonPage, IonRow, IonSearchbar, IonTabsContext, IonText, IonToolbar } from '@ionic/react'
+import { createAnimation, IonBackButton, IonButton, IonButtons, IonChip, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonModal, IonPage, IonRow, IonSearchbar, IonSpinner, IonTabsContext, IonText, IonToolbar, useIonViewWillEnter } from '@ionic/react'
 import { FC, useEffect, useRef, useState } from 'react'
 import { RouteComponentProps } from 'react-router'
 import useHobbyCategories from '../../hooks/hobbies/useHobbyCategories'
 import useHobbies from '../../hooks/hobbies/useHobbies'
 import { search } from 'ionicons/icons'
 import { HobbyType } from '../../types'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
 import { NewStudentTypeSteps } from '../../types/student/post/NewStudentType'
 import { newStudentAtom } from '../../atoms/student'
-import { useAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import useSetup from '../../hooks/setup/useSetup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
+import useSetupDraftStudent from '../../hooks/setup/useSetupDraftStudent'
+import useSelfDraftStudent from '../../hooks/student/useSelfDraftStudent'
+import { hideTabBar } from '../../utils/TabBar'
 
 // Define the main validation schema
 const validationSchema = Yup.object().shape({
@@ -19,6 +22,9 @@ const validationSchema = Yup.object().shape({
 });
 
 const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
+  useIonViewWillEnter(() => {
+    hideTabBar();
+  });
   const hcqR = useHobbyCategories();
   const hqR = useHobbies();
 
@@ -96,12 +102,16 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
     }
   }
 
+  const { handleSubmit, setValue } = useForm<NewStudentTypeSteps["step4"]>({
+    resolver: yupResolver(validationSchema)
+  });
   const [selectedHobbyIds, setSelectedHobbyIds] = useState<number[]>([]);
   const toggleHobbySelection = (hobbyId: number) => {
     setSelectedHobbyIds(prevIds => {
       const newIds = prevIds.includes(hobbyId)
         ? prevIds.filter(id => id !== hobbyId)
         : [...prevIds, hobbyId];
+      setValue("hobbies", newIds)
 
       if (newIds.length === 5 && prevIds.length < 5) {
         animateFooter(true);
@@ -130,11 +140,9 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
     }
   }
 
-  const { handleNext: next, handleUploadInterests, handleFinish, uploading } = useSetup();
-  const [newStudent, setNewStudent] = useAtom(newStudentAtom);
-  const { handleSubmit } = useForm<NewStudentTypeSteps["step4"]>({
-    resolver: yupResolver(validationSchema)
-  });
+  const { handleDraftHobbies, handleNext: next, uploading } = useSetupDraftStudent();
+  const setNewStudent = useSetAtom(newStudentAtom);
+  const ds = useSelfDraftStudent();
   const handlePageNext: SubmitHandler<NewStudentTypeSteps['step4']> = async (data) => {
     console.log("selected hobbies", selectedHobbyIds);
 
@@ -146,9 +154,13 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
       }
     }));
 
-    await handleUploadInterests(selectedHobbyIds);
+    // await handleUploadInterests(selectedHobbyIds);
+    await handleDraftHobbies(data, ds.data?.id!);
 
-    await handleFinish();
+    await next();
+  }
+  const handlePageError: SubmitErrorHandler<NewStudentTypeSteps['step4']> = (errors) => {
+    console.error(errors)
   }
 
   return (
@@ -197,7 +209,6 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
           <IonRow>
             <IonCol>
               {hqR.data && hqR.data.filter(hq => hq.category_id === null).map(hq => (
-
                 <IonChip
                   key={hq.id}
                   color={isHobbySelected(hq.id) ? "primary" : undefined}
@@ -208,17 +219,14 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
                     <p>{hq.title}</p>
                   </IonText>
                 </IonChip>
-
               ))}
             </IonCol>
           </IonRow>
           {hcqR.data && hcqR.data.map((hc) => {
             const hobbiesInCategory = filteredHobbies.filter((h) => h.category_id === hc.id);
-
             if (hobbiesInCategory.length === 0) {
               return null; // Skip rendering this category if no hobbies match
             }
-
             return (
               <>
                 <IonRow key={hc.id}>
@@ -256,11 +264,11 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
             slot="end"
             size="small"
             expand="block"
-            onClick={handleSubmit(handlePageNext)}
+            onClick={handleSubmit(handlePageNext, handlePageError)}
             disabled={uploading}
           >
             <IonText className='py-3'>
-              {uploading ? "Finishing..." : "Finish"}
+              {uploading ? <IonSpinner name="dots" /> : "Next"}
             </IonText>
           </IonButton>
         </IonToolbar>

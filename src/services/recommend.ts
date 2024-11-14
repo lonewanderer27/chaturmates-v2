@@ -1,21 +1,27 @@
 import axios, { AxiosResponse } from "axios";
-import { CourseType, GroupMemberType, GroupType, ProfileType, StudentType } from "../types";
+import {
+  CourseType,
+  GroupMemberType,
+  GroupType,
+  ProfileType,
+  StudentType,
+} from "../types";
 import { RealGroupsRes } from "../types/recommend/realGroup";
 
 // @ts-ignore
 export interface RecommendedStudentType extends StudentType {
-  course: CourseType,
-  profile: ProfileType
+  course: CourseType;
+  profile: ProfileType;
 }
 
 interface RecommendGroupMemberType extends GroupMemberType {
-  profile: ProfileType,
-  student: StudentType,
+  profile: ProfileType;
+  student: StudentType;
 }
 
 export interface RecommendGroupType extends GroupType {
-  courseContent: CourseType,
-  group_members: RecommendGroupMemberType[]
+  courseContent: CourseType;
+  group_members: RecommendGroupMemberType[];
 }
 
 const recommend = axios.create({
@@ -33,20 +39,27 @@ const RecommendService = {
   async getGroups(profileId: string) {
     const res: AxiosResponse<{
       groups: RecommendGroupType[];
-    }> = await recommend.get(`/groups/pid/${profileId}`)
+    }> = await recommend.get(`/groups/pid/${profileId}`);
 
     return res.data;
   },
   async getRealGroups(studentId: number, topK: number = 10) {
-    const res: AxiosResponse<RealGroupsRes> = 
-      await recommend.get(`/groups/sid/${studentId}`, {
+    const res: AxiosResponse<RealGroupsRes> = await recommend.get(
+      `/groups/sid/${studentId}`,
+      {
         params: {
-          top_k: topK
-        }
-      });
-      
+          top_k: topK,
+        },
+      }
+    );
+
     return res.data;
-  }
+  },
+  async refreshRealGroups() {
+    const res: AxiosResponse<{ message: string }> =
+      await recommend.post("/groups/refresh");
+    return res.data;
+  },
 };
 
 export default RecommendService;

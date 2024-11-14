@@ -22,6 +22,7 @@ import {
   IonSearchbar,
   IonSelect,
   IonSelectOption,
+  IonSpinner,
   IonText,
   IonTitle,
   IonToolbar,
@@ -42,7 +43,9 @@ import { newStudentAtom } from "../../atoms/student";
 import { boolean, number, object, string } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useFetchAcademicYears from "../../hooks/setup/useFetchAcademicYears";
-import { closeOutline } from "ionicons/icons";
+import { caretDown, closeOutline } from "ionicons/icons";
+import useSetupDraftStudent from "../../hooks/setup/useSetupDraftStudent";
+import useSelfDraftStudent from "../../hooks/student/useSelfDraftStudent";
 
 const validationSchema = object().shape({
   studentNo: number().required("Student No. is required"),
@@ -125,7 +128,7 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
         newStudent.step2.academicYear !== 0
           ? newStudent.step2.academicYear
           : undefined,
-      type: 
+      type:
         newStudent.step2.type !== undefined
           ? newStudent.step2.type
           : undefined,
@@ -141,17 +144,35 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
     console.log(errors);
     console.log(getValues());
   };
+  const ds = useSelfDraftStudent();
+  const { handleDraftAcademicInfo, setUploading, uploading } = useSetupDraftStudent();
   const handleNext: SubmitHandler<NewStudentTypeSteps["step2"]> = async (
     data
   ) => {
     console.log("handleNext");
     console.log(data);
+    setUploading(() => true);
     setChecking(() => true);
     setNewStudent((prev) => ({
       ...prev,
       step2: data,
     }));
+
+    // update the draft student record with the data
+    await handleDraftAcademicInfo({
+      student_no: data.studentNo.toString(),
+      course_id: data.course,
+      year_level: data.yearLevel,
+      academic_year_id: data.academicYear,
+      type: data.type ? "regular" : "irregular",
+      block: data.block,
+    }, ds.data?.id!)
+
+    // refetch the draft student record
+    await ds.refetch();
+
     setChecking(() => false);
+    setUploading(() => false);
 
     // route to next page
     next();
@@ -193,13 +214,15 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
               </IonText>
             </IonCol>
           </IonRow>
-          <IonRow className="py-1">
-            <IonCol>
+          <IonList className="rounded-xl">
+            <IonItem lines="none" className="mb-[-10px]">
               <IonLabel>
                 <IonText className="font-poppins font-semibold text-lg">
                   Student No
                 </IonText>
               </IonLabel>
+            </IonItem>
+            <IonItem lines="full">
               <IonInput
                 errorText={errors.studentNo?.message}
                 {...register("studentNo")}
@@ -207,18 +230,18 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
                 placeholder="Enter your student no."
                 value={getValues("studentNo")}
               />
-            </IonCol>
-          </IonRow>
-          <IonRow className="py-1">
-            <IonCol>
+            </IonItem>
+            <IonItem lines="none" className="mb-[-10px]">
               <IonLabel>
                 <IonText className="font-poppins font-semibold text-lg">
                   Course
                 </IonText>
               </IonLabel>
+            </IonItem>
+            <IonItem lines="full" onClick={openCourseModal}>
               <IonInput
                 errorText={errors.course?.message}
-                onClick={openCourseModal}
+                // onClick={openCourseModal}
                 placeholder="Select your course"
                 readonly
                 value={
@@ -226,44 +249,44 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
                     ?.full_title ?? ""
                 }
               />
-            </IonCol>
-          </IonRow>
-          <IonRow className="py-1">
-            <IonCol>
+              <IonIcon src={caretDown} size="small" />
+            </IonItem>
+            <IonItem lines="none" className="mb-[-10px]">
               <IonLabel>
                 <IonText className="font-poppins font-semibold text-lg">
                   Year Level
                 </IonText>
               </IonLabel>
-              <div className="flex justify-center">
-                <IonSelect
-                  {...register("yearLevel")}
-                  interface="action-sheet"
-                  interfaceOptions={{
-                    header: "Select your level",
-                  }}
-                  placeholder="Select your level"
-                >
-                  <IonSelectOption value={1}>1st</IonSelectOption>
-                  <IonSelectOption value={2}>2nd</IonSelectOption>
-                  <IonSelectOption value={3}>3rd</IonSelectOption>
-                  <IonSelectOption value={4}>4th</IonSelectOption>
-                </IonSelect>
-              </div>
+            </IonItem>
+            <IonItem lines="full">
+              <IonSelect
+                {...register("yearLevel")}
+                interface="action-sheet"
+                interfaceOptions={{
+                  header: "Select your year level",
+                }}
+                placeholder="Select your year level"
+              >
+                <IonSelectOption value={1}>1st Year</IonSelectOption>
+                <IonSelectOption value={2}>2nd Year</IonSelectOption>
+                <IonSelectOption value={3}>3rd Year</IonSelectOption>
+                <IonSelectOption value={4}>4th Year</IonSelectOption>
+              </IonSelect>
+              {/* </div> */}
               {errors.yearLevel && (
                 <div>
                   <IonText color="danger">Year Level is required</IonText>
                 </div>
               )}
-            </IonCol>
-          </IonRow>
-          <IonRow className="py-1">
-            <IonCol>
+            </IonItem>
+            <IonItem lines="none" className="mb-[-10px]">
               <IonLabel>
                 <IonText className="font-poppins font-semibold text-lg">
                   Academic Year
                 </IonText>
               </IonLabel>
+            </IonItem>
+            <IonItem lines="full">
               <div className="flex justify-center">
                 <IonSelect
                   interface="action-sheet"
@@ -288,16 +311,15 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
                   <IonText color="danger">Academic Year is required</IonText>
                 </div>
               )}
-            </IonCol>
-          </IonRow>
-          <IonRow className="py-1">
-            <IonCol>
+            </IonItem>
+            <IonItem lines="none" className="mb-[-10px]">
               <IonLabel>
                 <IonText className="font-poppins font-semibold text-lg">
                   Do you have a block section?
                 </IonText>
               </IonLabel>
-              <br />
+            </IonItem>
+            <IonItem lines="full">
               <IonRadioGroup
                 onIonChange={(e) => {
                   setValue("type", e.detail.value);
@@ -305,39 +327,38 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
                 }}
                 value={getValues("type")}
               >
-                <IonItem className=" rounded-full mt-[10px]">
-                  <IonRadio value={true} slot="start" justify="space-between">
-                    Yes
-                  </IonRadio>
-                  <IonRadio value={false} slot="end" justify="space-between">
-                    No
-                  </IonRadio>
-                </IonItem>
+                <IonRadio value={true} slot="start" labelPlacement="end">
+                  Yes
+                </IonRadio>
+                <IonRadio value={false} slot="end" className="ml-[25px]" labelPlacement="end">
+                  No
+                </IonRadio>
               </IonRadioGroup>
               {errors.type && (
-                <div className="mt-[5px]">
+                <div>
                   <IonText color="danger">{errors.type.message}</IonText>
                 </div>
               )}
-            </IonCol>
-          </IonRow>
-          {getValues("type") && (
-            <IonRow className="py-1">
-              <IonCol>
-                <IonLabel>
-                  <IonText className="font-poppins font-semibold text-lg">
-                    Block No
-                  </IonText>
-                </IonLabel>
-                <IonInput
-                  errorText={errors.block?.message}
-                  {...register("block")}
-                  placeholder="Enter your Block No."
-                  value={getValues("block")}
-                />
-              </IonCol>
-            </IonRow>
-          )}
+            </IonItem>
+            {getValues("type") && (
+              <>
+                <IonItem lines="none" className="mb-[-10px]">
+                  <IonLabel>
+                    <IonText className="font-poppins font-semibold text-lg">
+                      Block No
+                    </IonText>
+                  </IonLabel>
+                </IonItem>
+                <IonItem>
+                  <IonInput
+                    errorText={errors.block?.message}
+                    {...register("block")}
+                    placeholder="Enter your Block No."
+                    value={getValues("block")}
+                  />
+                </IonItem>
+              </>)}
+          </IonList>
         </IonGrid>
         <IonModal ref={courseModal} presentingElement={presentingElement!}>
           <IonHeader>
@@ -382,9 +403,16 @@ const Setup3AcademicInformation: FC<RouteComponentProps> = ({ match }) => {
           <IonButton
             shape="round"
             slot="end"
+            size="small"
             onClick={handleSubmit(handleNext, handleError)}
           >
-            Next
+            <IonText className="py-3">
+              {uploading ? (
+                <IonSpinner name="dots" />
+              ) : (
+                "Next"
+              )}
+            </IonText>
           </IonButton>
         </IonToolbar>
       </IonFooter>

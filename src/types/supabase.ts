@@ -288,6 +288,121 @@ export type Database = {
           },
         ]
       }
+      draft_classes: {
+        Row: {
+          code: string | null
+          created_at: string
+          draft_student_id: string
+          end_time: string | null
+          friday: boolean
+          id: number
+          monday: boolean
+          professor_id: number | null
+          room: string | null
+          saturday: boolean
+          start_time: string | null
+          subject_id: number
+          sunday: boolean
+          thursday: boolean
+          tuesday: boolean
+          wednesday: boolean
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string
+          draft_student_id: string
+          end_time?: string | null
+          friday?: boolean
+          id?: number
+          monday?: boolean
+          professor_id?: number | null
+          room?: string | null
+          saturday?: boolean
+          start_time?: string | null
+          subject_id: number
+          sunday?: boolean
+          thursday?: boolean
+          tuesday?: boolean
+          wednesday?: boolean
+        }
+        Update: {
+          code?: string | null
+          created_at?: string
+          draft_student_id?: string
+          end_time?: string | null
+          friday?: boolean
+          id?: number
+          monday?: boolean
+          professor_id?: number | null
+          room?: string | null
+          saturday?: boolean
+          start_time?: string | null
+          subject_id?: number
+          sunday?: boolean
+          thursday?: boolean
+          tuesday?: boolean
+          wednesday?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "draft_classes_draft_student_id_fkey"
+            columns: ["draft_student_id"]
+            isOneToOne: false
+            referencedRelation: "draft_students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_classes_professor_id_fkey"
+            columns: ["professor_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_classes_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      draft_student_hobbies: {
+        Row: {
+          created_at: string
+          draft_student_id: string
+          hobby_id: number
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          draft_student_id: string
+          hobby_id: number
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          draft_student_id?: string
+          hobby_id?: number
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "draft_student_hobbies_draft_student_id_fkey"
+            columns: ["draft_student_id"]
+            isOneToOne: false
+            referencedRelation: "draft_students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_student_hobbies_hobby_id_fkey"
+            columns: ["hobby_id"]
+            isOneToOne: false
+            referencedRelation: "hobbies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       draft_students: {
         Row: {
           academic_year_id: number | null
@@ -299,11 +414,10 @@ export type Database = {
           created_at: string
           description: string | null
           full_name: string | null
-          id: number
-          pending: boolean
+          id: string
           school_email: string | null
           student_no: string | null
-          type: boolean | null
+          type: Database["public"]["Enums"]["student_type"] | null
           updated_at: string
           user_id: string
           year_level: number | null
@@ -318,11 +432,10 @@ export type Database = {
           created_at?: string
           description?: string | null
           full_name?: string | null
-          id?: number
-          pending?: boolean
+          id?: string
           school_email?: string | null
           student_no?: string | null
-          type?: boolean | null
+          type?: Database["public"]["Enums"]["student_type"] | null
           updated_at?: string
           user_id: string
           year_level?: number | null
@@ -337,11 +450,10 @@ export type Database = {
           created_at?: string
           description?: string | null
           full_name?: string | null
-          id?: number
-          pending?: boolean
+          id?: string
           school_email?: string | null
           student_no?: string | null
-          type?: boolean | null
+          type?: Database["public"]["Enums"]["student_type"] | null
           updated_at?: string
           user_id?: string
           year_level?: number | null
@@ -994,8 +1106,8 @@ export type Database = {
           changed_at: string | null
           config_id: string | null
           feature_name: string | null
-          new_value: Json | null
-          old_value: Json | null
+          new_value: string | null
+          old_value: string | null
         }
         Insert: {
           action?: string | null
@@ -1003,8 +1115,8 @@ export type Database = {
           changed_at?: string | null
           config_id?: string | null
           feature_name?: string | null
-          new_value?: Json | null
-          old_value?: Json | null
+          new_value?: string | null
+          old_value?: string | null
         }
         Update: {
           action?: string | null
@@ -1012,8 +1124,8 @@ export type Database = {
           changed_at?: string | null
           config_id?: string | null
           feature_name?: string | null
-          new_value?: Json | null
-          old_value?: Json | null
+          new_value?: string | null
+          old_value?: string | null
         }
         Relationships: []
       }
@@ -1025,7 +1137,7 @@ export type Database = {
           is_active: boolean
           key: string
           updated_at: string
-          value: Json
+          value: string
         }
         Insert: {
           created_at?: string
@@ -1034,7 +1146,7 @@ export type Database = {
           is_active?: boolean
           key: string
           updated_at?: string
-          value: Json
+          value: string
         }
         Update: {
           created_at?: string
@@ -1043,7 +1155,7 @@ export type Database = {
           is_active?: boolean
           key?: string
           updated_at?: string
-          value?: Json
+          value?: string
         }
         Relationships: []
       }
@@ -1477,6 +1589,7 @@ export type Database = {
           school_email: string
           student_no: string | null
           type: Database["public"]["Enums"]["student_type"] | null
+          updated_at: string
           vanity_url: string | null
           verified: boolean
           year_level: number | null
@@ -1496,6 +1609,7 @@ export type Database = {
           school_email: string
           student_no?: string | null
           type?: Database["public"]["Enums"]["student_type"] | null
+          updated_at?: string
           vanity_url?: string | null
           verified?: boolean
           year_level?: number | null
@@ -1515,6 +1629,7 @@ export type Database = {
           school_email?: string
           student_no?: string | null
           type?: Database["public"]["Enums"]["student_type"] | null
+          updated_at?: string
           vanity_url?: string | null
           verified?: boolean
           year_level?: number | null
@@ -1579,6 +1694,35 @@ export type Database = {
           },
           {
             foreignKeyName: "students_class_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      students_coe: {
+        Row: {
+          created_at: string
+          file_path: string
+          id: number
+          student_id: number
+        }
+        Insert: {
+          created_at?: string
+          file_path: string
+          id?: number
+          student_id: number
+        }
+        Update: {
+          created_at?: string
+          file_path?: string
+          id?: number
+          student_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "students_coe_student_id_fkey"
             columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "students"

@@ -21,19 +21,18 @@ import {
   IonLoading,
   IonModal,
   IonPage,
-  IonProgressBar,
   IonRow,
   IonSearchbar,
   IonSelect,
   IonSelectOption,
+  IonSpinner,
   IonText,
   IonTitle,
   IonToolbar,
-  useIonLoading,
   useIonViewWillEnter,
 } from "@ionic/react";
 
-import React, { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 import { hideTabBar } from "../../utils/TabBar";
 import useFetchSubjects from "../../hooks/setup/useFetchSubjects";
@@ -56,6 +55,8 @@ import {
 import { NEW_STUDENT } from "../../constants/student";
 import GenerateAbbreviatedDays from "../../utils/GenerateAbbreviatedDays";
 import useSetup from "../../hooks/setup/useSetup";
+import useSetupDraftStudent from "../../hooks/setup/useSetupDraftStudent";
+import useSelfDraftStudent from "../../hooks/student/useSelfDraftStudent";
 
 // Define the specific subset of strings
 const allowedValues = [
@@ -160,10 +161,7 @@ const Setup4Classes: FC<RouteComponentProps> = ({ match }) => {
   const [newStudent, setNewStudent] = useAtom(newStudentAtom);
 
   const {
-    register,
     handleSubmit,
-    setError,
-    getFieldState,
     getValues,
     trigger,
     setValue,
@@ -183,24 +181,26 @@ const Setup4Classes: FC<RouteComponentProps> = ({ match }) => {
     console.log(getValues());
   };
 
-  const { handleNext: next, handleUpload, uploading } = useSetup();
-  const [show, hide] = useIonLoading();
+  const ds = useSelfDraftStudent();
+  const { handleDraftClasses, uploading, handleNext } = useSetupDraftStudent();
   const handlePageNext: SubmitHandler<NewStudentTypeSteps["step3"]> = async (
     data
   ) => {
     console.log("handleNext");
     console.log(data);
+
     setNewStudent((prev) => ({
       ...prev,
       step3: data,
     }));
 
-    // we can now submit our new student's data to the database
-    // we do it async so that we can show the next screen
-    handleUpload();
+    await handleDraftClasses(data, ds.data?.id!);
+
+    // refetch the draft student
+    await ds.refetch();
 
     // navigate to the interests screen
-    await next();
+    await handleNext();
   };
 
   const {
@@ -677,10 +677,13 @@ const Setup4Classes: FC<RouteComponentProps> = ({ match }) => {
           <IonButton
             shape="round"
             slot="end"
+            size="small"
             onClick={handleSubmit(handlePageNext, handlePageNextError)}
             disabled={uploading}
           >
-            Next
+            <IonText className='py-3'>
+              {uploading ? <IonSpinner name="dots" /> : "Next"}
+            </IonText>
           </IonButton>
           {/* <IonButton
             shape="round"

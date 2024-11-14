@@ -126,27 +126,31 @@ export default function useSetup() {
     // and push the next route based on that
     console.log("handleNext");
     console.log(rt.routeInfo.pathname);
+
+    // get current query params
+    const currentParams = window.location.search;
+
     switch (rt.routeInfo.pathname) {
       case "/setup":
-        rt.push("/setup/studentOrProf");
+        rt.push("/setup/studentOrProf"+currentParams);
         break;
       case "/setup/studentOrProf":
-        rt.push("/setup/pdfUpload");
+        rt.push("/setup/pdfUpload"+currentParams);
         break;
       case "/setup/pdfUpload":
-        rt.push("/setup/introduceYourself");
+        rt.push("/setup/introduceYourself"+currentParams);
         break;
       case "/setup/introduceYourself":
-        rt.push("/setup/academicInformation");
+        rt.push("/setup/academicInformation"+currentParams);
         break;
       case "/setup/academicInformation":
-        rt.push("/setup/classes");
+        rt.push("/setup/classes"+currentParams);
         break;
       case "/setup/classes":
-        rt.push("/setup/hobbies");
+        rt.push("/setup/hobbies"+currentParams);
         break;
       case "/setup/hobbies":
-        rt.push("/setup/finish");
+        rt.push("/setup/finish"+currentParams);
         break;
     }
   };

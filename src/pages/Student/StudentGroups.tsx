@@ -15,7 +15,6 @@ import GroupItem from "../../components/SearchPage/GroupItem";
 import { RouteComponentProps } from "react-router";
 import { hideTabBar } from "../../utils/TabBar";
 import useStudentGroups from "../../hooks/student/useStudentGroups";
-import useSelfStudentLite from "../../hooks/student/useSelfStudentLite";
 import useStudentInfo from "../../hooks/student/useStudentInfo";
 
 type StudentGroupsPageProps = {

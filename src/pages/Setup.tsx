@@ -9,24 +9,61 @@ import {
   IonPage,
   IonRow,
   IonToolbar,
+  useIonRouter,
   useIonViewWillEnter,
 } from "@ionic/react";
 
 import { IonText } from "@ionic/react";
 import {
-  fingerPrintOutline,
   helpCircleOutline,
-  personSharp,
 } from "ionicons/icons";
 import { hideTabBar } from "../utils/TabBar";
-import useSetup from "../hooks/setup/useSetup";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { RouteComponentProps } from "react-router";
 import client from "../client";
 import useSession from "../hooks/auth/useSession";
+import useSelfDraftStudent from "../hooks/student/useSelfDraftStudent";
+import useSetupDraftStudent from "../hooks/setup/useSetupDraftStudent";
 
 const Setup: FC<RouteComponentProps> = () => {
   const { session } = useSession();
+  const ds = useSelfDraftStudent();
+  console.log("draftStudent: ", ds.data)
+  const rt = useIonRouter()
+
+  useEffect(() => {
+    // if there's a draft student record and it's not completed
+    if (ds.data !== null && ds.data?.completed === false) {
+      // set the id to be of sessionId in the query params
+      rt.push(`/setup?sessionId=${ds.data.id}`, "forward", "replace")
+    }
+
+    // if there's none then create a new draft student record
+    // and set the id to be of sessionId in the query params
+    if (ds.data === null) {
+      (async () => {
+        const newDraftStudent = await client
+          .from("draft_students")
+          .insert({
+            user_id: session?.user.id!,
+            completed: false,
+            school_email: (await client.auth.getUser()).data.user?.email,
+          })
+          .select("*")
+          .single()
+
+        if (newDraftStudent.error) {
+          console.error(newDraftStudent.error)
+          throw new Error(newDraftStudent.error.message)
+        }
+
+        // refetch the draft student record
+        ds.refetch();
+
+        rt.push(`/setup?sessionId=${newDraftStudent.data.id}`, "forward", "replace")
+      })();
+    }
+  }, [ds.data])
 
   useIonViewWillEnter(() => {
     (async () => {
@@ -51,7 +88,7 @@ const Setup: FC<RouteComponentProps> = () => {
     })();
   }, []);
 
-  const { handleNext } = useSetup();
+  const { handleNext } = useSetupDraftStudent();
 
   return (
     <IonPage>
@@ -92,8 +129,15 @@ const Setup: FC<RouteComponentProps> = () => {
       </IonContent>
       <IonFooter>
         <IonToolbar className="ion-padding flex justify-end">
-          <IonButton slot="end" shape="round" onClick={handleNext}>
-            Get Started
+          <IonButton
+            shape="round"
+            slot="end"
+            size="small"
+            onClick={handleNext}
+          >
+            <IonText className="py-3">
+              Get Started
+            </IonText>
           </IonButton>
         </IonToolbar>
       </IonFooter>

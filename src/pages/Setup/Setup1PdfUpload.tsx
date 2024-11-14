@@ -12,6 +12,7 @@ import {
   IonLoading,
   IonPage,
   IonRow,
+  IonSpinner,
   IonText,
   IonToolbar,
   useIonAlert,
@@ -19,13 +20,14 @@ import {
   useIonRouter,
   useIonViewWillEnter,
 } from "@ionic/react";
+import md5 from "md5";
 import { hideTabBar } from "../../utils/TabBar";
 import useSetup from "../../hooks/setup/useSetup";
 import { useDropzone } from "react-dropzone";
 import { FC, useMemo, useState } from "react";
-import { createWorker } from "tesseract.js";
+import { createWorker, PSM } from "tesseract.js";
 import * as PDFJS from "pdfjs-dist";
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps, useLocation } from "react-router";
 import useFetchSubjects from "../../hooks/setup/useFetchSubjects";
 import { newStudentAtom } from "../../atoms/student";
 import { useAtom } from "jotai";
@@ -33,6 +35,7 @@ import useFetchAcademicYears from "../../hooks/setup/useFetchAcademicYears";
 import useFetchCourses from "../../hooks/setup/useFetchCourses";
 import { CourseType } from "../../types";
 import Image from "image-js";
+import useSetupDraftStudent from "../../hooks/setup/useSetupDraftStudent";
 
 PDFJS.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -71,6 +74,8 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
   const [alert] = useIonAlert();
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
+  const { handleDraftCOEUpload, handleNext } = useSetupDraftStudent();
+  const loc = useLocation();
 
   useIonViewWillEnter(() => {
     hideTabBar();
@@ -78,7 +83,6 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
 
   const rt = useIonRouter();
   const [newStudent, setNewStudent] = useAtom(newStudentAtom);
-  const { handleNext } = useSetup();
 
   const [file, setFile] = useState<File | null>(null);
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
@@ -312,11 +316,17 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
     };
 
     try {
+      // upload the coe image
+
       setLoading(true);
       setLoadingMessage("Processing PDF");
 
       // Get the array buffer from the file
       const arrayBuffer = await file!.arrayBuffer();
+
+      // Get the MD5 Hash of Cert of Enrollment PDF
+      // const coehash = md5(arrayBuffer);
+      // console.log("MD5 Hash: ", coehash);
 
       // Load the PDF document
       const doc = await PDFJS.getDocument({ data: arrayBuffer }).promise;
@@ -357,42 +367,79 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
             checks.imageNotFound = true;
           }
 
+          // Define the target dimensions
+          const targetWidth = 850;
+          const targetHeight = 1000;
+
           if (!imgObj.bitmap || imgObj.width !== 850) {
             console.log(
               "Invalid image, expecting bitmap image with dimensions 850x1000"
             );
-            checks.invalidImage = true;
+            // checks.invalidImage = true;
+            // we'll attempt to resize the image to the target dimensions
           }
 
           console.log(imgObj);
+          console.log(typeof imgObj.bitmap);
 
           // Convert ImageBitmap to a format image-js can work with
           const canvas0 = document.createElement("canvas");
-          canvas0.width = imgObj.width;
-          canvas0.height = imgObj.height;
+          // canvas0.width = imgObj.width;
+          canvas0.width = targetWidth;
+          // canvas0.height = imgObj.height;
+          canvas0.height = targetHeight;
           const ctx0 = canvas0.getContext("2d");
           if (!ctx0) {
             throw new Error("Failed to get canvas context");
           }
-          ctx0.drawImage(imgObj.bitmap, 0, 0);
-          const imageData0 = ctx0.getImageData(0, 0, imgObj.width, imgObj.height);
+          // ctx0.drawImage(imgObj.bitmap, 0, 0);
+          ctx0.drawImage(imgObj.bitmap, 0, 0, targetWidth, targetHeight);
+          // const imageData0 = ctx0.getImageData(0, 0, imgObj.width, imgObj.height);
+          const imageData0 = ctx0.getImageData(0, 0, targetWidth, targetHeight);
 
           // Load the image using image-js
           const image = new Image(
-            imgObj.width,
-            imgObj.height,
+            // imgObj.width,
+            // imgObj.height,
+            targetWidth,
+            targetHeight,
             new Uint8Array(imageData0.data),
             // @ts-ignore
-            { kind: "RGBA" }  
+            { kind: "RGBA" }
           )
 
+          // Create a URLSearchParams object to work with query params
+          const queryParams = new URLSearchParams(location.search);
+
+          // Fetch a specific query param (e.g., 'id')
+          const sessionId = queryParams.get('sessionId');
+
+          // set the loading message to uploading coe
+          setLoadingMessage("Uploading COE")
+
+          // Upload the image
+          const coeRes = await handleDraftCOEUpload(image, sessionId!)
+
+          // Convert the image to array buffer
+          const imageBuffer = image.toBuffer();
+
+          console.log("topImage")
           // EXTRACT THE TOP PART OF THE IMAGE
-          const topImage = image.crop({
+          let topImage = image.crop({
             x: 0,
             y: 112,
             width: image.width,
             height: 60,
-          });
+          })
+
+          // CONVERT THE IMAGE TO GREYSCALE
+          topImage = topImage.grey();
+
+          // DENOISE THE IMAGE
+          // topImage = topImage.medianFilter({ radius: 1 });
+
+          // THRESHOLD TO BINARIZE THE IMAGE
+          // topImage = topImage.mask({ threshold: 200 });
 
           // Create a canvas element
           const canvas = document.createElement("canvas");
@@ -419,12 +466,186 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
           const croppedWidth = 520;
           const croppedHeight = image.height - 306;
 
-          const bottomImage = image.crop({
+          console.log("bottomImage")
+          let bottomImage = image.crop({
             x: 0,
             y: 206,
             width: croppedWidth,
             height: croppedHeight,
-          }).grey();
+          })
+
+          // CONVERT THE IMAGE TO GREYSCALE
+          bottomImage = bottomImage.grey();
+
+          // DENOISE THE IMAGE
+          bottomImage.medianFilter({ radius: 1 });
+
+          // THRESHOLD TO BINARIZE THE IMAGE
+          bottomImage = bottomImage.mask({ threshold: 0.5 });
+
+          // we first extract the block no, which is the 30px in height
+          // then we download the image to check if we have the correct block no
+          // then we can proceed to the next step
+
+          console.log("blockNoImage")
+          let blockNoImage = bottomImage.crop({
+            x: 0,
+            y: 0,
+            width: croppedWidth,
+            height: 30,
+          })
+
+          // Convert image to blob
+          // blockNoImage.getCanvas().toBlob((blob) => {
+          //   const url = URL.createObjectURL(blob!);
+          //   const a = document.createElement("a");
+          //   a.href = url;
+          //   a.download = "block-no.jpg";
+          //   a.click();
+          // });
+
+          // Starting from 30px in height, extract subsequent classes
+          let y = 30;
+          let classIndex = 1;
+          while (y + 45 <= bottomImage.height) {
+            console.log(`classImage ${classIndex}`)
+            let classImage = bottomImage.crop({
+              x: 0,
+              y: y,
+              width: croppedWidth,
+              height: 45,
+            });
+
+            // Crop to the class code on the left by 90px
+            let classCodeImage = classImage.crop({
+              x: 0,
+              y: 0,
+              width: 90,
+              height: 45,
+            });
+
+            // download the image
+            // classCodeImage.getCanvas().toBlob((blob) => {
+            //   const url = URL.createObjectURL(blob!);
+            //   const a = document.createElement("a");
+            //   a.href = url;
+            //   a.download = `class-code-${classIndex}.jpg`;
+            //   a.click();
+            // });
+
+            // Crop to the unit count on the right by 50px
+            let unitCountImage = classImage.crop({
+              x: 470,
+              y: 0,
+              width: 50,
+              height: 45,
+            });
+
+            // download the image
+            // unitCountImage.getCanvas().toBlob((blob) => {
+            //   const url = URL.createObjectURL(blob!);
+            //   const a = document.createElement("a");
+            //   a.href = url;
+            //   a.download = `unit-count-${classIndex}.jpg`;
+            //   a.click();
+            // });
+
+            // Crop to the middle part of the image
+            // the starting x is 90px and the end width is the total width of bottom img - 50px
+            let middleImage = classImage.crop({
+              x: 90,
+              y: 0,
+              width: 380,
+              height: 45,
+            });
+
+            // Split the image into 2 parts horizontally
+            // the top part is the subject name and the bottom part is the schedule
+            let topMiddleImage = middleImage.crop({
+              x: 0,
+              y: 0,
+              width: 380,
+              height: 22,
+            });
+
+            // download the image
+            // topMiddleImage.getCanvas().toBlob((blob) => {
+            //   const url = URL.createObjectURL(blob!);
+            //   const a = document.createElement("a");
+            //   a.href = url;
+            //   a.download = `subject-name-${classIndex}.jpg`;
+            //   a.click();
+            // });
+
+            let bottomMiddleImage = middleImage.crop({
+              x: 0,
+              y: 22,
+              width: 380,
+              height: 23,
+            });
+
+            // download the image
+            // bottomMiddleImage.getCanvas().toBlob((blob) => {
+            //   const url = URL.createObjectURL(blob!);
+            //   const a = document.createElement("a");
+            //   a.href = url;
+            //   a.download = `schedule-${classIndex}.jpg`;
+            //   a.click();
+            // });
+
+            // download the image
+            // middleImage.getCanvas().toBlob((blob) => {
+            //   const url = URL.createObjectURL(blob!);
+            //   const a = document.createElement("a");
+            //   a.href = url;
+            //   a.download = `middle-${classIndex}.jpg`;
+            //   a.click();
+            // });
+
+            // Convert image to blob
+            // classImage.getCanvas().toBlob((blob) => {
+            //   const url = URL.createObjectURL(blob!);
+            //   const a = document.createElement("a");
+            //   a.href = url;
+            //   a.download = `class-${classIndex}.jpg`;
+            //   a.click();
+            // });
+
+            y += 45;
+            classIndex++;
+          }
+
+          // // Convert canvas to blob
+          // const blobB = await new Promise<Blob | null>((resolve) =>
+          //   canvas2.toBlob(resolve, "image/jpeg")
+          // );
+          // const urlB = blobB ? URL.createObjectURL(blobB) : null;
+
+          // // console.log("bottomImage Url: ", url2);
+
+          // // download the image
+          // const aB = document.createElement("a");
+          // aB.href = urlB!;
+          // aB.download = "bottom-image.jpg";
+          // aB.click();
+          // return;
+
+          // 30px is the start of the first class
+          // each class is 45px in height
+          // so for example, we have 4 subjects, we need to loop 4 times
+          // adding 45px to the y value each time
+          // for each loop, we check if we have reached the total amt of units 
+          // if we have, then we stop the loop
+
+          // 1.   Get the first class
+          // 2.   Extract the left part of the image
+          // 2.1  Extract the class code
+          // 3.   Extract the right part of the image
+          // 3.1  Extract the unit count
+          // 4.   Extract the middle part of the image
+          // 4.1  Split the image into 2 parts horizontally
+          // 4.2  Extract the subject name from the top part
+          // 4.3  Extract the schedule from the bottom part
 
           // Create a canvas element for the bottom part
           const canvas2 = document.createElement("canvas");
@@ -450,8 +671,10 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
           );
           const url2 = blob2 ? URL.createObjectURL(blob2) : null;
 
-          // // download the image
-          // const a = document.createElement("a");
+          // console.log("bottomImage Url: ", url2);
+
+          // download the image
+          const a = document.createElement("a");
           // a.href = url2!;
           // a.download = "bottom-image.jpg";
           // a.click();
@@ -697,14 +920,16 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
             >
               <input {...getInputProps()} />
               <IonImg src={"pdf.png"} className="w-32 mx-auto" />
-              <div className="flex justify-center mt-3">
+              <div className="flex justify-center mt-6">
                 <IonButton
                   shape="round"
                   size="small"
                   fill="outline"
                   color="dark"
                 >
-                  {file ? file.name : "Browse Files"}
+                  <IonText className="py-3">
+                    {file ? file.name : "Browse Files"}
+                  </IonText>
                 </IonButton>
               </div>
             </div>
@@ -723,9 +948,11 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
                   shape="round"
                   onClick={handleProceed}
                   size="small"
-                  disabled={file === null}
+                  disabled={file === null || loading}
                 >
-                  Process
+                  <IonText className="py-3">
+                    {loading ? <IonSpinner name="dots" /> : "Proceed"}
+                  </IonText>
                 </IonButton>
               </IonCol>
             </IonRow>
@@ -747,7 +974,7 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
         {loading === true && (
           <IonLoading
             isOpen={loading === true}
-            spinner="crescent"
+            spinner="lines"
             message={loadingMessage}
           />
         )}

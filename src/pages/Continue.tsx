@@ -50,9 +50,13 @@ export default function Continue() {
   }, []);
 
   // Check if feature flags enable Google login, Terms of Service, and Privacy Policy
-  const isGoogleLoginEnabled = (flags["google_sign_in"]?.value as { is_enabled: boolean })?.is_enabled ?? false;
-  const isTermsOfServiceEnabled = (flags['tos_display']?.value as { is_enabled: boolean })?.is_enabled ?? false;
-  const isPrivacyPolicyEnabled = (flags['privacy_policy_display']?.value as { is_enabled: boolean })?.is_enabled ?? false;
+  const isGoogleLoginEnabled = (flags["google_sign_in"]?.value as unknown as boolean) ?? false;
+  const isTermsOfServiceEnabled = (flags['tos_display']?.value as unknown as boolean) ?? false;
+  const isPrivacyPolicyEnabled = (flags['privacy_policy_display']?.value as unknown  as boolean) ?? false;
+
+  console.info("isGoogleLoginEnabled", isGoogleLoginEnabled);
+  console.info("isTermsOfServiceEnabled", isTermsOfServiceEnabled);
+  console.info("isPrivacyPolicyEnabled", isPrivacyPolicyEnabled);
 
   return (
     <IonPage>

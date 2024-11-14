@@ -74,17 +74,39 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
   const draftStudentRQ = useSelfDraftStudent();
   console.log("draftStudentRQ", draftStudentRQ.data);
 
-  if (draftStudentRQ.data === null && !showModal && !draftStudentRQ.isLoading) {
+  if (draftStudentRQ.data === null &&
+    !showModal &&
+    !draftStudentRQ.isLoading) {
     console.log("no student info found");
     setShowModal(true);
     console.log("open setup modal");
+  } else if (draftStudentRQ.data !== null &&
+    !showModal &&
+    !draftStudentRQ.isLoading &&
+    draftStudentRQ.data?.completed === false
+  ) {
+    console.log("incomplete student info found: ", draftStudentRQ.data)
+    setShowModal(true)
   } else {
     console.log("student info found: ", draftStudentRQ.data);
   }
 
   const rt = useIonRouter();
   const handleSetup = () => {
-    rt.push("/setup", "forward", "replace")
+    // if there is an incomplete draft student
+    // then include the session id 
+    if (draftStudentRQ.data !== null &&
+      showModal === false &&
+      draftStudentRQ.isLoading === false &&
+      draftStudentRQ.data?.completed === false
+    ) {
+      const sessionId = draftStudentRQ.data.id;
+      rt.push(`/setup?sessionId=${sessionId}`, "forward", "replace")
+      return;
+    } else {
+      // else just forward the user to the regular setup page
+      rt.push("/setup", "forward", "replace")
+    }
   }
 
   return (

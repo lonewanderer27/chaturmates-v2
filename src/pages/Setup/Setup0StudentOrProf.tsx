@@ -2,31 +2,28 @@ import {
   IonBackButton,
   IonButtons,
   IonCard,
-  IonCardContent,
-  IonCardHeader,
   IonCol,
   IonContent,
   IonGrid,
   IonHeader,
   IonImg,
-  IonLabel,
   IonPage,
   IonRow,
   IonText,
   IonToolbar,
   useIonAlert,
-  useIonRouter,
   useIonViewWillEnter,
 } from "@ionic/react";
 import { FC } from "react";
 import { RouteComponentProps } from "react-router";
 import { hideTabBar } from "../../utils/TabBar";
+import useSetupDraftStudent from "../../hooks/setup/useSetupDraftStudent";
 
 const SetupStudentOrProf: FC<RouteComponentProps> = ({ match }) => {
   useIonViewWillEnter(() => {
     hideTabBar();
   });
-  const rt = useIonRouter();
+  const { handleNext } = useSetupDraftStudent();
   const [alert] = useIonAlert();
   const handleProfessor = () => {
     // alert the user that this feature is not yet available
@@ -38,7 +35,8 @@ const SetupStudentOrProf: FC<RouteComponentProps> = ({ match }) => {
   };
   const handleStudent = () => {
     // go to the next step
-    rt.push("/setup/pdfUpload");
+    // rt.push("/setup/pdfUpload");
+    handleNext();
   };
 
   return (

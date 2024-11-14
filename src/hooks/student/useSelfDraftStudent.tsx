@@ -12,7 +12,6 @@ const useSelfDraftStudent = () => {
         .from("draft_students")
         .select("*")
         .eq("user_id", profile!.id)
-        .eq("completed", true)
         .limit(1)
         .maybeSingle()
 
@@ -22,7 +21,7 @@ const useSelfDraftStudent = () => {
       return data;
     },
     enabled: !!profile,
-    retry: false
+    retry: 2
   });
 
   return draftStudentQuery; // Return the query result to the component

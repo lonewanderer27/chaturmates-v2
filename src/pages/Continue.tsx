@@ -78,7 +78,7 @@ export default function Continue() {
             Continue with Email
             <IonIcon slot="start" src={mailOutline} />
           </IonButton>
-          {isGoogleLoginEnabled && Capacitor.isNativePlatform() === false && (
+          {isGoogleLoginEnabled === true && Capacitor.isNativePlatform() === false && (
             <IonButton
               onClick={handleGoogle}
               expand="block"
@@ -93,7 +93,7 @@ export default function Continue() {
           )}
         </div>
 
-        {(isTermsOfServiceEnabled || isPrivacyPolicyEnabled) && (
+        {(isTermsOfServiceEnabled === true || isPrivacyPolicyEnabled === true) && (
           <IonText color="light">
             By continuing, you confirm that you agree to our{' '}
             {isTermsOfServiceEnabled && (

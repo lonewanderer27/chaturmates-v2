@@ -40,7 +40,7 @@ const Setup: FC<RouteComponentProps> = () => {
 
     // if there's none then create a new draft student record
     // and set the id to be of sessionId in the query params
-    if (ds.data === null) {
+    if (ds.data === undefined) {
       (async () => {
         const newDraftStudent = await client
           .from("draft_students")
@@ -58,12 +58,12 @@ const Setup: FC<RouteComponentProps> = () => {
         }
 
         // refetch the draft student record
-        ds.refetch();
+        ds.refetch()
 
         rt.push(`/setup?sessionId=${newDraftStudent.data.id}`, "forward", "replace")
       })();
     }
-  }, [ds.data])
+  }, [ds.data, session])
 
   useIonViewWillEnter(() => {
     (async () => {

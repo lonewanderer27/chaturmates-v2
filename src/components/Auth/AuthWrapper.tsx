@@ -22,7 +22,7 @@ const AuthWrapper = (props: RouteProps) => {
   }
 
   // if we're not authenticated, redirect to the continue page
-  if (session === null) {
+  if (session === null || session === undefined) {
     hideTabBar();
     return <Redirect to="/continue" />;
   }

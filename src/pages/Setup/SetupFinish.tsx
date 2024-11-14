@@ -65,7 +65,7 @@ const Setup6Finish: FC<RouteComponentProps> = () => {
 
         // complete the student setup
         await handleCompleteStudent(sessionId);
-        
+
         // refresh the backend data
         await RecommendService.refreshRealGroups();
 
@@ -96,6 +96,14 @@ const Setup6Finish: FC<RouteComponentProps> = () => {
   return (
     <IonPage>
       <IonContent className="ion-padding">
+        {pageState === FinishPageState.IDLE && <IonGrid className="my-auto mt-32">
+          <IonRow>
+            <DotLottieReact
+              src={StudentLoading}
+              className="h-[350px] w-auto mx-auto"
+            />
+          </IonRow>
+        </IonGrid>}
         {pageState === FinishPageState.UPLOADING && <IonGrid className="my-auto mt-32">
           <IonRow>
             <DotLottieReact

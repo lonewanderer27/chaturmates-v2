@@ -891,7 +891,7 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
     rt.push("/setup/introduceYourself");
   };
 
-  const enableManualStudentInfoUpload = FF.flags["enableManualStudentInfoUpload"]?.value as unknown as boolean;
+  const enableManualStudentInfoUpload = FF.flags["enable_manual_student_info_upload"]?.value as unknown as boolean ?? false;
   console.info("Enable manual student info upload: ", enableManualStudentInfoUpload);
 
   return (
@@ -963,19 +963,20 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
             </IonRow>
           </IonGrid>
         </IonContent>
-        {enableManualStudentInfoUpload && <IonFooter className="ion-padding flex justify-center text-center">
-          <IonText color="medium" className="text-xs">
-            <p>
-              Don't want to upload? <br />{" "}
-              <span
-                className="underline cursor-pointer"
-                onClick={handleInputManually}
-              >
-                Input your data manually
-              </span>
-            </p>
-          </IonText>
-        </IonFooter>}
+        {enableManualStudentInfoUpload === true &&
+          <IonFooter className="ion-padding flex justify-center text-center">
+            <IonText color="medium" className="text-xs">
+              <p>
+                Don't want to upload? <br />{" "}
+                <span
+                  className="underline cursor-pointer"
+                  onClick={handleInputManually}
+                >
+                  Input your data manually
+                </span>
+              </p>
+            </IonText>
+          </IonFooter>}
         {loading === true && (
           <IonLoading
             isOpen={loading === true}

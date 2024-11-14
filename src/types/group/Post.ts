@@ -1,4 +1,4 @@
-import { GroupType } from "..";
+import { GroupMemberType, GroupPostType, GroupType, ProfileType, StudentType } from "..";
 
 export type GroupPostTypeWGroupInfo = {
   content: string | null;
@@ -12,3 +12,10 @@ export type GroupPostTypeWGroupInfo = {
   title: string | null;
   groups: GroupType;
 };
+
+export interface GroupPostCardType extends GroupPostType {
+  groupData: GroupType;
+  authorMemberData: GroupMemberType;
+  authorStudentData: StudentType;
+  authorProfileData: ProfileType;
+}

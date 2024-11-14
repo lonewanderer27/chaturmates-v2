@@ -24,6 +24,8 @@ import {
   IonToolbar,
   useIonAlert,
   useIonRouter,
+  useIonViewDidEnter,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { object, string } from "yup";
@@ -33,10 +35,9 @@ import { RouteComponentProps } from "react-router";
 import client from "../../../client";
 import { newGroupAtom } from "../../../atoms/group";
 import { useAtom } from "jotai";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useHideTabs from "../../../hooks/useHideTabs";
-import { helpCircleOutline } from "ionicons/icons";
 
 const CreateGroupP1: React.FC<RouteComponentProps> = ({ match }) => {
   useHideTabs();
@@ -58,11 +59,19 @@ const CreateGroupP1: React.FC<RouteComponentProps> = ({ match }) => {
     handleSubmit,
     setError,
     getFieldState,
+    setFocus,
     formState: { errors },
   } = useForm<NewGroupInputs["step1"]>({
     resolver: yupResolver(validationSchema),
     defaultValues: newGroup.step1,
   });
+
+  useIonViewWillEnter(() => {
+    // focus on the name input on page load
+    setTimeout(() => {
+      setFocus("name");
+    }, 300)
+  })
 
   const handleError: SubmitErrorHandler<NewGroupInputs["step1"]> = (
     errors,

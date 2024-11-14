@@ -17,5 +17,6 @@ export default defineConfig(({ mode }) => {
     //   environment: 'jsdom',
     //   setupFiles: './src/setupTests.ts',
     // }
+    assetsInclude: ["**/*.lottie"],
   };
 });

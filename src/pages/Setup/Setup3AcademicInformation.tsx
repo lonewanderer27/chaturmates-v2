@@ -45,7 +45,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import useFetchAcademicYears from "../../hooks/setup/useFetchAcademicYears";
 import { caretDown, closeOutline } from "ionicons/icons";
 import useSetupDraftStudent from "../../hooks/setup/useSetupDraftStudent";
-import useSelfDraftStudent from "../../hooks/student/useSelfDraftStudent";
 import useSelfSetupDraftStudent from "../../hooks/setup/useSelfSetupDraftStudent";
 
 const validationSchema = object().shape({

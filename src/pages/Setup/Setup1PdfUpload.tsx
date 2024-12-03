@@ -16,19 +16,15 @@ import {
   IonText,
   IonToolbar,
   useIonAlert,
-  useIonLoading,
   useIonRouter,
   useIonViewWillEnter,
 } from "@ionic/react";
-import md5 from "md5";
 import { hideTabBar } from "../../utils/TabBar";
-import useSetup from "../../hooks/setup/useSetup";
 import { useDropzone } from "react-dropzone";
 import { FC, useMemo, useState } from "react";
 import { createWorker, PSM } from "tesseract.js";
 import * as PDFJS from "pdfjs-dist";
 import { RouteComponentProps, useLocation } from "react-router";
-import useFetchSubjects from "../../hooks/setup/useFetchSubjects";
 import { newStudentAtom } from "../../atoms/student";
 import { useAtom } from "jotai";
 import useFetchAcademicYears from "../../hooks/setup/useFetchAcademicYears";
@@ -37,6 +33,7 @@ import { CourseType } from "../../types";
 import Image from "image-js";
 import useSetupDraftStudent from "../../hooks/setup/useSetupDraftStudent";
 import useFeatureFlags from "../../hooks/useFeatureFlags";
+import { parseAcademicInfo, parseBlockNumber } from "../../utils/Coe";
 
 PDFJS.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -72,6 +69,7 @@ const rejectStyle = {
 };
 
 const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
+  const debug = true;
   const FF = useFeatureFlags();
   const [alert] = useIonAlert();
   const [loading, setLoading] = useState(false);
@@ -107,199 +105,7 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
     [isFocused, isDragAccept, isDragReject]
   );
 
-  const worker = createWorker({
-    logger: (m) => console.log(m),
-    // langPath: "https://tessdata.projectnaptha.com/4.0.0_fast",
-  });
-  const [loader, dismissLoader] = useIonLoading();
-  const { data: subjects } = useFetchSubjects();
-
-  // function processImage(bitmap: ImageBitmap): string {
-  //   // Convert ImageBitmap to Image object from image-js
-  //   const image = await Image.load(bitmap);
-
-  //   // Desaturate the image
-  //   const desaturated = image.grey();
-
-  //   // Increase contrast
-  //   const highContrast = desaturated.level({
-
-  //   });
-
-  //   // Invert the image
-  //   const inverted = highContrast.invert();
-
-  //   return inverted;
-  // }
-
-  function parseAcademicInfo(text: string) {
-    try {
-      // Extract semester and academic year
-      const semesterRegex = /^(\d{1}[a-z]{2} Semester), (\d{4}-\d{4})/;
-      const semesterMatch = text.match(semesterRegex);
-      let semester = "";
-      let academicYear = "";
-      if (semesterMatch) {
-        semester = semesterMatch[1].includes("1st") ? "1" : "2";
-        academicYear = semesterMatch[2].trim();
-        text = text.replace(semesterMatch[0], "").trim();
-      }
-
-      // Extract name
-      const nameRegex =
-        /NAME\s*:\s*([A-Z ,]+)\s*(?:STUDENTNO\. ~\s*:\s*(\d+)|STUDENTNO\. *:\s*(\d+))/;
-      const nameMatch = text.match(nameRegex);
-      let name = null;
-      let studentNumber = null;
-      if (nameMatch) {
-        name = nameMatch[1]?.trim() || null;
-        studentNumber = nameMatch[2]?.trim() || nameMatch[3]?.trim() || null;
-        text = text.replace(nameMatch[0], "").trim();
-      }
-
-      // Extract course and year level
-      const courseRegex =
-        /COURSE\s+:\s+([A-Z. ]+)\s+ACAD\. YEAR\s+([A-Za-z ]+)/;
-      const courseMatch = text.match(courseRegex);
-      let course = "";
-      let yearLevel = "";
-      if (courseMatch) {
-        course = courseMatch[1].trim();
-        yearLevel = courseMatch[2].trim();
-        text = text.replace(courseMatch[0], "").trim();
-        if (yearLevel.includes("First")) {
-          yearLevel = "1";
-        } else if (yearLevel.includes("Second")) {
-          yearLevel = "2";
-        } else if (yearLevel.includes("Third")) {
-          yearLevel = "3";
-        } else if (yearLevel.includes("Fourth")) {
-          yearLevel = "4";
-        } else if (yearLevel.includes("Fifth")) {
-          yearLevel = "5";
-        }
-      }
-
-      // Convert to numbers
-      const sms = Number(semester);
-      const yl = Number(yearLevel);
-      const studentNo = Number(studentNumber);
-
-      return {
-        semester: sms,
-        name,
-        studentNumber: studentNo,
-        course,
-        yearLevel: yl,
-        academicYear,
-      };
-    } catch (error) {
-      console.error("Error parsing academic info:", error);
-      return {
-        semester: 0,
-        name: "",
-        studentNumber: 0,
-        course: "",
-        yearLevel: 0,
-        academicYear: "",
-      };
-    }
-  }
-
-  function parseSchedule(text: string) {
-    try {
-      // Extract and remove block number
-      const blockRegex = /Block No\.\: ([A-Z0-9 ]+)/;
-      const blockMatch = text.match(blockRegex);
-      let blockNumber = "";
-      if (blockMatch) {
-        blockNumber = blockMatch[1].trim();
-        function parseStudentInfo(text: string) {
-          // Extract semester
-          const semesterRegex = /^(\d{1}[a-z]{2} Semester, \d{4}-\d{4})/;
-          const semesterMatch = text.match(semesterRegex);
-          let semester = "";
-          if (semesterMatch) {
-            semester = semesterMatch[1].trim();
-            text = text.replace(semesterMatch[0], "").trim();
-          }
-
-          // Extract name
-          const nameRegex = /NAME\s+: ([A-Z ,]+) STUDENTNO\. ~ : (\d+)/;
-          const nameMatch = text.match(nameRegex);
-          let name = "";
-          let studentNumber = "";
-          if (nameMatch) {
-            name = nameMatch[1].trim();
-            studentNumber = nameMatch[2].trim();
-            text = text.replace(nameMatch[0], "").trim();
-          }
-
-          // Extract course and academic year
-          const courseRegex = /COURSE\s+: ([A-Z. ]+) ACAD. YEAR (\w+ \w+)/;
-          const courseMatch = text.match(courseRegex);
-          let course = "";
-          let academicYear = "";
-          if (courseMatch) {
-            course = courseMatch[1].trim();
-            academicYear = courseMatch[2].trim();
-            text = text.replace(courseMatch[0], "").trim();
-          }
-
-          return {
-            semester,
-            name,
-            studentNumber,
-            course,
-            academicYear,
-          };
-        }
-        text = text.replace(blockMatch[0], "").trim();
-      }
-
-      // Extract and remove total units
-      const unitsRegex = /Total Units\: (\d+)/;
-      const unitsMatch = text.match(unitsRegex);
-      let totalUnits = 0;
-      if (unitsMatch) {
-        totalUnits = parseInt(unitsMatch[1], 10);
-        text = text.substring(0, text.indexOf(unitsMatch[0])).trim();
-      }
-
-      // Extract subjects
-      const lines = text
-        .split("\n")
-        .map((line) => line.trim())
-        .filter((line) => line);
-      const subjects = [];
-      for (let i = 0; i < lines.length; i += 2) {
-        if (i + 1 >= lines.length) break;
-        const subjectName = lines[i];
-        const details = lines[i + 1].split(" ").filter((detail) => detail);
-        const subject = {
-          name: subjectName,
-          code: details[0],
-          schedule: details.slice(1, 3).join(" "),
-          room: details[3],
-          units: parseInt(details[4], 10),
-        };
-        subjects.push(subject);
-      }
-
-      return {
-        blockNumber,
-        totalUnits,
-        subjects,
-      };
-    } catch (error) {
-      console.error("Error parsing schedule:", error);
-      return {
-        blockNumber: "",
-        totalUnits: 0,
-        subjects: [],
-      };
-    }
-  }
+  const worker = createWorker({ logger: (m) => console.log(m) });
 
   const { data: academicYears } = useFetchAcademicYears();
   const { data: courses } = useFetchCourses();
@@ -314,7 +120,6 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
       studentNumberInvalid: false,
       semesterInvalid: false,
       courseInvalid: false,
-      subjectsNotFound: false,
     };
 
     try {
@@ -325,10 +130,6 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
 
       // Get the array buffer from the file
       const arrayBuffer = await file!.arrayBuffer();
-
-      // Get the MD5 Hash of Cert of Enrollment PDF
-      // const coehash = md5(arrayBuffer);
-      // console.log("MD5 Hash: ", coehash);
 
       // Load the PDF document
       const doc = await PDFJS.getDocument({ data: arrayBuffer }).promise;
@@ -375,9 +176,8 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
 
           if (!imgObj.bitmap || imgObj.width !== 850) {
             console.log(
-              "Invalid image, expecting bitmap image with dimensions 850x1000"
+              "Invalid image, expecting bitmap image with dimensions 850x1000.\nAttempting to resize to target dimensions"
             );
-            // checks.invalidImage = true;
             // we'll attempt to resize the image to the target dimensions
           }
 
@@ -386,44 +186,24 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
 
           // Convert ImageBitmap to a format image-js can work with
           const canvas0 = document.createElement("canvas");
-          // canvas0.width = imgObj.width;
           canvas0.width = targetWidth;
-          // canvas0.height = imgObj.height;
           canvas0.height = targetHeight;
+
           const ctx0 = canvas0.getContext("2d");
           if (!ctx0) {
             throw new Error("Failed to get canvas context");
           }
-          // ctx0.drawImage(imgObj.bitmap, 0, 0);
           ctx0.drawImage(imgObj.bitmap, 0, 0, targetWidth, targetHeight);
-          // const imageData0 = ctx0.getImageData(0, 0, imgObj.width, imgObj.height);
           const imageData0 = ctx0.getImageData(0, 0, targetWidth, targetHeight);
 
           // Load the image using image-js
           const image = new Image(
-            // imgObj.width,
-            // imgObj.height,
             targetWidth,
             targetHeight,
             new Uint8Array(imageData0.data),
             // @ts-ignore
             { kind: "RGBA" }
           )
-
-          // Create a URLSearchParams object to work with query params
-          const queryParams = new URLSearchParams(location.search);
-
-          // Fetch a specific query param (e.g., 'id')
-          const sessionId = queryParams.get('sessionId');
-
-          // set the loading message to uploading coe
-          setLoadingMessage("Uploading COE")
-
-          // Upload the image
-          const coeRes = await handleDraftCOEUpload(image, sessionId!)
-
-          // Convert the image to array buffer
-          const imageBuffer = image.toBuffer();
 
           console.log("topImage")
           // EXTRACT THE TOP PART OF THE IMAGE
@@ -444,25 +224,25 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
           // topImage = topImage.mask({ threshold: 200 });
 
           // Create a canvas element
-          const canvas = document.createElement("canvas");
-          canvas.width = imgObj.width;
-          canvas.height = imgObj.height;
+          const canvasTop = document.createElement("canvas");
+          canvasTop.width = imgObj.width;
+          canvasTop.height = imgObj.height;
 
           // Draw the ImageBitmap to the canvas
-          const ctx = canvas.getContext("2d");
+          const ctxTop = canvasTop.getContext("2d");
 
           const imageData = new ImageData(
             new Uint8ClampedArray(topImage.getRGBAData()),
             topImage.width,
             topImage.height
           );
-          ctx!.putImageData(imageData, 0, 0);
+          ctxTop!.putImageData(imageData, 0, 0);
 
           // Convert canvas to blob
-          const blob = await new Promise<Blob | null>((resolve) =>
-            canvas.toBlob(resolve, "image/jpeg")
+          const blobTop = await new Promise<Blob | null>((resolve) =>
+            canvasTop.toBlob(resolve, "image/jpeg")
           );
-          const url = URL.createObjectURL(blob!);
+          const urlTop = URL.createObjectURL(blobTop!);
 
           // EXTRACT THE BOTTOM PART OF THE IMAGE
           const croppedWidth = 520;
@@ -490,7 +270,7 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
           // then we can proceed to the next step
 
           console.log("blockNoImage")
-          let blockNoImage = bottomImage.crop({
+          const blockNoImage = bottomImage.crop({
             x: 0,
             y: 0,
             width: croppedWidth,
@@ -506,116 +286,116 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
           //   a.click();
           // });
 
-          // Starting from 30px in height, extract subsequent classes
-          let y = 30;
-          let classIndex = 1;
-          while (y + 45 <= bottomImage.height) {
-            console.log(`classImage ${classIndex}`)
-            let classImage = bottomImage.crop({
-              x: 0,
-              y: y,
-              width: croppedWidth,
-              height: 45,
-            });
+          // // Starting from 30px in height, extract subsequent classes
+          // let y = 30;
+          // let classIndex = 1;
+          // while (y + 45 <= bottomImage.height) {
+          //   console.log(`classImage ${classIndex}`)
+          //   let classImage = bottomImage.crop({
+          //     x: 0,
+          //     y: y,
+          //     width: croppedWidth,
+          //     height: 45,
+          //   });
 
-            // Crop to the class code on the left by 90px
-            let classCodeImage = classImage.crop({
-              x: 0,
-              y: 0,
-              width: 90,
-              height: 45,
-            });
+          //   // Crop to the class code on the left by 90px
+          //   let classCodeImage = classImage.crop({
+          //     x: 0,
+          //     y: 0,
+          //     width: 90,
+          //     height: 45,
+          //   });
 
-            // download the image
-            // classCodeImage.getCanvas().toBlob((blob) => {
-            //   const url = URL.createObjectURL(blob!);
-            //   const a = document.createElement("a");
-            //   a.href = url;
-            //   a.download = `class-code-${classIndex}.jpg`;
-            //   a.click();
-            // });
+          //   // download the image
+          //   // classCodeImage.getCanvas().toBlob((blob) => {
+          //   //   const url = URL.createObjectURL(blob!);
+          //   //   const a = document.createElement("a");
+          //   //   a.href = url;
+          //   //   a.download = `class-code-${classIndex}.jpg`;
+          //   //   a.click();
+          //   // });
 
-            // Crop to the unit count on the right by 50px
-            let unitCountImage = classImage.crop({
-              x: 470,
-              y: 0,
-              width: 50,
-              height: 45,
-            });
+          //   // Crop to the unit count on the right by 50px
+          //   let unitCountImage = classImage.crop({
+          //     x: 470,
+          //     y: 0,
+          //     width: 50,
+          //     height: 45,
+          //   });
 
-            // download the image
-            // unitCountImage.getCanvas().toBlob((blob) => {
-            //   const url = URL.createObjectURL(blob!);
-            //   const a = document.createElement("a");
-            //   a.href = url;
-            //   a.download = `unit-count-${classIndex}.jpg`;
-            //   a.click();
-            // });
+          //   // download the image
+          //   // unitCountImage.getCanvas().toBlob((blob) => {
+          //   //   const url = URL.createObjectURL(blob!);
+          //   //   const a = document.createElement("a");
+          //   //   a.href = url;
+          //   //   a.download = `unit-count-${classIndex}.jpg`;
+          //   //   a.click();
+          //   // });
 
-            // Crop to the middle part of the image
-            // the starting x is 90px and the end width is the total width of bottom img - 50px
-            let middleImage = classImage.crop({
-              x: 90,
-              y: 0,
-              width: 380,
-              height: 45,
-            });
+          //   // Crop to the middle part of the image
+          //   // the starting x is 90px and the end width is the total width of bottom img - 50px
+          //   let middleImage = classImage.crop({
+          //     x: 90,
+          //     y: 0,
+          //     width: 380,
+          //     height: 45,
+          //   });
 
-            // Split the image into 2 parts horizontally
-            // the top part is the subject name and the bottom part is the schedule
-            let topMiddleImage = middleImage.crop({
-              x: 0,
-              y: 0,
-              width: 380,
-              height: 22,
-            });
+          //   // Split the image into 2 parts horizontally
+          //   // the top part is the subject name and the bottom part is the schedule
+          //   let topMiddleImage = middleImage.crop({
+          //     x: 0,
+          //     y: 0,
+          //     width: 380,
+          //     height: 22,
+          //   });
 
-            // download the image
-            // topMiddleImage.getCanvas().toBlob((blob) => {
-            //   const url = URL.createObjectURL(blob!);
-            //   const a = document.createElement("a");
-            //   a.href = url;
-            //   a.download = `subject-name-${classIndex}.jpg`;
-            //   a.click();
-            // });
+          //   // download the image
+          //   // topMiddleImage.getCanvas().toBlob((blob) => {
+          //   //   const url = URL.createObjectURL(blob!);
+          //   //   const a = document.createElement("a");
+          //   //   a.href = url;
+          //   //   a.download = `subject-name-${classIndex}.jpg`;
+          //   //   a.click();
+          //   // });
 
-            let bottomMiddleImage = middleImage.crop({
-              x: 0,
-              y: 22,
-              width: 380,
-              height: 23,
-            });
+          //   let bottomMiddleImage = middleImage.crop({
+          //     x: 0,
+          //     y: 22,
+          //     width: 380,
+          //     height: 23,
+          //   });
 
-            // download the image
-            // bottomMiddleImage.getCanvas().toBlob((blob) => {
-            //   const url = URL.createObjectURL(blob!);
-            //   const a = document.createElement("a");
-            //   a.href = url;
-            //   a.download = `schedule-${classIndex}.jpg`;
-            //   a.click();
-            // });
+          //   // download the image
+          //   // bottomMiddleImage.getCanvas().toBlob((blob) => {
+          //   //   const url = URL.createObjectURL(blob!);
+          //   //   const a = document.createElement("a");
+          //   //   a.href = url;
+          //   //   a.download = `schedule-${classIndex}.jpg`;
+          //   //   a.click();
+          //   // });
 
-            // download the image
-            // middleImage.getCanvas().toBlob((blob) => {
-            //   const url = URL.createObjectURL(blob!);
-            //   const a = document.createElement("a");
-            //   a.href = url;
-            //   a.download = `middle-${classIndex}.jpg`;
-            //   a.click();
-            // });
+          //   // download the image
+          //   // middleImage.getCanvas().toBlob((blob) => {
+          //   //   const url = URL.createObjectURL(blob!);
+          //   //   const a = document.createElement("a");
+          //   //   a.href = url;
+          //   //   a.download = `middle-${classIndex}.jpg`;
+          //   //   a.click();
+          //   // });
 
-            // Convert image to blob
-            // classImage.getCanvas().toBlob((blob) => {
-            //   const url = URL.createObjectURL(blob!);
-            //   const a = document.createElement("a");
-            //   a.href = url;
-            //   a.download = `class-${classIndex}.jpg`;
-            //   a.click();
-            // });
+          //   // Convert image to blob
+          //   // classImage.getCanvas().toBlob((blob) => {
+          //   //   const url = URL.createObjectURL(blob!);
+          //   //   const a = document.createElement("a");
+          //   //   a.href = url;
+          //   //   a.download = `class-${classIndex}.jpg`;
+          //   //   a.click();
+          //   // });
 
-            y += 45;
-            classIndex++;
-          }
+          //   y += 45;
+          //   classIndex++;
+          // }
 
           // // Convert canvas to blob
           // const blobB = await new Promise<Blob | null>((resolve) =>
@@ -649,57 +429,75 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
           // 4.2  Extract the subject name from the top part
           // 4.3  Extract the schedule from the bottom part
 
-          // Create a canvas element for the bottom part
-          const canvas2 = document.createElement("canvas");
-          canvas2.width = croppedWidth;
-          canvas2.height = croppedHeight;
+          // Create canvas element for blockNo image
+          const canvasBlockNo = document.createElement("canvas");
+          canvasBlockNo.width = blockNoImage.width
+          canvasBlockNo.height = blockNoImage.height
 
           // Draw the processed image to the canvas
-          const ctx2 = canvas2.getContext("2d");
-          if (ctx2) {
-            const imageData2 = new ImageData(
-              new Uint8ClampedArray(bottomImage.getRGBAData()),
-              bottomImage.width,
-              bottomImage.height
+          const ctxBlockNo = canvasBlockNo.getContext("2d");
+          if (ctxBlockNo) {
+            const imageDataBlockNo = new ImageData(
+              new Uint8ClampedArray(blockNoImage.getRGBAData()),
+              blockNoImage.width,
+              blockNoImage.height
             );
-            ctx2.putImageData(imageData2, 0, 0);
+            ctxBlockNo.putImageData(imageDataBlockNo, 0, 0);
           }
-          ctx2!.imageSmoothingEnabled = true;
-          ctx2!.imageSmoothingQuality = "high";
+          ctxBlockNo!.imageSmoothingEnabled = true;
+          ctxBlockNo!.imageSmoothingQuality = "high";
 
           // Convert canvas to blob
-          const blob2 = await new Promise<Blob | null>((resolve) =>
-            canvas2.toBlob(resolve, "image/jpeg")
+          const blobBlockNo = await new Promise<Blob | null>((resolve) =>
+            canvasBlockNo.toBlob(resolve, "image/jpeg")
           );
-          const url2 = blob2 ? URL.createObjectURL(blob2) : null;
+          const urlBlockNo = blobBlockNo ? URL.createObjectURL(blobBlockNo) : null;
 
-          // console.log("bottomImage Url: ", url2);
+          // Create a URLSearchParams object to work with query params
+          const queryParams = new URLSearchParams(location.search);
 
-          // download the image
-          const a = document.createElement("a");
-          // a.href = url2!;
-          // a.download = "bottom-image.jpg";
-          // a.click();
-          // return;
+          // Fetch a specific query param (e.g., 'id')
+          const sessionId = queryParams.get('sessionId');
 
-          // OCR
-          setLoadingMessage("Preparing scanner");
+          // set the loading message to uploading coe
+          setLoadingMessage("Uploading COE")
 
-          await worker.load();
-          await worker.loadLanguage("eng");
-          await worker.initialize("eng");
+          // Parallel tasks
+          const uploadPromise = (async () => {
+            const data = await handleDraftCOEUpload(image, sessionId!)
+            console.log("COE Uploaded: ", data)
+            return data;
+          })();
+          const ocrPromise = (async () => {
+            // OCR
+            setLoadingMessage("Preparing scanner");
 
-          setLoadingMessage("Scanning your details");
-          const { data } = await worker.recognize(url);
-          const { data: data2 } = await worker.recognize(url2!);
+            await worker.load();
+            await worker.loadLanguage("eng");
+            await worker.initialize("eng");
 
-          await worker.terminate();
+            setLoadingMessage("Scanning your details");
+            const { data: academicInfo } = await worker.recognize(urlTop);
+            const { data: blockNo } = await worker.recognize(urlBlockNo!);
 
-          console.log(data.text);
-          console.log(data2.text);
+            await worker.terminate();
 
-          const studentInfo = parseAcademicInfo(data.text);
-          const schedule = parseSchedule(data2.text);
+            console.log(academicInfo.text);
+            console.log(blockNo.text);
+
+            const studentInfo = parseAcademicInfo(academicInfo.text);
+            const blockNumber = parseBlockNumber(blockNo.text);
+
+            return {
+              studentInfo,
+              blockNumber
+            }
+          })();
+
+          const [uploadResult, { studentInfo, blockNumber }] = await Promise.all([
+            uploadPromise,
+            ocrPromise
+          ])
 
           setLoading(false);
 
@@ -707,17 +505,8 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
             checks.academicInfoNotFound = true;
           }
 
-          if (schedule.subjects.length > 0) {
-            // TODO: Validate subjects and check if they exist in the database
-            // and perhaps add it to the student's subjects
-            // but we ain't data scientists so we don't know how to fix the OCR engine
-            // so we'll just leave it as is
-          } else {
-            checks.subjectsNotFound = true;
-          }
-
           console.log(studentInfo);
-          console.log(schedule);
+          console.log(blockNumber);
 
           if (
             checks.imageNotFound ||
@@ -826,29 +615,46 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
                 academicYear: academicYear ? academicYear.id : 0,
                 semester: studentInfo.semester ? studentInfo.semester : 0,
                 yearLevel: studentInfo.yearLevel ? studentInfo.yearLevel : 0,
-                type: schedule.blockNumber.length > 0 ? true : false,
+                type: blockNumber.length > 0 ? true : false,
                 block:
-                  schedule.blockNumber.length > 0 ? schedule.blockNumber : "",
+                  blockNumber.length > 0 ? blockNumber : "",
               },
             }));
 
             // we can now proceed to the next step, at least, since we have the basic data
             // alert the user that we have processed some but not all of the data
             // and that we've saved the data we've processed
-            alert({
-              backdropDismiss: false,
-              header: "Success",
-              message:
-                "We've are able to process some of the data. Please input the rest of the data manually.",
-              buttons: [
-                {
-                  text: "OK",
-                  handler: () => {
-                    handleNext();
+            if (debug) {
+              alert({
+                backdropDismiss: false,
+                header: "DEBUG",
+                message:
+                  `Academic Info:\n${JSON.stringify(studentInfo, null, 2)}\nBlock No: ${blockNumber}`,
+                buttons: [
+                  {
+                    text: "OK",
+                    handler: () => {
+                      handleNext();
+                    },
                   },
-                },
-              ],
-            });
+                ],
+              });
+            } else {
+              alert({
+                backdropDismiss: false,
+                header: "Success",
+                message:
+                  "We've are able to process some of the data. Please input the rest of the data manually.",
+                buttons: [
+                  {
+                    text: "OK",
+                    handler: () => {
+                      handleNext();
+                    },
+                  },
+                ],
+              });
+            }
           } else {
             // if we're not able to process the student number, course, year level, academic year
             // then we should inform the user that we're not able to process the data

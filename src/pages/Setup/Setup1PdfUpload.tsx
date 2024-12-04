@@ -21,8 +21,8 @@ import {
 } from "@ionic/react";
 import { hideTabBar } from "../../utils/TabBar";
 import { useDropzone } from "react-dropzone";
-import { FC, useMemo, useState } from "react";
-import { createWorker } from "tesseract.js";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
+import Tesseract, { createWorker, Worker } from "tesseract.js";
 import * as PDFJS from "pdfjs-dist";
 import { RouteComponentProps } from "react-router";
 import { newStudentAtom } from "../../atoms/student";
@@ -36,6 +36,7 @@ import useFeatureFlags from "../../hooks/useFeatureFlags";
 import { parseAcademicInfo, parseAcademicInfoNative, parseBlockNumber, parseBlockNumberNative } from "../../utils/Coe";
 import { CapacitorPluginMlKitTextRecognition } from "@pantrist/capacitor-plugin-ml-kit-text-recognition";
 import { Capacitor } from "@capacitor/core";
+import { workerAtom } from "../../atoms/setup";
 
 PDFJS.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -106,6 +107,26 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
     }),
     [isFocused, isDragAccept, isDragReject]
   );
+
+  const [worker, setWorker] = useAtom(workerAtom)
+
+  useEffect(() => {
+    if (worker === null) {
+      const initWorker = async () => {
+        const wk = await createWorker('eng', 1, {
+          logger: m => console.log(m),
+          cacheMethod: "none"
+        })
+  
+        setWorker(wk);
+      };
+  
+      initWorker();
+    } else {
+      console.log("Worker has been initialized!")
+      console.log(worker);
+    }
+  }, [])
 
   const { data: academicYears } = useFetchAcademicYears();
   const { data: courses } = useFetchCourses();
@@ -495,16 +516,16 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
               }
             } else {
               // OCR
-              setLoadingMessage("Preparing Tesseract Scanner");
-              const worker = await createWorker('eng', 1, {
-                logger: m => console.log(m)
-              })
+              // setLoadingMessage("Preparing Tesseract Scanner");
+              // const worker = await createWorker('eng', 1, {
+              //   logger: m => console.log(m)
+              // })
 
               setLoadingMessage("Scanning your details");
-              const { data: academicInfo } = await worker.recognize(urlTop);
-              const { data: blockNo } = await worker.recognize(urlBlockNo!);
+              const { data: academicInfo } = await worker!.recognize(urlTop);
+              const { data: blockNo } = await worker!.recognize(urlBlockNo!);
 
-              await worker.terminate();
+              await worker!.terminate();
 
               console.log("Recognized text academic info:\n", academicInfo.text);
               console.log("Recognized text block no:\n", blockNo.text);

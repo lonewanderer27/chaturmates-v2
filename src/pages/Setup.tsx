@@ -25,12 +25,34 @@ import useSession from "../hooks/auth/useSession";
 import useSelfDraftStudent from "../hooks/student/useSelfDraftStudent";
 import useSetupDraftStudent from "../hooks/setup/useSetupDraftStudent";
 import useSelfSetupDraftStudent from "../hooks/setup/useSelfSetupDraftStudent";
+import { useAtom } from "jotai";
+import { createWorker } from "tesseract.js";
+import { workerAtom } from "../atoms/setup";
 
 const Setup: FC<RouteComponentProps> = () => {
   const { session } = useSession();
   const ds = useSelfDraftStudent();
   console.log("draftStudent: ", ds.data)
   const rt = useIonRouter()
+  const [worker, setWorker] = useAtom(workerAtom)
+
+  useEffect(() => {
+    if (worker === null) {
+      const initWorker = async () => {
+        const wk = await createWorker('eng', 1, {
+          logger: m => console.log(m),
+          cacheMethod: "none"
+        })
+  
+        setWorker(wk);
+      };
+  
+      initWorker();
+    } else {
+      console.log("Worker has been initialized!")
+      console.log(worker);
+    }
+  }, [])
 
   useEffect(() => {
     // if there's a draft student record and it's not completed

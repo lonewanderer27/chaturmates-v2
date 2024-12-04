@@ -53,6 +53,9 @@ importers:
       '@lottiefiles/dotlottie-react':
         specifier: ^0.9.3
         version: 0.9.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@pantrist/capacitor-plugin-ml-kit-text-recognition':
+        specifier: ^6.2.1
+        version: 6.2.1(@capacitor/core@6.0.0)
       '@supabase/supabase-js':
         specifier: ^2.43.1
         version: 2.43.1
@@ -129,8 +132,8 @@ importers:
         specifier: ^11.1.1
         version: 11.1.1
       tesseract.js:
-        specifier: 2.1.1
-        version: 2.1.1
+        specifier: 5.1.1
+        version: 5.1.1
       usehooks-ts:
         specifier: ^3.1.0
         version: 3.1.0(react@18.3.1)
@@ -1307,6 +1310,11 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
+
+  '@pantrist/capacitor-plugin-ml-kit-text-recognition@6.2.1':
+    resolution: {integrity: sha512-zOgKhzCvnY33ZQPJ9r9GlyjsPizqC/unkOAqW22EbMIvK9Kjqs7WfknXZOGp6DkihJSLuDKwmnpgY73vwwV98g==}
+    peerDependencies:
+      '@capacitor/core': ^6.0.0
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -3204,10 +3212,6 @@ packages:
     resolution: {integrity: sha512-uzk64HRpUZyTGZtVuvrjP0FYxzQrBf4rojot6J65YMEbwBLB0CWm0CLojVpwpmFmxcE/lkvYICgfcGozbBq6rw==}
     engines: {node: '>=6'}
 
-  file-type@12.4.2:
-    resolution: {integrity: sha512-UssQP5ZgIOKelfsaB5CuGAL+Y+q7EmONuiwF3N5HAH0t27rvrttgi6Ra9k/+DVaY9UF6+ybxu5pOXLUdA8N7Vg==}
-    engines: {node: '>=8'}
-
   filelist@1.0.4:
     resolution: {integrity: sha512-w1cEuf3S+DrLCQL7ET6kz+gmlJdbq9J7yXCSjK/OZCPA+qEN1WyF4ZAf0YYJa4/shHJra2t/d/r8SV4Ji+x+8Q==}
 
@@ -3558,8 +3562,8 @@ packages:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
 
-  idb-keyval@3.2.0:
-    resolution: {integrity: sha512-slx8Q6oywCCSfKgPgL0sEsXtPVnSbTLWpyiDcu6msHOyKOLari1TD1qocXVCft80umnkk3/Qqh3lwoFt8T/BPQ==}
+  idb-keyval@6.2.1:
+    resolution: {integrity: sha512-8Sb3veuYCyrZL+VBt9LJfZjLUPWVvqn8tG28VqYNFCo43KHcKuq+b4EiXGeuaLAQWL2YmyDgMp2aSpH9JHsEQg==}
 
   idb@7.1.1:
     resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
@@ -5060,10 +5064,6 @@ packages:
   resolve-pathname@3.0.0:
     resolution: {integrity: sha512-C7rARubxI8bXFNB/hqcp/4iUeIXJhJZvFPFPiSPRnhU5UPxzMFIl+2E6yY6c4k9giDJAhtV+enfA+G89N6Csng==}
 
-  resolve-url@0.2.1:
-    resolution: {integrity: sha512-ZuF55hVUQaaczgOIwqWzkEcEidmlD/xl44x1UZnhOXcYuFN2S6+rcxpG+C1N3So0wvNI3DmJICUFfu2SxhBmvg==}
-    deprecated: https://github.com/lydell/resolve-url#deprecated
-
   resolve@1.22.8:
     resolution: {integrity: sha512-oKWePCxqpd6FlLvGV1VU0x7bkPmmCNolxzjMf4NczoDnQcIWrAF+cPtZn5i6n+RfD2d9i0tzpKnG6Yk168yIyw==}
     hasBin: true
@@ -5493,12 +5493,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  tesseract.js-core@2.2.0:
-    resolution: {integrity: sha512-a8L+OJTbUipBsEDsJhDPlnLB0TY1MkTZqw5dqUwmiDSjUzwvU7HWLg/2+WDRulKUi4LE+7PnHlaBlW0k+V0U0w==}
+  tesseract.js-core@5.1.1:
+    resolution: {integrity: sha512-KX3bYSU5iGcO1XJa+QGPbi+Zjo2qq6eBhNjSGR5E5q0JtzkoipJKOUQD7ph8kFyteCEfEQ0maWLu8MCXtvX5uQ==}
 
-  tesseract.js@2.1.1:
-    resolution: {integrity: sha512-utg0A8UzT1KwBvZf+UMGmM8LU6izeol6yIem0Z44+7Qqd/YWgRVQ99XOG18ApTOXX48lGE++PDwlcZYkv0ygRQ==}
-    deprecated: 'Version contains major bugs and no longer supported. Upgrade to @latest. Guide for upgrading here: https://github.com/naptha/tesseract.js/issues/771'
+  tesseract.js@5.1.1:
+    resolution: {integrity: sha512-lzVl/Ar3P3zhpUT31NjqeCo1f+D5+YfpZ5J62eo2S14QNVOmHBTtbchHm/YAbOOOzCegFnKf4B3Qih9LuldcYQ==}
 
   text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
@@ -5883,6 +5882,9 @@ packages:
   w3c-xmlserializer@4.0.0:
     resolution: {integrity: sha512-d+BFHzbiCx6zGfz0HyQ6Rg69w9k19nviJspaj4yNscGjrHu94sVP+aRm75yEbCh+r2/yR+7q6hux9LVtbuTGBw==}
     engines: {node: '>=14'}
+
+  wasm-feature-detect@1.8.0:
+    resolution: {integrity: sha512-zksaLKM2fVlnB5jQQDqKXXwYHLQUVH9es+5TOOHwGOVJOCeRBCiPjwSg+3tN2AdTCzjgli4jijCH290kXb/zWQ==}
 
   watchpack@2.4.1:
     resolution: {integrity: sha512-8wrBCMtVhqcXP2Sup1ctSkga6uc2Bx0IIvKyT7yTFier5AXHooSI+QyQQAtTb7+E0IUCCKyTFmXqdqgum2XWGg==}
@@ -7384,6 +7386,10 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
+
+  '@pantrist/capacitor-plugin-ml-kit-text-recognition@6.2.1(@capacitor/core@6.0.0)':
+    dependencies:
+      '@capacitor/core': 6.0.0
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -10025,8 +10031,6 @@ snapshots:
 
   file-type@10.11.0: {}
 
-  file-type@12.4.2: {}
-
   filelist@1.0.4:
     dependencies:
       minimatch: 5.1.6
@@ -10426,7 +10430,7 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
-  idb-keyval@3.2.0: {}
+  idb-keyval@6.2.1: {}
 
   idb@7.1.1: {}
 
@@ -11969,8 +11973,6 @@ snapshots:
 
   resolve-pathname@3.0.0: {}
 
-  resolve-url@0.2.1: {}
-
   resolve@1.22.8:
     dependencies:
       is-core-module: 2.13.1
@@ -12514,20 +12516,19 @@ snapshots:
       commander: 2.20.3
       source-map-support: 0.5.21
 
-  tesseract.js-core@2.2.0: {}
+  tesseract.js-core@5.1.1: {}
 
-  tesseract.js@2.1.1:
+  tesseract.js@5.1.1:
     dependencies:
       bmp-js: 0.1.0
-      file-type: 12.4.2
-      idb-keyval: 3.2.0
+      idb-keyval: 6.2.1
       is-electron: 2.2.2
       is-url: 1.2.4
       node-fetch: 2.7.0
       opencollective-postinstall: 2.0.3
       regenerator-runtime: 0.13.11
-      resolve-url: 0.2.1
-      tesseract.js-core: 2.2.0
+      tesseract.js-core: 5.1.1
+      wasm-feature-detect: 1.8.0
       zlibjs: 0.3.1
     transitivePeerDependencies:
       - encoding
@@ -12893,6 +12894,8 @@ snapshots:
   w3c-xmlserializer@4.0.0:
     dependencies:
       xml-name-validator: 4.0.0
+
+  wasm-feature-detect@1.8.0: {}
 
   watchpack@2.4.1:
     dependencies:

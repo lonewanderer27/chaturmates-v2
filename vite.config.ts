@@ -12,11 +12,6 @@ export default defineConfig(({ mode }) => {
           ? ["console.log", "console.info", "console.error"]
           : [],
     },
-    // test: {
-    //   globals: true,
-    //   environment: 'jsdom',
-    //   setupFiles: './src/setupTests.ts',
-    // }
     assetsInclude: ["**/*.lottie"],
   };
 });

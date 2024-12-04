@@ -21,10 +21,10 @@ import {
 } from "@ionic/react";
 import { hideTabBar } from "../../utils/TabBar";
 import { useDropzone } from "react-dropzone";
-import { FC, useEffect, useMemo, useState } from "react";
-import Tesseract, { createWorker } from "tesseract.js";
+import { FC, useMemo, useState } from "react";
+import { createWorker } from "tesseract.js";
 import * as PDFJS from "pdfjs-dist";
-import { RouteComponentProps, useLocation } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { newStudentAtom } from "../../atoms/student";
 import { useAtom } from "jotai";
 import useFetchAcademicYears from "../../hooks/setup/useFetchAcademicYears";
@@ -33,7 +33,9 @@ import { CourseType } from "../../types";
 import Image from "image-js";
 import useSetupDraftStudent from "../../hooks/setup/useSetupDraftStudent";
 import useFeatureFlags from "../../hooks/useFeatureFlags";
-import { parseAcademicInfo, parseBlockNumber } from "../../utils/Coe";
+import { parseAcademicInfo, parseAcademicInfoNative, parseBlockNumber, parseBlockNumberNative } from "../../utils/Coe";
+import { CapacitorPluginMlKitTextRecognition } from "@pantrist/capacitor-plugin-ml-kit-text-recognition";
+import { Capacitor } from "@capacitor/core";
 
 PDFJS.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -104,8 +106,6 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
     }),
     [isFocused, isDragAccept, isDragReject]
   );
-
-  const worker = createWorker({ logger: (m) => console.log(m) });
 
   const { data: academicYears } = useFetchAcademicYears();
   const { data: courses } = useFetchCourses();
@@ -470,27 +470,55 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
             });
           })();
           const ocrPromise = (async () => {
-            // OCR
-            setLoadingMessage("Preparing scanner");
-            await worker.load();
-            await worker.loadLanguage("eng");
-            await worker.initialize("eng");
+            if (Capacitor.isNativePlatform()) {
+              console.log("Preparing MLKit Scanner")
+              const topBase64 = await topImage.toBase64("image/png")
+              const blockNoBase64 = await blockNoImage.toBase64("image/png")
 
-            setLoadingMessage("Scanning your details");
-            const { data: academicInfo } = await worker.recognize(urlTop);
-            const { data: blockNo } = await worker.recognize(urlBlockNo!);
+              setLoadingMessage("Scanning your details");
+              const academicInfo = await CapacitorPluginMlKitTextRecognition.detectText({
+                base64Image: topBase64
+              })
+              const blockNo = await CapacitorPluginMlKitTextRecognition.detectText({
+                base64Image: blockNoBase64
+              })
 
-            await worker.terminate();
+              console.log(academicInfo)
+              console.log(blockNo)
 
-            console.log(academicInfo.text);
-            console.log(blockNo.text);
+              const studentInfo = parseAcademicInfo(academicInfo.text)
+              const blockNumber = parseBlockNumber(blockNo.text)
 
-            const studentInfo = parseAcademicInfo(academicInfo.text);
-            const blockNumber = parseBlockNumber(blockNo.text);
+              return {
+                studentInfo,
+                blockNumber
+              }
+            } else {
+              // OCR
+              setLoadingMessage("Preparing Tesseract Scanner");
+              const worker = await createWorker('eng', 1, {
+                logger: m => console.log(m)
+              })
 
-            return {
-              studentInfo,
-              blockNumber
+              setLoadingMessage("Scanning your details");
+              const { data: academicInfo } = await worker.recognize(urlTop);
+              const { data: blockNo } = await worker.recognize(urlBlockNo!);
+
+              await worker.terminate();
+
+              console.log("Recognized text academic info:\n", academicInfo.text);
+              console.log("Recognized text block no:\n", blockNo.text);
+
+              const studentInfo = parseAcademicInfo(academicInfo.text);
+              const blockNumber = parseBlockNumber(blockNo.text);
+
+              console.log("studentInfo:\n", studentInfo)
+              console.log("blockNumber:\n", blockNumber)
+
+              return {
+                studentInfo,
+                blockNumber
+              }
             }
           })();
 
@@ -501,7 +529,7 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
 
           setLoading(false);
 
-          if (studentInfo.studentNumber.toString().length !== 9) {
+          if (studentInfo.studentNumber?.toString().length !== 9) {
             checks.academicInfoNotFound = true;
           }
 

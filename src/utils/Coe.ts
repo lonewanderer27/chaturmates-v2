@@ -13,6 +13,17 @@ function parseBlockNumber(text: string) {
   }
 }
 
+const parseBlockNumberNative = (bottomText: string) => {
+  const blockRegex = /Block No\.\s*:?\s*(CS\s*\d+)/i;
+  const match = bottomText.match(blockRegex);
+
+  if (match) {
+    return match[1].trim().replace(" ", "");
+  } else {
+    return null;
+  }
+};
+
 function parseSchedule(text: string) {
   try {
     // Extract and remove block number
@@ -94,24 +105,26 @@ function parseAcademicInfo(text: string) {
     }
 
     // Extract course and year level
-    const courseRegex =
-      /COURSE\s+:\s+([A-Z. ]+)\s+ACAD\. YEAR\s+([A-Za-z ]+)/;
+    const courseRegex = /COURSE\s*[:~-]?\s*([A-Z. ]+)\s*ACAD\.\s*YEAR\s*[:~-]?\s*([A-Za-z0-9 ]+)/;
     const courseMatch = text.match(courseRegex);
     let course = "";
+    
     let yearLevel = "";
     if (courseMatch) {
       course = courseMatch[1].trim();
       yearLevel = courseMatch[2].trim();
       text = text.replace(courseMatch[0], "").trim();
-      if (yearLevel.includes("First")) {
+    
+      // Normalize yearLevel to handle variations like "First" and "first"
+      if (/first|1st/i.test(yearLevel)) {
         yearLevel = "1";
-      } else if (yearLevel.includes("Second")) {
+      } else if (/second|2nd/i.test(yearLevel)) {
         yearLevel = "2";
-      } else if (yearLevel.includes("Third")) {
+      } else if (/third|3rd/i.test(yearLevel)) {
         yearLevel = "3";
-      } else if (yearLevel.includes("Fourth")) {
+      } else if (/fourth|4th/i.test(yearLevel)) {
         yearLevel = "4";
-      } else if (yearLevel.includes("Fifth")) {
+      } else if (/fifth|5th/i.test(yearLevel)) {
         yearLevel = "5";
       }
     }
@@ -142,4 +155,111 @@ function parseAcademicInfo(text: string) {
   }
 }
 
-export { parseAcademicInfo, parseBlockNumber, parseSchedule };
+const parseAcademicInfoNative = (topText: string) => {
+  try {
+    const semesterRegex = /(\d+[a-z]{2} Semester, \d{4}-\d{4})/i;
+    const nameRegex = /^[A-Za-z, ]+$/m;
+    const courseRegex = /B\.S\. [A-Z ]+/;
+    const studentNoRegex = /\b\d{9}\b/;
+    const yearLevelRegex = /(First|Second|Third|Fourth|Fifth) Year/i;
+    const academicYearRegex = /\b\d{4}-\d{4}\b/;
+
+    console.log("splitting topText");
+    let lines = topText.split("\n").map((line) => line.trim());
+
+    // Helper to remove a matched line from the text
+    const removeLine = (regex: RegExp) => {
+      const match = lines.find((line) => regex.test(line));
+      if (match) {
+        lines = lines.filter((line) => line !== match);
+      }
+      return match;
+    };
+
+    // Remove and extract semester
+    const semesterMatch = removeLine(semesterRegex)?.match(semesterRegex)?.[1];
+
+    // Convert semester to a numeric value
+    let semester: number | undefined;
+    if (semesterMatch) {
+      if (semesterMatch.includes("1st")) semester = 1;
+      else if (semesterMatch.includes("2nd")) semester = 2;
+      else if (semesterMatch.includes("3rd")) semester = 3;
+      else if (semesterMatch.includes("4th")) semester = 4;
+    }
+
+    // Remove "COURSE" and extract course
+    lines = lines.filter((line) => line !== "COURSE");
+    const courseMatch = removeLine(courseRegex)?.match(courseRegex)?.[0];
+
+    // Remove "STUDENT NO." and extract student number
+    let studentNo: number | undefined;
+    lines = lines.filter((line) => line !== "STUDENT NO.");
+    const studentNoMatch =
+      removeLine(studentNoRegex)?.match(studentNoRegex)?.[0];
+    if (studentNoMatch) studentNo = parseInt(studentNoMatch);
+
+    // Remove "ACAD. YEAR" and extract year level
+    lines = lines.filter((line) => line !== "ACAD. YEAR");
+    const yearLevelMatch =
+      removeLine(yearLevelRegex)?.match(yearLevelRegex)?.[1];
+
+    // Extract academic year
+    const academicYearMatch = topText.match(academicYearRegex)?.[0];
+
+    // Convert year level to a numeric value
+    let yearLevel: number | undefined;
+    if (yearLevelMatch) {
+      if (yearLevelMatch.includes("First")) yearLevel = 1;
+      else if (yearLevelMatch.includes("Second")) yearLevel = 2;
+      else if (yearLevelMatch.includes("Third")) yearLevel = 3;
+      else if (yearLevelMatch.includes("Fourth")) yearLevel = 4;
+      else if (yearLevelMatch.includes("Fifth")) yearLevel = 5;
+    }
+
+    // Remove "NAME" and find the name
+    lines = lines.filter((line) => line !== "NAME");
+    const nameMatch = lines.find((line) => nameRegex.test(line));
+    if (nameMatch) lines = lines.filter((line) => line !== nameMatch);
+
+    // flip the name from last name, first name middle name
+    // to first name middle name last name
+    console.log("splitting name");
+    console.log("nameMatch: ", nameMatch);
+    const nameParts = nameMatch!.split(",");
+    let studentName = `${nameParts[1].trim()} ${nameParts[0].trim()}`;
+
+    // convert student name into title case
+    studentName = studentName
+      .split(" ")
+      .map((n) => n.charAt(0).toUpperCase() + n.slice(1).toLowerCase())
+      .join(" ");
+
+    return {
+      semester: semester,
+      name: studentName || "",
+      studentNumber: studentNo,
+      course: courseMatch || "",
+      yearLevel: yearLevel || "",
+      academicYear: academicYearMatch || "",
+    };
+  } catch (err) {
+    console.error("Error parsing academic info:", err);
+    return {
+      semester: 0,
+      name: "",
+      studentNumber: 0,
+      course: "",
+      yearLevel: 0,
+      academicYear: "",
+    };
+  }
+};
+
+export {
+  parseAcademicInfo,
+  parseAcademicInfoNative,
+  parseBlockNumber,
+  parseBlockNumberNative,
+  parseSchedule,
+};

@@ -21,8 +21,8 @@ import {
 } from "@ionic/react";
 import { hideTabBar } from "../../utils/TabBar";
 import { useDropzone } from "react-dropzone";
-import { FC, useMemo, useState } from "react";
-import { createWorker, PSM } from "tesseract.js";
+import { FC, useEffect, useMemo, useState } from "react";
+import Tesseract, { createWorker } from "tesseract.js";
 import * as PDFJS from "pdfjs-dist";
 import { RouteComponentProps, useLocation } from "react-router";
 import { newStudentAtom } from "../../atoms/student";
@@ -69,13 +69,12 @@ const rejectStyle = {
 };
 
 const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
-  const debug = true;
+  const debug = false;
   const FF = useFeatureFlags();
   const [alert] = useIonAlert();
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
   const { handleDraftCOEUpload, handleNext } = useSetupDraftStudent();
-  const loc = useLocation();
 
   useIonViewWillEnter(() => {
     hideTabBar();
@@ -106,6 +105,12 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
   );
 
   const worker = createWorker({ logger: (m) => console.log(m) });
+
+  useEffect(() => {
+    if (worker) {
+      
+    }
+  }, [worker])
 
   const { data: academicYears } = useFetchAcademicYears();
   const { data: courses } = useFetchCourses();
@@ -464,14 +469,14 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
 
           // Parallel tasks
           const uploadPromise = (async () => {
-            const data = await handleDraftCOEUpload(image, sessionId!)
-            console.log("COE Uploaded: ", data)
-            return data;
+            return handleDraftCOEUpload(image, sessionId!).then((data) => {
+              console.log("COE Uploaded: ", data)
+              return data;
+            });
           })();
           const ocrPromise = (async () => {
             // OCR
             setLoadingMessage("Preparing scanner");
-
             await worker.load();
             await worker.loadLanguage("eng");
             await worker.initialize("eng");
@@ -572,18 +577,18 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
 
             course =
               courses?.find((c) => {
-                console.log(
-                  `does ${c.title.toLowerCase()} contain the ${courseWithoutBs}?`
-                );
+                // console.log(
+                //   `does ${c.title.toLowerCase()} contain the ${courseWithoutBs}?`
+                // );
                 const yes = c.title.toLowerCase().includes(courseWithoutBs);
-                console.log(yes);
+                // console.log(yes);
                 return yes;
               }) ?? null;
 
             if (!course) {
               checks.courseInvalid = true;
             } else {
-              console.log("course found: ", course);
+              // console.log("course found: ", course);
             }
 
             // flip the name from last name, first name middle name

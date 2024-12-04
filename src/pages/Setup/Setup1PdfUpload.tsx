@@ -68,8 +68,9 @@ const rejectStyle = {
   borderColor: "#ff1744",
 };
 
+const debug = false;
+
 const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
-  const debug = false;
   const FF = useFeatureFlags();
   const [alert] = useIonAlert();
   const [loading, setLoading] = useState(false);
@@ -105,12 +106,6 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
   );
 
   const worker = createWorker({ logger: (m) => console.log(m) });
-
-  useEffect(() => {
-    if (worker) {
-      
-    }
-  }, [worker])
 
   const { data: academicYears } = useFetchAcademicYears();
   const { data: courses } = useFetchCourses();
@@ -637,11 +632,12 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
                   `Academic Info:\n${JSON.stringify(studentInfo, null, 2)}\nBlock No: ${blockNumber}`,
                 buttons: [
                   {
-                    text: "OK",
-                    handler: () => {
-                      handleNext();
-                    },
+                    text: "OK"
                   },
+                  {
+                    text: "Proceed",
+                    handler: () => handleNext()
+                  }
                 ],
               });
             } else {

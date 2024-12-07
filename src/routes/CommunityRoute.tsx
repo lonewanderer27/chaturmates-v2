@@ -25,6 +25,7 @@ import StudentFollowing from "../pages/Student/StudentFollowing";
 import StudentGroups from "../pages/Student/StudentGroups";
 import StudentPage from "../pages/Student/StudentPage";
 import RecommendGroups from "../pages/Recommend/RecommendGroups";
+import UpdateHobbies from "../pages/Me/MeUpdate/UpdateHobbies";
 
 const CommunityRoute: React.FC<RouteComponentProps> = ({ match }) => {
   console.log(match);
@@ -36,6 +37,7 @@ const CommunityRoute: React.FC<RouteComponentProps> = ({ match }) => {
       <Route path={`${match.url}/me/groups`} component={MeGroups} exact />
       <Route path={`${match.url}/me/following`} component={MeFollowing} exact />
       <Route path={`${match.url}/me/update`} component={MeUpdate} exact />
+      <Route path={`${match.url}/me/update/hobbies`} component={UpdateHobbies} exact />
       <Route path={`${match.url}/me/recommend`} render={() => <Redirect to={`${match.url}/me/recommend/groups`} />} exact />
       <Route path={`${match.url}/me/recommend/groups`} component={RecommendGroups} exact />
       <Route

@@ -20,6 +20,7 @@ const useSelfHobbies = () => {
       const hobbies = await client
         .from("hobbies")
         .select("*")
+        .order("title", { ascending: true })
         .in("id", rawHobbies.data.map((hobby) => hobby.hobby_id))
 
       return hobbies.data

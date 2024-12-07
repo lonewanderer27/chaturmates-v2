@@ -27,13 +27,13 @@ import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
 import { RouteComponentProps } from "react-router";
 import useSelfStudent from "../../hooks/student";
 import useSession from "../../hooks/auth/useSession";
-import { colorWandOutline } from "ionicons/icons";
+import { colorWandOutline, pencilOutline, pencilSharp } from "ionicons/icons";
 import useSelfGroups from "../../hooks/student/useSelfGroups";
 import useSelfFollowing from "../../hooks/student/useSelfFollowing";
 import useSelfHobbies from "../../hooks/student/useSelfHobbies";
 import useSelfSubjects from "../../hooks/student/useSelfSubjects";
 import string from "string";
-import LoaderCard from "../../components/Me/LoaderCard";
+import MeLoaderCard from "../../components/Me/MeLoaderCard";
 
 const Me: FC<RouteComponentProps> = ({ match }) => {
   const rt = useIonRouter();
@@ -153,6 +153,10 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
     }
   }, [hobbiesQuery.isLoading, hobbies]);
 
+  const handleUpdateHobbies = () => {
+    rt.push(rt.routeInfo.pathname + "/update/hobbies");
+  }
+
   return (
     <IonPage id="MePage">
       <IonContent className="ion-padding">
@@ -235,7 +239,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
         {/* Description Loader with Animation */}
         {(studentQuery.isLoading === true || student === null) && (
           <div ref={descriptionLoaderRef}>
-            <LoaderCard showParagraph hideChips />
+            <MeLoaderCard showParagraph hideChips />
           </div>
         )}
 
@@ -266,27 +270,33 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
         {/* Subjects Loader with Animation */}
         {(subjectsQuery.isLoading || subjects === null) && (
           <div ref={subjectsLoaderRef}>
-            <LoaderCard />
+            <MeLoaderCard />
           </div>
         )}
 
         {/* Hobbies Section with Animation */}
         {hobbies.length > 0 && (
           <div ref={hobbiesRef}>
-            <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
+            <IonCard className="mt-4 mx-0 rounded-xl shadow-none" onClick={handleUpdateHobbies}>
               <IonCardContent>
-                <div className="mb-2">
+                <div className="mb-2 flex justify-between">
                   <IonText className="text-xs font-bold" color="dark">
-                    HOBBIES
+                    INTERESTS
                   </IonText>
+                  <IonIcon
+                    // className="text-xs font-bold ml-auto"
+                    className="ml-auto"
+                    color="dark"
+                    icon={colorWandOutline}
+                  />
                   <br />
                 </div>
                 <div className="mx-[-5px]">
                   {hobbies.map((hobby) => (
-                    <IonChip key={hobby.id + hobby.title} color="dark">
-                      <IonText>{hobby.title}</IonText>
-                    </IonChip>
-                  ))}
+                      <IonChip key={hobby.id + hobby.title} color="dark">
+                        <IonText>{hobby.title}</IonText>
+                      </IonChip>
+                    ))}
                 </div>
               </IonCardContent>
             </IonCard>
@@ -295,11 +305,11 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
         {/* Hobbies Loader with Animation */}
         {(hobbiesQuery.isLoading || hobbies == null) && (
           <div ref={hobbiesLoaderRef}>
-            <LoaderCard />
+            <MeLoaderCard />
           </div>
         )}
       </IonContent>
-      <IonFooter>
+      {/* <IonFooter>
         <IonToolbar className="p-2">
           <IonButton
             color="medium"
@@ -310,7 +320,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
             Logout
           </IonButton>
         </IonToolbar>
-      </IonFooter>
+      </IonFooter> */}
     </IonPage>
   );
 };

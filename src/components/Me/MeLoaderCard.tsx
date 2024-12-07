@@ -9,7 +9,7 @@ interface LoaderCardProps {
   paragraphLines?: number;
 }
 
-const LoaderCard: React.FC<LoaderCardProps> = ({
+const MeLoaderCard: React.FC<LoaderCardProps> = ({
   title,
   numChips,
   showParagraph,
@@ -101,4 +101,4 @@ const LoaderCard: React.FC<LoaderCardProps> = ({
   );
 };
 
-export default LoaderCard;
+export default MeLoaderCard;

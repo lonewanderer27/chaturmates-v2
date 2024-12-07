@@ -18,7 +18,7 @@ import { hideTabBar } from '../../utils/TabBar'
 import useSelfSetupDraftStudent from '../../hooks/setup/useSelfSetupDraftStudent'
 
 // Define the main validation schema
-const validationSchema = Yup.object().shape({
+export const hobbiesValidationSchema = Yup.object().shape({
   hobbies: Yup.array().of(Yup.number().required()).required().min(5, "Select at least 5 interests"),
 });
 
@@ -104,7 +104,7 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
   }
 
   const { handleSubmit, setValue } = useForm<NewStudentTypeSteps["step4"]>({
-    resolver: yupResolver(validationSchema)
+    resolver: yupResolver(hobbiesValidationSchema)
   });
   const [selectedHobbyIds, setSelectedHobbyIds] = useState<number[]>([]);
   const toggleHobbySelection = (hobbyId: number) => {

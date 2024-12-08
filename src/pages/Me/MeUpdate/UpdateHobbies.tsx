@@ -106,6 +106,9 @@ const UpdateHobbies = () => {
       return setUploading(() => false);
     }
 
+    // Refresh my hobbies
+    await hobbiesQuery.refetch();
+
     setUploading(() => false);
 
     // go back to me page

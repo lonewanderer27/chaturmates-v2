@@ -170,28 +170,38 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
             </IonGrid>
           </IonCardContent>
         </IonCard>
-        <IonList className="rounded-xl px-1 mt-4" lines="none">
-          <IonListHeader>
-            <IonLabel className="uppercase text-xs">CREATED ON</IonLabel>
-          </IonListHeader>
-          <IonItem>
-            <IonText className="text-sm">
-              {dayjs(infoLite?.created_at).format("MMMM D, YYYY")}
-            </IonText>
-          </IonItem>
-        </IonList>
-        <IonList className="rounded-xl px-1 mt-4 ion-padding-bottom" lines="none">
-          <IonListHeader>
-            <IonLabel className="uppercase text-xs">DESCRIPTION</IonLabel>
-          </IonListHeader>
-          <IonItem>
-            <IonLabel>
-              <h3>{infoLite?.description}</h3>
-            </IonLabel>
-          </IonItem>
-        </IonList>
+        <IonCard className="mt-4 rounded-xl mx-0">
+          <IonCardContent>
+            <div>
+              <IonText className="text-xs font-bold" color="dark">
+                CREATED AT
+              </IonText>
+              <br />
+            </div>
+            <div>
+              <IonText className="text-sm" color="dark">
+                {dayjs(infoLite?.created_at).format("MMMM D, YYYY")}
+              </IonText>
+            </div>
+          </IonCardContent>
+        </IonCard>
+        <IonCard className="mt-4 rounded-xl mx-0">
+          <IonCardContent>
+            <div>
+              <IonText className="text-xs font-bold" color="dark">
+                DESCRIPTION
+              </IonText>
+              <br />
+            </div>
+            <div>
+              <IonText className="text-sm" color="dark">
+                {infoLite?.description}
+              </IonText>
+            </div>
+          </IonCardContent>
+        </IonCard>
         {groupRules && groupRules.length > 0 && (
-          <IonList className="rounded-xl px-1 mt-4" color="light">
+          <IonList className="rounded-xl px-1 mt-4 shadow-xl" color="light">
             <IonListHeader>
               <IonLabel className="uppercase text-xs">RULES</IonLabel>
               {groupRules && groupRules.length > 3 && (

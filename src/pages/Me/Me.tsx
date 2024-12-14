@@ -27,7 +27,7 @@ import AvatarLarge from "../../components/Me/AvatarLarge";
 import { RouteComponentProps } from "react-router";
 import useSelfStudent from "../../hooks/student";
 import useSession from "../../hooks/auth/useSession";
-import { colorWandOutline, pencilOutline, pencilSharp } from "ionicons/icons";
+import { add, addCircleOutline, addOutline, colorWandOutline, pencilOutline, pencilSharp } from "ionicons/icons";
 import useSelfGroups from "../../hooks/student/useSelfGroups";
 import useSelfFollowing from "../../hooks/student/useSelfFollowing";
 import useSelfHobbies from "../../hooks/student/useSelfHobbies";
@@ -277,20 +277,14 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
         )}
 
         {/* Hobbies Section with Animation */}
-        {hobbies.length > 0 && (
+        {(!hobbiesQuery.isLoading && hobbies.length > 0) && (
           <div ref={hobbiesRef}>
-            <IonCard className="mt-4 mx-0 rounded-xl " onClick={handleUpdateHobbies}>
+            <IonCard className="mt-4 mx-0 rounded-xl ">
               <IonCardContent>
                 <div className="mb-2 flex justify-between">
                   <IonText className="text-xs font-bold" color="dark">
                     INTERESTS
                   </IonText>
-                  <IonIcon
-                    // className="text-xs font-bold ml-auto"
-                    className="ml-auto"
-                    color="dark"
-                    icon={colorWandOutline}
-                  />
                   <br />
                 </div>
                 <div className="mx-[-5px]">
@@ -299,6 +293,10 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
                       <IonText>{hobby.title}</IonText>
                     </IonChip>
                   ))}
+                  <IonChip onClick={handleUpdateHobbies}>
+                    <IonIcon icon={addCircleOutline} />
+                    <IonText>Add Interests</IonText>
+                  </IonChip>
                 </div>
               </IonCardContent>
             </IonCard>

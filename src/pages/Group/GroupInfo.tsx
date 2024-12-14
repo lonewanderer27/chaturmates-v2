@@ -28,7 +28,7 @@ import useGroupMemsCount from "../../hooks/group/useGroupMemsCount";
 import useGroupInfoLite from "../../hooks/group/useGroupInfoLite";
 import { Share } from '@capacitor/share';
 import AvatarLarge from "../../components/Me/AvatarLarge";
-import { peopleOutline, shareSocialOutline } from "ionicons/icons";
+import { peopleCircleOutline, peopleOutline, shareSocialOutline } from "ionicons/icons";
 import useAmIAdmin from "../../hooks/group/useAmIAdmin";
 import dayjs from "dayjs";
 import useAmIAMember from "../../hooks/group/useAmIAMember";
@@ -147,7 +147,7 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
           </IonToolbar>
         </IonHeader>
         <div className="flex justify-center mb-[-80px] z-[500]">
-          <AvatarLarge avatarUrl={infoLite?.avatar_url} />
+          <AvatarLarge avatarUrl={infoLite?.avatar_url} avatarIcon={peopleCircleOutline} />
         </div>
         <IonCard className="pt-16 mx-0 z-[-500] ">
           <IonCardContent>

@@ -62,11 +62,11 @@ export default function useUpdateInfo() {
     setSaving(false);
 
     // show success message
-    await show({
-      header: "Success",
-      message: "Your profile has been updated.",
-      buttons: ["Ok"]
-    })
+    // await show({
+    //   header: "Success",
+    //   message: "Your profile has been updated.",
+    //   buttons: ["Ok"]
+    // })
 
     // redirect to the prior page
     rt.goBack();

@@ -18,7 +18,7 @@ const RecommendedGroupsGrid = () => {
           )}
           {query.data && query.data?.length > 0 && !query.isFetching && (
             <IonText className="text-xl font-bold font-poppins">
-              Recommended Groups
+              For You
             </IonText>
           )}
         </IonCol>

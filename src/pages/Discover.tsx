@@ -37,8 +37,8 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
   const uAQuery = useUniversityAnnouncements();
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await sRGQuery.query.refetch();
-    await uAQuery.query.refetch();
+    const promises = [sRGQuery.query.refetch(), uAQuery.query.refetch()];
+    await Promise.all(promises);
     event.detail.complete();
   };
 
@@ -138,14 +138,8 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        {/* <AdminPostsGrid
-          group={iaQuery.data?.group}
-          posts={iaQuery.data?.group_posts}
-          isLoading={iaQuery.isLoading}
-        /> */}
         <UniversityPostsGrid />
         <RecommendedGroupsGrid />
-        {/* <ExploreGroupsGrid /> */}
       </IonContent>
     </IonPage>
   );

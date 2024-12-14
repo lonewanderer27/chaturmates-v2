@@ -1,6 +1,6 @@
 import "./StudentItem.css";
 
-import { IonAvatar, IonCol, IonIcon, IonItem, IonRow, IonText, useIonRouter, } from "@ionic/react";
+import { IonAvatar, IonCol, IonIcon, IonItem, IonLabel, IonRow, IonText, useIonRouter, } from "@ionic/react";
 import { mail, personCircleOutline } from "ionicons/icons";
 import { StudentType } from "../../types";
 import { useMemo } from "react";
@@ -51,19 +51,14 @@ export default function StudentItem(props: {
           icon={props.icon}
         ></IonIcon>
       )}
-      <IonRow className="ion-align-items-center ml-[-5px]">
-        <IonCol>
-          <IonText className="studentItemName truncate font-poppins">
-            {props?.student.full_name}
-          </IonText>
-          {props.showType && (
-            <IonText className="studentType text-sm mt-[-20px]" color="medium">
-              <br />
-              {props.student.type === "regular" ? "Block " + props.student.block?.toUpperCase() : "Irregular"}
-            </IonText>
-          )}
-        </IonCol>
-      </IonRow>
+      <IonLabel>
+        <h2 className="truncate">{props?.student.full_name}</h2>
+        {props.showType && (
+          <p className="studentType text-sm mt-[-30px]" color="medium">
+            {props.student.type === "regular" ? "Block " + props.student.block?.toUpperCase() : "Irregular"}
+          </p>
+        )}
+      </IonLabel>
     </IonItem>
   );
 }

@@ -6,6 +6,7 @@ import {
   IonCol,
   IonIcon,
   IonItem,
+  IonLabel,
   IonRow,
   IonText,
   useIonRouter,
@@ -79,31 +80,13 @@ export default function GroupItem(props: {
           icon={props.icon}
         ></IonIcon>
       )}
-      <IonRow className="ion-align-items-center ml-[-5px]">
-        <IonCol>
-          <IonText className="groupName truncate font-poppins">
-            {props.group.name}
-          </IonText>
-          <br />
-          <IonText className="groupCount text-sm" color="medium">
-            {props.group.approx_members_count} Members
-          </IonText>
-        </IonCol>
-      </IonRow>
-      {props.hideButton === false && (
-        <>
-          {/* Only show join button if group is not found in the groups array */}
-          {/* @ts-ignore */}
-          {groups && groups.find((group) => group.id === props.group.id) ? (
-            <ItemListButton buttonLabel={"Visit"} />
-          ) : (
-            <ItemListButton
-              buttonLabel={props.buttonLabel}
-              onClick={handleJoin}
-            />
-          )}
-        </>
-      )}
+      <IonLabel>
+        <h2 className="truncate">{props.group.name}</h2>
+        <p className="groupType text-sm mt-[-30px]" color="medium">
+          {props.group.approx_members_count} Members
+        </p>
+      </IonLabel>
+      
     </IonItem>
   );
 }

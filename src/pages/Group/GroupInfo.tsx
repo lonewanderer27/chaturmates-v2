@@ -18,6 +18,7 @@ import {
   IonRow,
   IonText,
   IonToolbar,
+  useIonAlert,
   useIonRouter,
   useIonToast,
   useIonViewWillEnter,
@@ -28,7 +29,7 @@ import useGroupMemsCount from "../../hooks/group/useGroupMemsCount";
 import useGroupInfoLite from "../../hooks/group/useGroupInfoLite";
 import { Share } from '@capacitor/share';
 import AvatarLarge from "../../components/Me/AvatarLarge";
-import { peopleCircleOutline, peopleOutline, shareSocialOutline } from "ionicons/icons";
+import { exitOutline, peopleCircleOutline, peopleOutline, shareSocialOutline } from "ionicons/icons";
 import useAmIAdmin from "../../hooks/group/useAmIAdmin";
 import dayjs from "dayjs";
 import useAmIAMember from "../../hooks/group/useAmIAMember";
@@ -36,6 +37,7 @@ import GroupPreview from "./GroupPreview";
 import useGroupRules from "../../hooks/group/useGroupRules";
 import { hideTabBar } from "../../utils/TabBar";
 import { Capacitor } from "@capacitor/core";
+import useMeLeave from "../../hooks/group/useMeLeave";
 
 type GroupInfoPageProps = {
   vanity_url: string;
@@ -110,6 +112,34 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
     );
   };
 
+  const [showAllRules, setShowAllRules] = useState(false);
+  const displayedRules = groupRules ? (showAllRules ? groupRules : groupRules.slice(0, 3)) : [];
+
+  useIonViewWillEnter(() => {
+    hideTabBar();
+  });
+
+  const [alert] = useIonAlert();
+  const { leave, loading } = useMeLeave(p.match.params.vanity_url);
+  const handleLeave = async () => {
+    // show a confirmation dialog
+    alert({
+      header: "Leave Group",
+      message: `Are you sure you want to leave ${infoLite?.name}?`,
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "Confirm",
+          handler: leave
+        }
+      ]
+    })
+
+  }
+
   const AIM = useAmIAMember(p.match.params.vanity_url);
   if (AIM.isLoading) {
     return <IonLoading isOpen={true} />;
@@ -120,13 +150,6 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
       return <GroupPreview {...p} />;
     }
   }
-
-  const [showAllRules, setShowAllRules] = useState(false);
-  const displayedRules = groupRules ? (showAllRules ? groupRules : groupRules.slice(0, 3)) : [];
-
-  useIonViewWillEnter(() => {
-    hideTabBar();
-  });
 
   return (
     <IonPage>
@@ -157,15 +180,19 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
               </IonRow>
               <IonRow className="pt-[10px] flex justify-center">
                 <IonChip onClick={handleMembers}>
-                  <IonIcon icon={peopleOutline} />
+                  {/* <IonIcon icon={peopleOutline} /> */}
                   <IonLabel>{infoLite?.approx_members_count} Members</IonLabel>
                 </IonChip>
                 {AmIAdminLoading === false && AmIAdmin ? (
                   <IonChip onClick={handlePendingMembers}>
-                    <IonIcon icon={peopleOutline} />
+                    {/* <IonIcon icon={peopleOutline} /> */}
                     <IonLabel>Pending</IonLabel>
                   </IonChip>
                 ) : null}
+                <IonChip color="danger" onClick={handleLeave} disabled={loading}>
+                  <IonIcon icon={exitOutline} />
+                  <IonLabel>Leave</IonLabel>
+                </IonChip>
               </IonRow>
             </IonGrid>
           </IonCardContent>

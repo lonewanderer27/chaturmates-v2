@@ -2,7 +2,6 @@ import {
   IonButton,
   IonButtons,
   IonContent,
-  IonFooter,
   IonHeader,
   IonModal,
   IonPage,
@@ -16,52 +15,30 @@ import {
   useIonViewWillEnter,
 } from "@ionic/react";
 import {
-  chevronDown,
-  chevronDownOutline,
   notificationsOutline,
   personCircleOutline,
   searchOutline,
 } from "ionicons/icons";
 
-import AdminPostsGrid from "../components/DiscoverPage/AdminPostsGrid";
 import NavBtn from "../components/NavBtn";
-import { getAdminPosts } from "../services/group/admin";
-import { getAllGroups } from "../services/groups";
 import { showTabBar } from "../utils/TabBar";
-import { useQuery } from "@tanstack/react-query";
 import useSelfStudent from "../hooks/student";
-import ExploreGroupsGrid from "../components/DiscoverPage/ExploreGroupsGrid";
 import { FC, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
 import useSelfDraftStudent from "../hooks/student/useSelfDraftStudent";
+import useSelfRecommendedGroups from "../hooks/student/useSelfRecommendedGroups";
+import RecommendedGroupsGrid from "../components/DiscoverPage/RecommendedGroupsGrid";
+import useUniversityAnnouncements from "../hooks/group/useUniversityAnnouncements";
+import UniversityPostsGrid from "../components/DiscoverPage/UniversityPostsGrid";
 
 const Discover: FC<RouteComponentProps> = ({ match }) => {
   const { student } = useSelfStudent();
-
-  const query = useQuery({
-    queryKey: ["groups"],
-    queryFn: async () => {
-      console.log("useQuery");
-      const res = await getAllGroups();
-      await close();
-      console.log("data", res.data);
-      return res.data;
-    },
-  });
-
-  const iaQuery = useQuery({
-    queryKey: ["important_announcements"],
-    queryFn: async () => {
-      const res = await getAdminPosts(student!.school + "");
-      console.log("adminPosts", res);
-      return res;
-    },
-    enabled: !!student?.id,
-  });
+  const sRGQuery = useSelfRecommendedGroups();
+  const uAQuery = useUniversityAnnouncements();
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await query.refetch();
-    await iaQuery.refetch();
+    await sRGQuery.query.refetch();
+    await uAQuery.query.refetch();
     event.detail.complete();
   };
 
@@ -72,23 +49,23 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
   const [showModal, setShowModal] = useState(false);
   const setupModal = useRef<HTMLIonModalElement>(null);
   const draftStudentRQ = useSelfDraftStudent();
-  console.log("draftStudentRQ", draftStudentRQ.data);
+  // console.log("draftStudentRQ", draftStudentRQ.data);
 
   if (draftStudentRQ.data === null &&
     !showModal &&
     !draftStudentRQ.isLoading) {
-    console.log("no student info found");
+    // console.log("no student info found");
     setShowModal(true);
-    console.log("open setup modal");
+    // console.log("open setup modal");
   } else if (draftStudentRQ.data !== null &&
     !showModal &&
     !draftStudentRQ.isLoading &&
     draftStudentRQ.data?.completed === false
   ) {
-    console.log("incomplete student info found: ", draftStudentRQ.data)
+    // console.log("incomplete student info found: ", draftStudentRQ.data)
     setShowModal(true)
   } else {
-    console.log("student info found: ", draftStudentRQ.data);
+    // console.log("student info found: ", draftStudentRQ.data);
   }
 
   const rt = useIonRouter();
@@ -161,12 +138,14 @@ const Discover: FC<RouteComponentProps> = ({ match }) => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <AdminPostsGrid
+        {/* <AdminPostsGrid
           group={iaQuery.data?.group}
           posts={iaQuery.data?.group_posts}
           isLoading={iaQuery.isLoading}
-        />
-        <ExploreGroupsGrid />
+        /> */}
+        <UniversityPostsGrid />
+        <RecommendedGroupsGrid />
+        {/* <ExploreGroupsGrid /> */}
       </IonContent>
     </IonPage>
   );

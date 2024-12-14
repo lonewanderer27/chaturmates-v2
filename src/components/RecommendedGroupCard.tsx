@@ -59,7 +59,7 @@ const RecommendedGroupCard = (props: {
             {props.group.name}
           </IonText>
         </IonRow>
-        <div className="ml-[10px]">
+        <div className="ml-[8px]">
           {approvedMembers.map((m, i) => {
             if (i <= 5)
               return (

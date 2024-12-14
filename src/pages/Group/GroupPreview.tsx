@@ -7,7 +7,6 @@ import {
   IonContent,
   IonGrid,
   IonHeader,
-  IonIcon,
   IonPage,
   IonRow,
   IonSpinner,
@@ -22,7 +21,6 @@ import useGroupInfoLite from "../../hooks/group/useGroupInfoLite";
 import useGroupMemsCount from "../../hooks/group/useGroupMemsCount";
 import useMePendingRequest from "../../hooks/group/useMePendingRequest";
 import dayjs from "dayjs";
-import GroupAvatarLarge from "../../components/Group/GroupAvatarLarge";
 
 type GroupTimelinePageProps = {
   vanity_url: string;
@@ -106,11 +104,12 @@ const GroupPreview: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
                       if (PRLoading) return;
                       toggleJoin();
                     }}
+                    disabled={PRLoading || joining}
                   >
                     {PRLoading || joining ? (
                       <IonSpinner name="dots" />
                     ) : (
-                      "Request to Join"
+                      "Join"
                     )}
                   </IonButton>
                 )}

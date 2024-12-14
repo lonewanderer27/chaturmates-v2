@@ -17,7 +17,7 @@ const useAmIAMember = (group_vanity_id: string) => {
         .eq("group_vanity_id", group_vanity_id)
         .single()
 
-      console.log("am i member", res);
+      // console.log("am i member", res);
       return res.data
     },
     enabled: !!group_vanity_id && !!profile

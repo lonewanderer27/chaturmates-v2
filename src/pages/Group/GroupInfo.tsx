@@ -185,21 +185,22 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
             </div>
           </IonCardContent>
         </IonCard>
-        <IonCard className="mt-4 rounded-xl mx-0">
-          <IonCardContent>
-            <div>
-              <IonText className="text-xs font-bold" color="dark">
-                DESCRIPTION
-              </IonText>
-              <br />
-            </div>
-            <div>
-              <IonText className="text-sm" color="dark">
-                {infoLite?.description}
-              </IonText>
-            </div>
-          </IonCardContent>
-        </IonCard>
+        {infoLite?.description &&
+          <IonCard className="mt-4 rounded-xl mx-0">
+            <IonCardContent>
+              <div>
+                <IonText className="text-xs font-bold" color="dark">
+                  DESCRIPTION
+                </IonText>
+                <br />
+              </div>
+              <div>
+                <IonText className="text-sm" color="dark">
+                  {infoLite?.description}
+                </IonText>
+              </div>
+            </IonCardContent>
+          </IonCard>}
         {groupRules && groupRules.length > 0 && (
           <IonList className="rounded-xl px-1 mt-4 shadow-xl" color="light">
             <IonListHeader>

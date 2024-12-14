@@ -4,8 +4,8 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "vite --mode web",
+    "build": "tsc && vite build --mode web",
     "preview": "vite preview",
     "test.e2e": "cypress run",
     "test.unit": "vitest",

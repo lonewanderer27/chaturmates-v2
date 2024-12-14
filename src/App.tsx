@@ -42,7 +42,7 @@ import TabIconChangerWrapper from "./TabIconChangerWrapper";
 import useDraggableFab from "./hooks/useDraggableFab";
 import { accessibilitySharp, chatboxEllipsesOutline, chatboxOutline, compassOutline, compassSharp, peopleOutline, peopleSharp } from "ionicons/icons";
 import AccessibilitySettings from "./components/AccessibilitySettings";
-
+import { isPlatform } from '@ionic/react';
 import DiscoverRoute from "./routes/DiscoverRoute";
 const ContinueRoute = lazy(() => import("./routes/ContinueRoute"));
 const CommunityRoute = lazy(() => import("./routes/CommunityRoute"));
@@ -58,6 +58,19 @@ const NotFound = lazy(() => import("./routes/NotFound"));
 setupIonicReact({
   mode: "ios",
 });
+
+// Check if the app is running in a native Capacitor environment
+const isNative = isPlatform("capacitor");
+
+// register service worker if we're not capacitor
+if (!isNative) {
+  // Register the service worker only for web deployments
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch((error) => {
+      console.error('Service Worker registration failed:', error);
+    });
+  }
+}
 
 // instantiate tanstack client
 export const qClient = new QueryClient();

@@ -1,6 +1,7 @@
 import { IonAvatar, IonIcon, IonImg, IonRow } from "@ionic/react";
-import { peopleCircle, person, personCircleOutline } from "ionicons/icons";
+import { personCircleOutline } from "ionicons/icons";
 import { isValidUrl } from "../../utils/ValidUrl";
+import "./MemberAvatarLarge.css"
 import { useToggleTheme } from "../../hooks/useToggleTheme";
 
 const MemberAvatarLarge = (props: { avatarUrl: string | null | undefined }) => {
@@ -17,7 +18,15 @@ const MemberAvatarLarge = (props: { avatarUrl: string | null | undefined }) => {
       ) : (
         <>
           <div className={`flex rounded-full p-[0.5]`}>
-            <IonIcon className="text-9xl" src={personCircleOutline} />
+            <IonIcon 
+              className="text-9xl" 
+              src={personCircleOutline} 
+              style={{
+                color: darkMode ? 'var(--ion-color-light-tint)' : 'var(--ion-color-dark-tint)',
+                backgroundColor: darkMode ? 'var(--ion-color-dark-tint)' : 'var(--ion-color-light-tint)',
+                borderRadius: "100%"
+              }}
+            />
           </div>
         </>
       )}

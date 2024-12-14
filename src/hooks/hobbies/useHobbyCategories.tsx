@@ -9,6 +9,7 @@ const useHobbyCategories = () => {
       const hobbiesCategoryRes = await client
         .from("hobbies_category")
         .select("*")
+        .order("created_at", { ascending: false });
 
       return hobbiesCategoryRes.data;
     }

@@ -1,5 +1,5 @@
-import { createAnimation, IonBackButton, IonButton, IonButtons, IonChip, IonCol, IonContent, IonGrid, IonPage, IonRow, IonSearchbar, IonSpinner, IonText, IonTitle, IonToolbar, useIonRouter, useIonViewWillEnter } from '@ionic/react'
-import React, { useEffect, useRef, useState } from 'react'
+import { IonBackButton, IonButton, IonButtons, IonChip, IonCol, IonContent, IonGrid, IonPage, IonRow, IonSearchbar, IonSpinner, IonText, IonTitle, IonToolbar, useIonRouter, useIonViewWillEnter } from '@ionic/react'
+import { useEffect, useState } from 'react'
 import useHobbies from '../../../hooks/hobbies/useHobbies';
 import useHobbyCategories from '../../../hooks/hobbies/useHobbyCategories';
 import { HobbyType } from '../../../types';
@@ -9,9 +9,9 @@ import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { NewStudentTypeSteps } from '../../../types/student/post/NewStudentType';
 import { hobbiesValidationSchema } from '../../Setup/Setup5Hobbies';
 import useSelfHobbies from '../../../hooks/student/useSelfHobbies';
-import MeLoaderCard from '../../../components/Me/MeLoaderCard';
 import client from '../../../client';
 import useSelfStudentLite from '../../../hooks/student/useSelfStudentLite';
+import { useToggleTheme } from '../../../hooks/useToggleTheme';
 
 const UpdateHobbies = () => {
   useIonViewWillEnter(() => {
@@ -26,6 +26,9 @@ const UpdateHobbies = () => {
   const [filteredHobbies, setFilteredHobbies] = useState<HobbyType[]>(
     hqR.data ?? []
   );
+  const handleSearch = (e: CustomEvent) => {
+    setHobsSearch(e.detail.value);
+  }
   useEffect(() => {
     if (hqR.data) {
       setFilteredHobbies(
@@ -33,7 +36,7 @@ const UpdateHobbies = () => {
           h.title.toLowerCase().includes(hobsSearch.toLowerCase())
         )
       );
-      console.log("filtered hobbies", filteredHobbies);
+      // console.log("filtered hobbies", filteredHobbies);
     }
   }, [hobsSearch, hqR.data]);
   const { handleSubmit, setValue } = useForm<NewStudentTypeSteps["step4"]>({
@@ -119,12 +122,14 @@ const UpdateHobbies = () => {
       // rt.push("/discover/me");
 
       // lets try if we can pop to the either discover or community me page
-      rt.push("/"+rt.routeInfo.pathname.split("/")[1]+"/me");
+      rt.push("/" + rt.routeInfo.pathname.split("/")[1] + "/me");
     }
   }
   const handlePageError: SubmitErrorHandler<NewStudentTypeSteps['step4']> = (errors) => {
-
+    
   }
+
+  const [darkMode] = useToggleTheme('darkModeActivated', 'ion-palette-dark');
 
   return (
     <IonPage>
@@ -133,7 +138,7 @@ const UpdateHobbies = () => {
           <IonToolbar>
             <IonButtons>
               <IonBackButton
-                defaultHref={"/"+rt.routeInfo.pathname.split("/")[1]+"/me"}
+                defaultHref={"/" + rt.routeInfo.pathname.split("/")[1] + "/me"}
                 text='Me'
               />
             </IonButtons>
@@ -157,58 +162,53 @@ const UpdateHobbies = () => {
                 </IonText>
               </IonCol>
             </IonRow>
-          </IonGrid>
-          <IonGrid>
-            <IonRow>
+            <IonRow className='mx-[-13px]'>
               <IonCol>
-                {hqR.data && hqR.data.filter(hq => hq.category_id === null).map(hq => (
-                  <IonChip
-                    key={hq.id}
-                    color={isHobbySelected(hq.id) ? "primary" : undefined}
-                    onClick={() => toggleHobbySelection(hq.id)}
-                    className="outline outline-1"
-                  >
-                    <IonText>
-                      <p>{hq.title}</p>
-                    </IonText>
-                  </IonChip>
-                ))}
+                <IonSearchbar
+                  value={hobsSearch}
+                  animated
+                  onIonInput={(e) => {
+                    handleSearch(e);
+                    setHobsSearch(e.detail.value!);
+                  }}
+                  placeholder='Search interests'
+                />
               </IonCol>
             </IonRow>
-            {(hcqR.data && !hqR.isLoading && !hobbiesQuery.isLoading) && hcqR.data.map((hc) => {
+            {(!hcqR.isLoading && !hqR.isLoading && !hobbiesQuery.isFetching) && hcqR.data?.map((hc) => {
               const hobbiesInCategory = filteredHobbies.filter((h) => h.category_id === hc.id);
               if (hobbiesInCategory.length === 0) {
                 return null; // Skip rendering this category if no hobbies match
               }
               return (
-                <>
+                <IonGrid className='mx-[-5px]' key={hc.id}> 
                   <IonRow key={hc.id}>
                     <IonCol>
                       <IonText>
-                        <h6>{hc.title}</h6>
+                        <h6 className="font-semibold">{hc.title}</h6>
                       </IonText>
                     </IonCol>
                   </IonRow>
-                  <IonRow>
+                  <IonRow className='mx-[-5px]'>
                     <IonCol>
-                      {filteredHobbies && 
-                      filteredHobbies
-                      .filter((h) => h.category_id === hc.id).map((h) => (
-                        <IonChip
-                          key={h.id}
-                          color={isHobbySelected(h.id) ? "primary" : undefined}
-                          onClick={() => toggleHobbySelection(h.id)}
-                          className="outline outline-1"
-                          disabled={hobbiesQuery.isLoading === true || uploading}
-                        >
-                          <IonText>
-                            <p>{h.title}</p>
-                          </IonText>
-                        </IonChip>
-                      ))}
+                      {filteredHobbies &&
+                        filteredHobbies
+                          .filter((h) => h.category_id === hc.id).map((h) => (
+                            <IonChip
+                              key={h.id}
+                              color={isHobbySelected(h.id) ? "primary" : undefined}
+                              onClick={() => toggleHobbySelection(h.id)}
+                              className={`${darkMode ? 'outline outline-1' : ''}`}
+                              disabled={hobbiesQuery.isLoading === true || uploading}
+                            >
+                              <IonText>
+                                <p>{h.title}</p>
+                              </IonText>
+                            </IonChip>
+                          ))}
                     </IonCol>
                   </IonRow>
-                </>
+                </IonGrid>
               )
             })}
           </IonGrid>

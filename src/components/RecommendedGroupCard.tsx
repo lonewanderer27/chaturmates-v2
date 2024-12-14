@@ -15,6 +15,7 @@ interface GT extends GroupType {
 
 const RecommendedGroupCard = (props: {
   group: GT;
+  hideMembers?: boolean;
   icon?: string;
 }) => {
   const rt = useIonRouter();
@@ -48,7 +49,7 @@ const RecommendedGroupCard = (props: {
         className="ion-padding ion-no-margin w-full font-poppins"
         onClick={handleView}
       >
-        <IonRow>
+        <IonRow className="ml-[-5px]">
           {isValidUrl(props.group.avatar_url + "") && <IonAvatar>
             <img className="w-[50px] h-auto object-cover rounded-full aspect-square" src={props.group.avatar_url!} />
           </IonAvatar>}
@@ -59,9 +60,10 @@ const RecommendedGroupCard = (props: {
             {props.group.name}
           </IonText>
         </IonRow>
+        {!props.hideMembers && 
         <div className="ml-[12px] flex flex-nowrap">
           {approvedMembers.map((m, i) => {
-            if (i+1 <= 6)
+            if (i + 1 <= 6)
               return (
                 <div className="avatar ml-[-16px]" title={m.student.full_name ?? ""} key={m.id + i}>
                   {isValidUrl(m.avatar_url + "") ? (
@@ -76,7 +78,7 @@ const RecommendedGroupCard = (props: {
                 </div>
               )
           })}
-        </div>
+        </div>}
       </IonCard>
     </IonCol>
   )

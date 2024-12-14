@@ -34,6 +34,7 @@ import { funnelOutline, gridOutline, listOutline } from "ionicons/icons";
 import RealGroupListItem from "../../components/Recommend/RealGroupListItem";
 import GroupListItemLoader from "../../loaders/GroupListItemLoader";
 import "./TopKModal.css";
+import RecommendedGroupCard from "../../components/RecommendedGroupCard";
 
 enum SortingOptions {
   HIGH_TO_LOW = "high_to_low",
@@ -231,30 +232,19 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
               {(isSorting || isLoading) ? (
                 <IonRow className="mx-[-4px]">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <IonCol
-                      size="12"
-                      className="flex flex-column w-full"
-                      key={`recogroup-${i}`}
-                    >
-                      {Array.from({ length: 2 }).map((_, i) => (
-                        <GroupCardLoader key={i} />
-                      ))}
-                    </IonCol>
+                    Array.from({ length: 2 }).map((_, i) => (
+                      <GroupCardLoader key={`recogroup-${i}`} />
+                    ))
                   ))}
                 </IonRow>
               ) : (
                 <IonRow className="mx-[-4px]">
-                  {displayedData.map((group, index) => (
-                    <IonCol
-                      size="6"
-                      className="flex flex-column w-full"
-                      key={`recogroup-${index}`}
-                    >
-                      <RealGroupCard
-                        // @ts-ignore TODO: Fix this
-                        group={group}
-                      />
-                    </IonCol>
+                  {displayedData.map((group, i) => (
+                    <RecommendedGroupCard
+                      key={group.vanity_id + i}
+                      // @ts-ignore TODO: Fix this
+                      group={group}
+                    />
                   ))}
                 </IonRow>
               )}

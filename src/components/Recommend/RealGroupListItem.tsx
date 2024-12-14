@@ -15,7 +15,7 @@ export interface RecommendGroupType2 extends GroupType {
 const RealGroupListItem = (props: { group: RecommendGroupType2 }) => {
   const rt = useIonRouter();
   const handleClick = () => {
-    rt.push("/discover/group/vu/" + props.group.vanity_id);
+    rt.push("/discover/group/vu/" + props.group.vanity_id, "none");
   };
 
   return (
@@ -27,9 +27,18 @@ const RealGroupListItem = (props: { group: RecommendGroupType2 }) => {
           slot="start"
         />
       ) : (
-        <IonIcon src={peopleCircleOutline} className="text-6xl" slot="start" />
+        <IonIcon 
+          src={peopleCircleOutline} 
+          className="text-5xl" 
+          slot="start"
+        />
       )}
-      <IonLabel>{props.group.name}</IonLabel>
+      <IonLabel>
+        <h2 className='truncate'>{props.group.name}</h2>
+        <p className='text-sm mt-[-30px]'>
+          {props.group.approx_members_count} Members
+        </p>
+      </IonLabel>
     </IonItem>
   )
 }

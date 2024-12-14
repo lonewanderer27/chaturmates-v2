@@ -46,11 +46,9 @@ const StudentGroups: FC<RouteComponentProps<StudentGroupsPageProps>> = ({
             <IonTitle>{student?.full_name?.split(" ")[0] ?? "Their"} Groups ({groups?.length ?? "-"})</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonGrid>
-          <IonList className="rounded-xl">
-            {groups?.map((group) => <GroupItem group={group} key={group.id} />)}
-          </IonList>
-        </IonGrid>
+        <IonList className="rounded-xl">
+          {groups?.map((group) => <GroupItem group={group} key={group.id} />)}
+        </IonList>
       </IonContent>
     </IonPage>
   );

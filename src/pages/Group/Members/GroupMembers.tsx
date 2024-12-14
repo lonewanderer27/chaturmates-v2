@@ -52,17 +52,15 @@ const GroupMembers: FC<RouteComponentProps<GroupMembersPageProps>> = ({
             <IonTitle>Group Members ({count})</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonGrid>
-          <IonList className="rounded-xl">
-            {data?.map((member) => {
-              const klasmeyt = member.students;
-              if (klasmeyt!.id === meStudent!.id) {
-                return <StudentItem student={klasmeyt!} key={klasmeyt!.id} me />;
-              }
-              return <StudentItem student={klasmeyt!} key={klasmeyt!.id} />;
-            })}
-          </IonList>
-        </IonGrid>
+        <IonList className="rounded-xl">
+          {data?.map((member) => {
+            const klasmeyt = member.students;
+            if (klasmeyt!.id === meStudent!.id) {
+              return <StudentItem student={klasmeyt!} key={klasmeyt!.id} me />;
+            }
+            return <StudentItem student={klasmeyt!} key={klasmeyt!.id} />;
+          })}
+        </IonList>
       </IonContent>
     </IonPage>
   );

@@ -44,13 +44,11 @@ const StudentFollowing: FC<RouteComponentProps<StudentFollowingPageProps>> = ({
             <IonTitle>Their Following ({following?.length ?? "-"})</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonGrid>
-          <IonList className="rounded-xl">
-            {following?.map((klasmeyt) => (
-              <StudentItem student={klasmeyt} key={klasmeyt.id} />
-            ))}
-          </IonList>
-        </IonGrid>
+        <IonList className="rounded-xl">
+          {following?.map((klasmeyt) => (
+            <StudentItem student={klasmeyt} key={klasmeyt.id} />
+          ))}
+        </IonList>
       </IonContent>
     </IonPage>
   );

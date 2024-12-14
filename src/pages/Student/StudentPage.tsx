@@ -83,7 +83,7 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
               </IonRow>
               <IonRow className="flex justify-center mt-1">
                 <IonText className="text-sm capitalize" color="dark">
-                  {student?.type ?? "-"}
+                  {student?.block ? student.block : "-"}
                 </IonText>
               </IonRow>
               <IonRow className="flex justify-center mt-2">

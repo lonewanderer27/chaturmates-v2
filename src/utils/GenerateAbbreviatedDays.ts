@@ -1,4 +1,4 @@
-export default function generateAbbreviatedDays(daysObj: { [x: string]: any; }) {
+export default function generateAbbreviatedDays(daysObj: { [x: string]: boolean; }) {
   // Define a mapping of full weekday names to their abbreviations
   const dayAbbreviations: { [key: string]: string } = {
     monday: 'Mon',

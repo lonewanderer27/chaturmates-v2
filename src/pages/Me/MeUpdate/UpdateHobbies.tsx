@@ -40,7 +40,12 @@ const UpdateHobbies = () => {
     }
   }, [hobsSearch, hqR.data]);
   const { handleSubmit, setValue } = useForm<NewStudentTypeSteps["step4"]>({
-    resolver: yupResolver(hobbiesValidationSchema)
+    resolver: yupResolver(hobbiesValidationSchema),
+    defaultValues: async () => {
+      return {
+        hobbies: selectedHobbyIds
+      }
+    }
   });
   const [selectedHobbyIds, setSelectedHobbyIds] = useState<number[]>(() => hobbies.map(h => h.id));
   const toggleHobbySelection = (hobbyId: number) => {
@@ -58,7 +63,7 @@ const UpdateHobbies = () => {
   }, [hobbiesQuery.data]);
   const isHobbySelected = (hobbyId: number) => selectedHobbyIds.includes(hobbyId);
   const getInterestMessage = () => {
-    const count = selectedHobbyIds.length;
+    const count = selectedHobbyIds.length + newHobbies.filter(h => h.selected).length;
     switch (count) {
       case 0:
         return "Add five hobbies to find even more klasmeyts";
@@ -70,9 +75,23 @@ const UpdateHobbies = () => {
       case 4:
         return "Excellent! You can add one more interest if you'd like";
       default:
-        return "Perfect! You've selected 5 interests. Feel free to add more";
+        return `Perfect! You've selected ${count} interests. Feel free to add more`;
     }
   }
+
+  const [newHobbies, setNewHobbies] = useState<{
+    id: number;
+    title: string;
+    selected: boolean;
+  }[]>([]);
+  const handleAddCustomHobby = () => {
+    setNewHobbies((prevHobbies) => [...prevHobbies, { id: prevHobbies.length, title: hobsSearch, selected: true }]);
+    setHobsSearch("");
+  }
+  const toggleCustomHobbySelection = (id: number) => {
+    setNewHobbies((prevHobbies) => prevHobbies.map((h) => h.id === id ? { ...h, selected: !h.selected } : h));
+  }
+  const isCustomHobbySelected = (index: number) => newHobbies[index].selected;
 
   const rt = useIonRouter();
   const { student } = useSelfStudentLite();
@@ -93,13 +112,38 @@ const UpdateHobbies = () => {
       return setUploading(() => false);
     }
 
+    // Create the custom hobbies object that will be uploaded
+    const customHbbys = newHobbies.filter(h => h.selected).map(h => ({
+      title: h.title,
+      created_by_student_id: student?.id,
+      is_custom: true
+    }));
+
+    // Upload the new custom hobbies
+    // And get the new hobbies id
+    const { data: nhobbies, error: customError } = await client
+      .from("hobbies")
+      .insert(customHbbys)
+      .select("id");
+
+    if (customError) {
+      console.error("Error uploading custom hobbies", customError);
+      return setUploading(() => false);
+    }
+
     // Create the hobbies object that will be uploaded
     const hbbys = hqR.data!.filter(h => selectedHobbyIds.includes(h.id)).map(h => ({
       student_id: student?.id!,
       hobby_id: h.id
     }));
 
-    // Upload the hobbies
+    // Create the hobbies object for the new custom hobbies
+    hbbys.push(...nhobbies.map((h: { id: number }) => ({
+      student_id: student?.id!,
+      hobby_id: h.id
+    })));
+
+    // Upload the final list of hobbies
     const { error } = await client
       .from("student_hobbies")
       .insert(hbbys);
@@ -109,10 +153,13 @@ const UpdateHobbies = () => {
       return setUploading(() => false);
     }
 
-    // Refresh my hobbies
-    await hobbiesQuery.refetch();
+    // Reset the new hobbies
+    setNewHobbies(() => []);
 
     setUploading(() => false);
+
+    // Refresh my hobbies
+    hobbiesQuery.refetch();
 
     // go back to me page
     // lets try if we can pop to the me page
@@ -126,7 +173,7 @@ const UpdateHobbies = () => {
     }
   }
   const handlePageError: SubmitErrorHandler<NewStudentTypeSteps['step4']> = (errors) => {
-    
+    console.error("errors", errors);
   }
 
   const [darkMode] = useToggleTheme('darkModeActivated', 'ion-palette-dark');
@@ -171,46 +218,108 @@ const UpdateHobbies = () => {
                     handleSearch(e);
                     setHobsSearch(e.detail.value!);
                   }}
-                  placeholder='Search interests'
+                  placeholder='Search topics'
                 />
               </IonCol>
             </IonRow>
-            {(!hcqR.isLoading && !hqR.isLoading && !hobbiesQuery.isFetching) && hcqR.data?.map((hc) => {
-              const hobbiesInCategory = filteredHobbies.filter((h) => h.category_id === hc.id);
-              if (hobbiesInCategory.length === 0) {
-                return null; // Skip rendering this category if no hobbies match
-              }
-              return (
-                <IonGrid className='mx-[-5px]' key={hc.id}> 
-                  <IonRow key={hc.id}>
-                    <IonCol>
-                      <IonText>
-                        <h6 className="font-semibold">{hc.title}</h6>
-                      </IonText>
-                    </IonCol>
-                  </IonRow>
-                  <IonRow className='mx-[-5px]'>
-                    <IonCol>
-                      {filteredHobbies &&
-                        filteredHobbies
-                          .filter((h) => h.category_id === hc.id).map((h) => (
-                            <IonChip
-                              key={h.id}
-                              color={isHobbySelected(h.id) ? "primary" : undefined}
-                              onClick={() => toggleHobbySelection(h.id)}
-                              className={`${darkMode ? 'outline outline-1' : ''}`}
-                              disabled={hobbiesQuery.isLoading === true || uploading}
-                            >
-                              <IonText>
-                                <p>{h.title}</p>
-                              </IonText>
-                            </IonChip>
-                          ))}
-                    </IonCol>
+
+            {/* Toggle-able custom hobbies will appear here */}
+            {(filteredHobbies.length === 0 &&
+              !hcqR.isLoading &&
+              !hqR.isLoading &&
+              !hobbiesQuery.isFetching &&
+              hobsSearch.length !== 0) && (
+                <IonGrid className='mx-[-5px]'>
+                  <IonRow>
+                    <IonChip
+                      className={`${darkMode ? 'outline outline-1' : ''}`}
+                      onClick={handleAddCustomHobby}
+                    >
+                      <IonText>{hobsSearch}</IonText>
+                    </IonChip>
                   </IonRow>
                 </IonGrid>
-              )
-            })}
+              )}
+
+            {/* A custom hobby is a hobby that is not in the list of hobbies. 
+            You can add a custom hobby by typing the hobby in the search bar 
+            and clicking on the hobby that appears in the search results.   */}
+            {(!hcqR.isLoading &&
+              !hqR.isLoading &&
+              !hobbiesQuery.isFetching &&
+              hobsSearch.length == 0) &&
+              newHobbies.map((h, i) => (
+                <IonChip
+                  key={i}
+                  color={isCustomHobbySelected(h.id) ? "primary" : undefined}
+                  onClick={() => toggleCustomHobbySelection(h.id)}
+                  className={`${darkMode ? 'outline outline-1' : ''}`}
+                >
+                  <IonText>
+                    <p>{h.title}</p>
+                  </IonText>
+                </IonChip>
+              ))}
+
+            {/* Displays the custom hobbies of other users */}
+            {(!hcqR.isLoading &&
+              !hqR.isLoading &&
+              !hobbiesQuery.isFetching) &&
+              filteredHobbies
+                .filter((h) => h.category_id === null)
+                .map((h, i) => (
+                  <IonChip
+                    key={i}
+                    color={isHobbySelected(h.id) ? "primary" : undefined}
+                    onClick={() => toggleHobbySelection(h.id)}
+                    className={`${darkMode ? 'outline outline-1' : ''}`}
+                  >
+                    <IonText>
+                      <p>{h.title}</p>
+                    </IonText>
+                  </IonChip>
+                ))}
+
+            {/* Hobbies from our database */}
+            {(!hcqR.isLoading &&
+              !hqR.isLoading &&
+              !hobbiesQuery.isFetching) && hcqR.data?.map((hc) => {
+                const hobbiesInCategory = filteredHobbies.filter((h) => h.category_id === hc.id);
+                if (hobbiesInCategory.length === 0) {
+                  return null; // Skip rendering this category if no hobbies match
+                }
+                return (
+                  <IonGrid className='mx-[-5px]' key={hc.id}>
+                    <IonRow key={hc.id}>
+                      <IonCol>
+                        <IonText>
+                          <h6 className="font-semibold">{hc.title}</h6>
+                        </IonText>
+                      </IonCol>
+                    </IonRow>
+                    <IonRow className='mx-[-5px] mt-[-12px]'>
+                      <IonCol>
+                        {filteredHobbies &&
+                          filteredHobbies
+                            .filter((h) => h.category_id === hc.id).map((h) => (
+                              <IonChip
+                                key={h.id}
+                                color={isHobbySelected(h.id) ? "primary" : undefined}
+                                onClick={() => toggleHobbySelection(h.id)}
+                                className={`${darkMode ? 'outline outline-1' : ''}`}
+                                disabled={hobbiesQuery.isLoading === true || uploading}
+                              >
+                                <IonText>
+                                  <p>{h.title}</p>
+                                </IonText>
+                              </IonChip>
+                            ))}
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                )
+              })}
+
           </IonGrid>
         </IonContent>
       </IonContent>

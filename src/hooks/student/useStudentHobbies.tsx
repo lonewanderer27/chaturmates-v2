@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import client from "../../client"
 
-const useStudentHobbies = (studentId: number) => {
+const useStudentHobbies = (studentId: string) => {
   const sHQ = useQuery({
     queryKey: ["studentHobbies"],
     queryFn: async() => {

@@ -220,6 +220,16 @@ const UpdateHobbies = () => {
                     handleSearch(e);
                     setHobsSearch(e.detail.value!);
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" &&
+                      (filteredHobbies.length === 0 &&
+                        !hcqR.isLoading &&
+                        !hqR.isLoading &&
+                        !hobbiesQuery.isFetching &&
+                        hobsSearch.length !== 0)) {
+                      handleAddCustomHobby();
+                    }
+                  }}
                   placeholder='Search topics'
                 />
               </IonCol>

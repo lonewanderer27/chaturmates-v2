@@ -9,13 +9,14 @@ import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
 import { NewStudentTypeSteps } from '../../types/student/post/NewStudentType'
 import { newStudentAtom } from '../../atoms/student'
 import { useSetAtom } from 'jotai'
-import useSetup from '../../hooks/setup/useSetup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import useSetupDraftStudent from '../../hooks/setup/useSetupDraftStudent'
-import useSelfDraftStudent from '../../hooks/student/useSelfDraftStudent'
 import { hideTabBar } from '../../utils/TabBar'
 import useSelfSetupDraftStudent from '../../hooks/setup/useSelfSetupDraftStudent'
+import { useDebounceValue } from 'usehooks-ts'
+import { useToggleTheme } from '../../hooks/useToggleTheme'
+import useSelfDraftHobbies from '../../hooks/setup/useSelfDraftHobbies'
 
 // Define the main validation schema
 export const hobbiesValidationSchema = Yup.object().shape({
@@ -28,9 +29,11 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
   });
   const hcqR = useHobbyCategories();
   const hqR = useHobbies();
+  const selfDraftHbbysQry = useSelfDraftHobbies();
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [hobsSearch, setHobsSearch] = useState("");
+  const [debouncedHobsSearch] = useDebounceValue(hobsSearch, 300);
   const [filteredHobbies, setFilteredHobbies] = useState<HobbyType[]>(
     hqR.data ?? []
   );
@@ -46,7 +49,7 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
         )
       );
     }
-  }, [hobsSearch, hqR.data]);
+  }, [debouncedHobsSearch, hqR.data]);
 
   const toggleSearch = () => {
     setSearchOpen(e => !e);
@@ -125,7 +128,7 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
   }
   const isHobbySelected = (hobbyId: number) => selectedHobbyIds.includes(hobbyId);
   const getInterestMessage = () => {
-    const count = selectedHobbyIds.length;
+    const count = selectedHobbyIds.length  + newHobbies.filter(h => h.selected).length;
     switch (count) {
       case 0:
         return "Add five hobbies to find even more klasmeyts";
@@ -137,9 +140,23 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
       case 4:
         return "Excellent! You can add one more interest if you'd like";
       default:
-        return "Perfect! You've selected 5 interests. Feel free to add more";
+        return `Perfect! You've selected ${count} interests. Feel free to add more`;
     }
   }
+
+  const [newHobbies, setNewHobbies] = useState<{
+    id: number;
+    title: string;
+    selected: boolean;
+  }[]>([]);
+  const handleAddCustomHobby = () => {
+    setNewHobbies((prevHobbies) => [...prevHobbies, { id: prevHobbies.length, title: hobsSearch, selected: true }]);
+    setHobsSearch("");
+  }
+  const toggleCustomHobbySelection = (id: number) => {
+    setNewHobbies((prevHobbies) => prevHobbies.map((h) => h.id === id ? { ...h, selected: !h.selected } : h));
+  }
+  const isCustomHobbySelected = (index: number) => newHobbies[index].selected;
 
   const { handleDraftHobbies, handleNext: next, uploading } = useSetupDraftStudent();
   const setNewStudent = useSetAtom(newStudentAtom);
@@ -155,14 +172,15 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
       }
     }));
 
-    // await handleUploadInterests(selectedHobbyIds);
-    await handleDraftHobbies(data, ds.data?.id!);
+    await handleDraftHobbies(data, ds.data?.id!, newHobbies);
 
     await next();
   }
   const handlePageError: SubmitErrorHandler<NewStudentTypeSteps['step4']> = (errors) => {
     console.error(errors)
   }
+
+  const [darkMode] = useToggleTheme('darkModeActivated', 'ion-palette-dark');
 
   return (
     <IonPage>
@@ -175,16 +193,6 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
                 text=""
               />
             </IonButtons>
-            <IonSearchbar
-              ref={searchbarRef}
-              style={{ display: searchOpen ? 'block' : 'none' }}
-              value={hobsSearch}
-              onIonInput={(e) => {
-                handleSearch(e);
-                setHobsSearch(e.detail.value!);
-              }}
-              placeholder='Search interests'
-            />
             <IonButtons slot="end">
               <IonButton onClick={toggleSearch}>
                 <IonIcon src={search} />
@@ -202,49 +210,107 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
           </IonRow>
           <IonRow>
             <IonCol>
-              <IonText>
+              <IonText className='text-center'>
                 <h4>{getInterestMessage()}</h4>
               </IonText>
             </IonCol>
           </IonRow>
-          <IonRow>
-            <IonCol>
-              {hqR.data && hqR.data.filter(hq => hq.category_id === null).map(hq => (
+          <IonRow className='mx-[-10px]'>
+            <IonSearchbar
+              ref={searchbarRef}
+              style={{ display: searchOpen ? 'block' : 'none' }}
+              value={hobsSearch}
+              onIonInput={(e) => {
+                handleSearch(e);
+                setHobsSearch(e.detail.value!);
+              }}
+              placeholder='Search topics'
+            />
+          </IonRow>
+
+          {/* If the search bar is not empty and no hobbies are found,
+            the user can add a custom hobby by clicking on this chip */}
+          {(filteredHobbies.length === 0 &&
+            !hcqR.isLoading &&
+            !hqR.isLoading &&
+            !selfDraftHbbysQry.isFetching &&
+            hobsSearch.length !== 0) && (
+              <IonRow className='mx-[-5px]'>
                 <IonChip
-                  key={hq.id}
-                  color={isHobbySelected(hq.id) ? "primary" : undefined}
-                  onClick={() => toggleHobbySelection(hq.id)}
-                  className="outline outline-1"
+                  className={`${darkMode ? 'outline outline-1' : ''}`}
+                  onClick={handleAddCustomHobby}
+                  disabled={selfDraftHbbysQry.isLoading === true || uploading}
+                >
+                  <IonText>{hobsSearch}</IonText>
+                </IonChip>
+              </IonRow>
+            )}
+
+          {/* A custom hobby is a hobby that is not in the list of hobbies. 
+              You can add a custom hobby by typing the hobby in the search bar 
+              and clicking on the hobby that appears in the search results.   */}
+          {(!hcqR.isLoading &&
+            !hqR.isLoading &&
+            !selfDraftHbbysQry.isFetching &&
+            hobsSearch.length == 0) &&
+            newHobbies.map((h, i) => (
+              <IonChip
+                key={i}
+                color={isCustomHobbySelected(h.id) ? "primary" : undefined}
+                onClick={() => toggleCustomHobbySelection(h.id)}
+                className={`${darkMode ? 'outline outline-1' : ''}`}
+                disabled={selfDraftHbbysQry.isLoading === true || uploading}
+              >
+                <IonText>
+                  <p>{h.title}</p>
+                </IonText>
+              </IonChip>
+            ))}
+
+          {/* Displays the custom hobbies of other users */}
+          {(!hcqR.isLoading &&
+            !hqR.isLoading &&
+            !selfDraftHbbysQry.isFetching) &&
+            filteredHobbies
+              .filter((h) => h.category_id === null)
+              .map((h, i) => (
+                <IonChip
+                  key={i}
+                  color={isHobbySelected(h.id) ? "primary" : undefined}
+                  onClick={() => toggleHobbySelection(h.id)}
+                  className={`${darkMode ? 'outline outline-1' : ''}`}
+                  disabled={selfDraftHbbysQry.isLoading === true || uploading}
                 >
                   <IonText>
-                    <p>{hq.title}</p>
+                    <p>{h.title}</p>
                   </IonText>
                 </IonChip>
               ))}
-            </IonCol>
-          </IonRow>
+
+          {/* Hobbies from our database */}
           {hcqR.data && hcqR.data.map((hc) => {
             const hobbiesInCategory = filteredHobbies.filter((h) => h.category_id === hc.id);
             if (hobbiesInCategory.length === 0) {
               return null; // Skip rendering this category if no hobbies match
             }
             return (
-              <>
-                <IonRow key={hc.id}>
+              <IonGrid className='mx-[-5px]' key={hc.id}>
+                <IonRow>
                   <IonCol>
                     <IonText>
-                      <h6>{hc.title}</h6>
+                      <h6 className="font-semibold">{hc.title}</h6>
                     </IonText>
                   </IonCol>
                 </IonRow>
-                <IonRow>
+                <IonRow className='mx-[-5px] mt-[-12px]'>
                   <IonCol>
                     {filteredHobbies && filteredHobbies.filter((h) => h.category_id === hc.id).map((h) => (
                       <IonChip
                         key={h.id}
                         color={isHobbySelected(h.id) ? "primary" : undefined}
                         onClick={() => toggleHobbySelection(h.id)}
-                        className="outline outline-1"
+                        className={`${darkMode ? 'outline outline-1' : ''}`}
+                        disabled={selfDraftHbbysQry.isLoading === true || uploading}
                       >
                         <IonText>
                           <p>{h.title}</p>
@@ -253,7 +319,7 @@ const Setup5Hobbies: FC<RouteComponentProps> = ({ match }) => {
                     ))}
                   </IonCol>
                 </IonRow>
-              </>
+              </IonGrid>
             )
           })}
         </IonGrid>

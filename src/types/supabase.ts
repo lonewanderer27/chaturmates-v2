@@ -367,6 +367,83 @@ export type Database = {
           },
         ]
       }
+      draft_hobbies: {
+        Row: {
+          category_id: number | null
+          created_at: string
+          created_by_draft_student_id: string | null
+          id: number
+          ionicon_name: string | null
+          is_custom: boolean
+          title: string
+        }
+        Insert: {
+          category_id?: number | null
+          created_at?: string
+          created_by_draft_student_id?: string | null
+          id?: number
+          ionicon_name?: string | null
+          is_custom?: boolean
+          title: string
+        }
+        Update: {
+          category_id?: number | null
+          created_at?: string
+          created_by_draft_student_id?: string | null
+          id?: number
+          ionicon_name?: string | null
+          is_custom?: boolean
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "draft_hobbies_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "hobbies_category"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_hobbies_created_by_draft_student_id_fkey"
+            columns: ["created_by_draft_student_id"]
+            isOneToOne: false
+            referencedRelation: "draft_students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      draft_pdfcoeextract_progress: {
+        Row: {
+          created_at: string
+          draft_student_id: string
+          id: number
+          progress: number
+          progress_text: string
+        }
+        Insert: {
+          created_at?: string
+          draft_student_id: string
+          id?: number
+          progress: number
+          progress_text: string
+        }
+        Update: {
+          created_at?: string
+          draft_student_id?: string
+          id?: number
+          progress?: number
+          progress_text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "draft_pdfcoeextract_progress_draft_student_id_fkey"
+            columns: ["draft_student_id"]
+            isOneToOne: false
+            referencedRelation: "draft_students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       draft_student_hobbies: {
         Row: {
           created_at: string
@@ -1493,17 +1570,17 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "student_hobbies_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "user_hobbies_hobby_id_fkey"
             columns: ["hobby_id"]
             isOneToOne: false
             referencedRelation: "hobbies"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_hobbies_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "students"
             referencedColumns: ["id"]
           },
         ]

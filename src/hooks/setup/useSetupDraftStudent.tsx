@@ -240,7 +240,15 @@ const useSetupDraftStudent = () => {
     return classesData;
   }
 
-  const handleDraftHobbies = async (data: NewStudentTypeSteps["step4"], sessionId: string) => {
+  const handleDraftHobbies = async (
+    data: NewStudentTypeSteps["step4"],
+    sessionId: string,
+    customHobbies: {
+      id: number;
+      title: string;
+      selected: boolean;
+    }[]
+  ) => {
     setUploading(() => true);
 
     // Remove the existing draft hobbies
@@ -256,11 +264,38 @@ const useSetupDraftStudent = () => {
       throw new Error(deleteError.message)
     }
 
+    // Upload the custom hobbies to the real hobbies table
+    const customHobbiesData = customHobbies.map((hobby) => ({
+      title: hobby.title,
+      is_custom: true,
+      // created_by_student_id: // TODO: Figure out later
+    }))
+
+    const { data: customHobbiesRes, error: customHobbiesError } = await client
+      .from("hobbies")
+      .insert(customHobbiesData)
+      .select("*")
+
+    if (customHobbiesError) {
+      console.error(customHobbiesError)
+      setUploading(() => false)
+      throw new Error(customHobbiesError.message)
+    }
+
+    // create the hobbies object needed by supabase
+    const customHbbys = customHobbiesRes.map((hobby) => ({
+      draft_student_id: sessionId,
+      hobby_id: hobby.id
+    }))
+
     const hobbies = data.hobbies.map((hobby
       : number) => ({
         draft_student_id: sessionId,
         hobby_id: hobby
       }))
+
+    // append the custom hobbies to the hobbies array
+    hobbies.push(...customHbbys);
 
     const { data: hobbiesData, error: hobbiesError } = await client
       .from("draft_student_hobbies")

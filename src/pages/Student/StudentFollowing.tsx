@@ -2,6 +2,7 @@ import {
   IonBackButton,
   IonButtons,
   IonContent,
+  IonGrid,
   IonHeader,
   IonList,
   IonPage,
@@ -43,11 +44,13 @@ const StudentFollowing: FC<RouteComponentProps<StudentFollowingPageProps>> = ({
             <IonTitle>Their Following ({following?.length ?? "-"})</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonList className="mx-[-15px]">
-          {following?.map((klasmeyt) => (
-            <StudentItem student={klasmeyt} key={klasmeyt.id} />
-          ))}
-        </IonList>
+        <IonGrid>
+          <IonList className="rounded-xl">
+            {following?.map((klasmeyt) => (
+              <StudentItem student={klasmeyt} key={klasmeyt.id} />
+            ))}
+          </IonList>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );

@@ -235,7 +235,8 @@ const UpdateHobbies = () => {
               </IonCol>
             </IonRow>
 
-            {/* Toggle-able custom hobbies will appear here */}
+            {/* If the search bar is not empty and no hobbies are found,
+            the user can add a custom hobby by clicking on this chip */}
             {(filteredHobbies.length === 0 &&
               !hcqR.isLoading &&
               !hqR.isLoading &&
@@ -246,6 +247,7 @@ const UpdateHobbies = () => {
                     <IonChip
                       className={`${darkMode ? 'outline outline-1' : ''}`}
                       onClick={handleAddCustomHobby}
+                      disabled={hobbiesQuery.isLoading === true || uploading}
                     >
                       <IonText>{hobsSearch}</IonText>
                     </IonChip>
@@ -266,6 +268,7 @@ const UpdateHobbies = () => {
                   color={isCustomHobbySelected(h.id) ? "primary" : undefined}
                   onClick={() => toggleCustomHobbySelection(h.id)}
                   className={`${darkMode ? 'outline outline-1' : ''}`}
+                  disabled={hobbiesQuery.isLoading === true || uploading}
                 >
                   <IonText>
                     <p>{h.title}</p>
@@ -285,6 +288,7 @@ const UpdateHobbies = () => {
                     color={isHobbySelected(h.id) ? "primary" : undefined}
                     onClick={() => toggleHobbySelection(h.id)}
                     className={`${darkMode ? 'outline outline-1' : ''}`}
+                    disabled={hobbiesQuery.isLoading === true || uploading}
                   >
                     <IonText>
                       <p>{h.title}</p>

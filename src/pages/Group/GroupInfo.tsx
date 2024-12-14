@@ -27,7 +27,7 @@ import { RouteComponentProps } from "react-router";
 import useGroupMemsCount from "../../hooks/group/useGroupMemsCount";
 import useGroupInfoLite from "../../hooks/group/useGroupInfoLite";
 import { Share } from '@capacitor/share';
-import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
+import AvatarLarge from "../../components/Me/AvatarLarge";
 import { peopleOutline, shareSocialOutline } from "ionicons/icons";
 import useAmIAdmin from "../../hooks/group/useAmIAdmin";
 import dayjs from "dayjs";
@@ -146,8 +146,10 @@ const GroupInfo: FC<RouteComponentProps<GroupInfoPageProps>> = (p) => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <MemberAvatarLarge avatarUrl={infoLite?.avatar_url} />
-        <IonCard className="pt-16 mx-0 z-[-500] shadow-none">
+        <div className="flex justify-center mb-[-80px] z-[500]">
+          <AvatarLarge avatarUrl={infoLite?.avatar_url} />
+        </div>
+        <IonCard className="pt-16 mx-0 z-[-500] ">
           <IonCardContent>
             <IonGrid>
               <IonRow className="flex justify-center">

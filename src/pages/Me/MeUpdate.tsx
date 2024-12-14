@@ -2,6 +2,7 @@ import {
   IonBackButton,
   IonButton,
   IonButtons,
+  IonCard,
   IonCardContent,
   IonContent,
   IonFooter,
@@ -23,28 +24,18 @@ import React, { FC } from "react";
 import { hideTabBar } from "../../utils/TabBar";
 
 import { Controller } from "react-hook-form";
-import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
+import AvatarLarge from "../../components/Me/AvatarLarge";
 import { RouteComponentProps } from "react-router";
 import StudentItem from "../../components/SearchPage/StudentItem";
 import useSelfStudent from "../../hooks/student";
 import useUpdateInfo from "../../hooks/me/useUpdateInfo";
 
 const MeUpdate: FC<RouteComponentProps> = ({ match }) => {
-  const {
-    student,
-    profile,
-    groups,
-    school,
-    academic_year,
-    following,
-    followers,
-  } = useSelfStudent();
+  const { student } = useSelfStudent();
   const {
     handleSubmit,
     handleSave,
     handleError,
-    setValue,
-    register,
     saving,
     control,
   } = useUpdateInfo();
@@ -57,7 +48,7 @@ const MeUpdate: FC<RouteComponentProps> = ({ match }) => {
       <IonContent className="ion-padding">
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonButtons>
+            <IonButtons slot="start">
               <IonBackButton
                 disabled={saving}
                 className="ml-[-5px]"
@@ -66,40 +57,50 @@ const MeUpdate: FC<RouteComponentProps> = ({ match }) => {
               />
             </IonButtons>
             <IonTitle>Update Your Profile</IonTitle>
+            <IonButtons slot="end">
+              <IonButton
+                disabled={saving}
+                onClick={handleSubmit(handleSave, handleError)}
+              >
+                {saving ? (
+                  <IonSpinner name="dots" />
+                ) : (
+                  <IonText>Save</IonText>
+                )}
+              </IonButton>
+            </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <MemberAvatarLarge avatarUrl={student?.avatar_url} />
-        <div className="pt-20 bg-slate-200 rounded-xl px-4">
-          <IonGrid>
-            <IonRow>
-              <IonLabel
-                className="font-poppins font-semibold text-l"
-                color="medium"
-              >
-                Full Name
-              </IonLabel>
-              <Controller
-                render={({
-                  field: { value, onChange, onBlur },
-                  fieldState: { error, isTouched },
-                }) => (
-                  <IonInput
-                    className={`${error && "ion-invalid"} ${isTouched && "ion-touched"}`}
-                    fill="outline"
-                    value={value}
-                    onIonChange={onChange}
-                    onIonBlur={onBlur}
-                    errorText={error?.message}
-                  />
-                )}
-                name="fullName"
-                control={control}
-              />
-            </IonRow>
-            <IonRow></IonRow>
-          </IonGrid>
+        <div className="flex justify-center mb-[-80px] z-[500]">
+          <AvatarLarge avatarUrl={student?.avatar_url} />
         </div>
-        <div className="mt-4 rounded-xl bg-slate-200">
+        <IonCard className="pt-16 mx-0 z-[-500]">
+          <IonCardContent>
+            <IonLabel
+              className="font-poppins font-semibold"
+            >
+              Full Name
+            </IonLabel>
+            <Controller
+              render={({
+                field: { value, onChange, onBlur },
+                fieldState: { error, isTouched },
+              }) => (
+                <IonInput
+                  className={`${error && "ion-invalid"} ${isTouched && "ion-touched"}`}
+                  fill="outline"
+                  value={value}
+                  onIonChange={onChange}
+                  onIonBlur={onBlur}
+                  errorText={error?.message}
+                />
+              )}
+              name="fullName"
+              control={control}
+            />
+          </IonCardContent>
+        </IonCard>
+        <IonCard className="mx-0 z-[-500]">
           <IonCardContent>
             <IonLabel
               className="font-poppins font-semibold text-l"
@@ -128,23 +129,8 @@ const MeUpdate: FC<RouteComponentProps> = ({ match }) => {
               control={control}
             />
           </IonCardContent>
-        </div>
+        </IonCard>
       </IonContent>
-      <IonFooter>
-        <IonToolbar className="p-3">
-          <IonButton
-            className="font-poppins font-bold"
-            expand="block"
-            onClick={handleSubmit(handleSave, handleError)}
-          >
-            {saving ? (
-              <IonSpinner name="dots" />
-            ) : (
-              <IonText>Update Profile</IonText>
-            )}
-          </IonButton>
-        </IonToolbar>
-      </IonFooter>
     </IonPage>
   );
 };

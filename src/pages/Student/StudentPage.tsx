@@ -19,7 +19,7 @@ import {
 } from "@ionic/react";
 
 import { FC } from "react";
-import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
+import AvatarLarge from "../../components/Me/AvatarLarge";
 import { RouteComponentProps } from "react-router";
 import { hideTabBar } from "../../utils/TabBar";
 import useSession from "../../hooks/auth/useSession";
@@ -72,8 +72,10 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <MemberAvatarLarge avatarUrl={student?.avatar_url} />
-        <IonCard className="pt-16 rounded-xl  z-[-500] shadow-none mx-0">
+        <div className="flex justify-center mb-[-80px] z-[500]">
+          <AvatarLarge avatarUrl={student?.avatar_url} />
+        </div>
+        <IonCard className="pt-16 rounded-xl  z-[-500]  mx-0">
           <IonCardContent>
             <IonGrid>
               <IonRow className="flex justify-center">
@@ -141,7 +143,7 @@ const StudentPage: FC<RouteComponentProps<StudentPageProps>> = ({ match }) => {
           </IonCardContent>
         </IonCard>
         {student?.description && (
-          <IonCard className="mt-4 rounded-xl bg-slate-200 mx-0 shadow-none">
+          <IonCard className="mt-4 rounded-xl  mx-0 ">
             <IonCardContent>
               <div>
                 <IonText className="text-xs font-bold" color="dark">

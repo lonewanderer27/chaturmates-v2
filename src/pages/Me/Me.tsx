@@ -23,7 +23,7 @@ import {
 import { hideTabBar } from "../../utils/TabBar";
 
 import { FC, useEffect, useRef } from "react";
-import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
+import AvatarLarge from "../../components/Me/AvatarLarge";
 import { RouteComponentProps } from "react-router";
 import useSelfStudent from "../../hooks/student";
 import useSession from "../../hooks/auth/useSession";
@@ -175,8 +175,10 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <MemberAvatarLarge avatarUrl={student?.avatar_url} />
-        <IonCard className="pt-16 mx-0  z-[-500] shadow-none">
+        <div className="flex justify-center mb-[-80px] z-[500]">
+          <AvatarLarge avatarUrl={student?.avatar_url} />
+        </div>
+        <IonCard className="pt-16 mx-0  z-[-500] ">
           <IonCardContent>
             <IonGrid>
               <IonRow className="flex justify-end mt-[-70px] pb-4 top-0 ">
@@ -219,7 +221,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
         {/* Description Section with Animation */}
         {(student?.description && studentQuery.isLoading == false) && (
           <div ref={descriptionRef}>
-            <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
+            <IonCard className="mt-4 mx-0 rounded-xl ">
               <IonCardContent>
                 <div>
                   <IonText className="text-xs font-bold" color="dark">
@@ -246,7 +248,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
         {/* Subjects Section with Animation */}
         {subjects.length > 0 && (
           <div ref={subjectsRef}>
-            <IonCard className="mt-4 mx-0 rounded-xl shadow-none">
+            <IonCard className="mt-4 mx-0 rounded-xl ">
               <IonCardContent>
                 <div className="mb-2">
                   <IonText className="text-xs font-bold" color="dark">
@@ -277,7 +279,7 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
         {/* Hobbies Section with Animation */}
         {hobbies.length > 0 && (
           <div ref={hobbiesRef}>
-            <IonCard className="mt-4 mx-0 rounded-xl shadow-none" onClick={handleUpdateHobbies}>
+            <IonCard className="mt-4 mx-0 rounded-xl " onClick={handleUpdateHobbies}>
               <IonCardContent>
                 <div className="mb-2 flex justify-between">
                   <IonText className="text-xs font-bold" color="dark">
@@ -293,10 +295,10 @@ const Me: FC<RouteComponentProps> = ({ match }) => {
                 </div>
                 <div className="mx-[-5px]">
                   {hobbies.map((hobby) => (
-                      <IonChip key={hobby.id + hobby.title} color="dark">
-                        <IonText>{hobby.title}</IonText>
-                      </IonChip>
-                    ))}
+                    <IonChip key={hobby.id + hobby.title} color="dark">
+                      <IonText>{hobby.title}</IonText>
+                    </IonChip>
+                  ))}
                 </div>
               </IonCardContent>
             </IonCard>

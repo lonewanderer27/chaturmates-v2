@@ -17,7 +17,7 @@ import {
 } from "@ionic/react";
 import { FC } from "react";
 import { RouteComponentProps } from "react-router";
-import MemberAvatarLarge from "../../components/Me/MemberAvatarLarge";
+import AvatarLarge from "../../components/Me/AvatarLarge";
 import useGroupInfoLite from "../../hooks/group/useGroupInfoLite";
 import useGroupMemsCount from "../../hooks/group/useGroupMemsCount";
 import useMePendingRequest from "../../hooks/group/useMePendingRequest";
@@ -69,8 +69,10 @@ const GroupPreview: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <GroupAvatarLarge avatarUrl={infoLite?.avatar_url} />
-        <IonCard className="pt-16 mx-0 bg-slate-200  z-[-500] shadow-none">
+        <div className="flex justify-center mb-[-80px] z-[500]">
+          <AvatarLarge avatarUrl={infoLite?.avatar_url} />
+        </div>
+        <IonCard className="pt-16 mx-0 z-[-500]">
           <IonCardContent>
             <IonGrid>
               <IonRow className="flex justify-center">
@@ -116,7 +118,7 @@ const GroupPreview: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
             </IonGrid>
           </IonCardContent>
         </IonCard>
-        <IonCard className="mt-4 mx-0 rounded-xl bg-slate-200 shadow-none">
+        <IonCard className="mt-4 mx-0 rounded-xl">
           <IonCardContent>
             <div>
               <IonText className="text-xs font-bold" color="dark">
@@ -132,7 +134,7 @@ const GroupPreview: FC<RouteComponentProps<GroupTimelinePageProps>> = ({
           </IonCardContent>
         </IonCard>
         {infoLite?.description && (
-          <IonCard className="mt-4 mx-0 rounded-xl bg-slate-200 shadow-none">
+          <IonCard className="mt-4 mx-0 rounded-xl">
             <IonCardContent>
               <div>
                 <IonText className="text-xs font-bold" color="dark">

@@ -1,7 +1,6 @@
-import { IonAvatar, IonIcon, IonImg, IonRow } from "@ionic/react";
+import { IonIcon, IonRow } from "@ionic/react";
 import { personCircleOutline } from "ionicons/icons";
 import { isValidUrl } from "../../utils/ValidUrl";
-import "./MemberAvatarLarge.css"
 import { useToggleTheme } from "../../hooks/useToggleTheme";
 
 const MemberAvatarLarge = (props: { avatarUrl: string | null | undefined }) => {

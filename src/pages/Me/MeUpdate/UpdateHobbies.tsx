@@ -19,7 +19,7 @@ const UpdateHobbies = () => {
     hideTabBar();
   });
   const [uploading, setUploading] = useState(false);
-  const { hobbies, query: hobbiesQuery } = useSelfHobbies();
+  const { hobbies: selfHbbys, query: selfHbbysQry } = useSelfHobbies();
   const hcqR = useHobbyCategories();
   const hqR = useHobbies();
 
@@ -49,7 +49,7 @@ const UpdateHobbies = () => {
       }
     }
   });
-  const [selectedHobbyIds, setSelectedHobbyIds] = useState<number[]>(() => hobbies.map(h => h.id));
+  const [selectedHobbyIds, setSelectedHobbyIds] = useState<number[]>(() => selfHbbys.map(h => h.id));
   const toggleHobbySelection = (hobbyId: number) => {
     setSelectedHobbyIds(prevIds => {
       const newIds = prevIds.includes(hobbyId)
@@ -61,8 +61,8 @@ const UpdateHobbies = () => {
     });
   }
   useEffect(() => {
-    setSelectedHobbyIds(hobbies.map(h => h.id));
-  }, [hobbiesQuery.data]);
+    setSelectedHobbyIds(selfHbbys.map(h => h.id));
+  }, [selfHbbysQry.data]);
   const isHobbySelected = (hobbyId: number) => selectedHobbyIds.includes(hobbyId);
   const getInterestMessage = () => {
     const count = selectedHobbyIds.length + newHobbies.filter(h => h.selected).length;
@@ -161,7 +161,7 @@ const UpdateHobbies = () => {
     setUploading(() => false);
 
     // Refresh my hobbies
-    hobbiesQuery.refetch();
+    selfHbbysQry.refetch();
 
     // go back to me page
     // lets try if we can pop to the me page
@@ -196,7 +196,7 @@ const UpdateHobbies = () => {
             </IonTitle>
             <IonButtons slot='end'>
               <IonButton
-                disabled={hobbiesQuery.isLoading || selectedHobbyIds.length < 5 || uploading}
+                disabled={selfHbbysQry.isLoading || selectedHobbyIds.length < 5 || uploading}
                 onClick={handleSubmit(handlePageNext, handlePageError)}
               >
                 {uploading ? <IonSpinner name="dots" /> : "Save"}
@@ -225,7 +225,7 @@ const UpdateHobbies = () => {
                       (filteredHobbies.length === 0 &&
                         !hcqR.isLoading &&
                         !hqR.isLoading &&
-                        !hobbiesQuery.isFetching &&
+                        !selfHbbysQry.isFetching &&
                         hobsSearch.length !== 0)) {
                       handleAddCustomHobby();
                     }
@@ -240,14 +240,14 @@ const UpdateHobbies = () => {
             {(filteredHobbies.length === 0 &&
               !hcqR.isLoading &&
               !hqR.isLoading &&
-              !hobbiesQuery.isFetching &&
+              !selfHbbysQry.isFetching &&
               hobsSearch.length !== 0) && (
                 <IonGrid className='mx-[-5px]'>
                   <IonRow>
                     <IonChip
                       className={`${darkMode ? 'outline outline-1' : ''}`}
                       onClick={handleAddCustomHobby}
-                      disabled={hobbiesQuery.isLoading === true || uploading}
+                      disabled={selfHbbysQry.isLoading === true || uploading}
                     >
                       <IonText>{hobsSearch}</IonText>
                     </IonChip>
@@ -260,7 +260,7 @@ const UpdateHobbies = () => {
             and clicking on the hobby that appears in the search results.   */}
             {(!hcqR.isLoading &&
               !hqR.isLoading &&
-              !hobbiesQuery.isFetching &&
+              !selfHbbysQry.isFetching &&
               hobsSearch.length == 0) &&
               newHobbies.map((h, i) => (
                 <IonChip
@@ -268,7 +268,7 @@ const UpdateHobbies = () => {
                   color={isCustomHobbySelected(h.id) ? "primary" : undefined}
                   onClick={() => toggleCustomHobbySelection(h.id)}
                   className={`${darkMode ? 'outline outline-1' : ''}`}
-                  disabled={hobbiesQuery.isLoading === true || uploading}
+                  disabled={selfHbbysQry.isLoading === true || uploading}
                 >
                   <IonText>
                     <p>{h.title}</p>
@@ -279,7 +279,7 @@ const UpdateHobbies = () => {
             {/* Displays the custom hobbies of other users */}
             {(!hcqR.isLoading &&
               !hqR.isLoading &&
-              !hobbiesQuery.isFetching) &&
+              !selfHbbysQry.isFetching) &&
               filteredHobbies
                 .filter((h) => h.category_id === null)
                 .map((h, i) => (
@@ -288,7 +288,7 @@ const UpdateHobbies = () => {
                     color={isHobbySelected(h.id) ? "primary" : undefined}
                     onClick={() => toggleHobbySelection(h.id)}
                     className={`${darkMode ? 'outline outline-1' : ''}`}
-                    disabled={hobbiesQuery.isLoading === true || uploading}
+                    disabled={selfHbbysQry.isLoading === true || uploading}
                   >
                     <IonText>
                       <p>{h.title}</p>
@@ -299,7 +299,7 @@ const UpdateHobbies = () => {
             {/* Hobbies from our database */}
             {(!hcqR.isLoading &&
               !hqR.isLoading &&
-              !hobbiesQuery.isFetching) && hcqR.data?.map((hc) => {
+              !selfHbbysQry.isFetching) && hcqR.data?.map((hc) => {
                 const hobbiesInCategory = filteredHobbies.filter((h) => h.category_id === hc.id);
                 if (hobbiesInCategory.length === 0) {
                   return null; // Skip rendering this category if no hobbies match
@@ -323,7 +323,7 @@ const UpdateHobbies = () => {
                                 color={isHobbySelected(h.id) ? "primary" : undefined}
                                 onClick={() => toggleHobbySelection(h.id)}
                                 className={`${darkMode ? 'outline outline-1' : ''}`}
-                                disabled={hobbiesQuery.isLoading === true || uploading}
+                                disabled={selfHbbysQry.isLoading === true || uploading}
                               >
                                 <IonText>
                                   <p>{h.title}</p>

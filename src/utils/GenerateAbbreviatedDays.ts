@@ -1,13 +1,13 @@
 export default function generateAbbreviatedDays(daysObj: { [x: string]: any; }) {
   // Define a mapping of full weekday names to their abbreviations
   const dayAbbreviations: { [key: string]: string } = {
-    monday: 'M',
-    tuesday: 'T',
-    wednesday: 'W',
-    thursday: 'Th',
-    friday: 'F',
-    saturday: 'Sa',
-    sunday: 'Su'
+    monday: 'Mon',
+    tuesday: 'Tue',
+    wednesday: 'Wed',
+    thursday: 'Thu',
+    friday: 'Fri',
+    saturday: 'Sat',
+    sunday: 'Sun'
   };
 
   // Initialize an empty array to store the abbreviations

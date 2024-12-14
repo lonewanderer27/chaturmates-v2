@@ -59,11 +59,11 @@ const RecommendedGroupCard = (props: {
             {props.group.name}
           </IonText>
         </IonRow>
-        <div className="ml-[8px]">
+        <div className="ml-[12px] flex flex-nowrap">
           {approvedMembers.map((m, i) => {
-            if (i <= 5)
+            if (i+1 <= 6)
               return (
-                <div className="avatar ml-[-15px]" title={m.student.full_name ?? ""} key={m.id + i}>
+                <div className="avatar ml-[-16px]" title={m.student.full_name ?? ""} key={m.id + i}>
                   {isValidUrl(m.avatar_url + "") ? (
                     <img src={m.avatar_url + ""} />
                   ) : (

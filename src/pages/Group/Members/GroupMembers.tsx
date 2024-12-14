@@ -3,6 +3,7 @@ import {
   IonButton,
   IonButtons,
   IonContent,
+  IonGrid,
   IonHeader,
   IonIcon,
   IonList,
@@ -51,15 +52,17 @@ const GroupMembers: FC<RouteComponentProps<GroupMembersPageProps>> = ({
             <IonTitle>Group Members ({count})</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonList className="mx-[-15px]">
-          {data?.map((member) => {
-            const klasmeyt = member.students;
-            if (klasmeyt!.id === meStudent!.id) {
-              return <StudentItem student={klasmeyt!} key={klasmeyt!.id} me />;
-            }
-            return <StudentItem student={klasmeyt!} key={klasmeyt!.id} />;
-          })}
-        </IonList>
+        <IonGrid>
+          <IonList className="rounded-xl">
+            {data?.map((member) => {
+              const klasmeyt = member.students;
+              if (klasmeyt!.id === meStudent!.id) {
+                return <StudentItem student={klasmeyt!} key={klasmeyt!.id} me />;
+              }
+              return <StudentItem student={klasmeyt!} key={klasmeyt!.id} />;
+            })}
+          </IonList>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );

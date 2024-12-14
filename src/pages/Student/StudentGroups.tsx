@@ -2,6 +2,7 @@ import {
   IonBackButton,
   IonButtons,
   IonContent,
+  IonGrid,
   IonHeader,
   IonList,
   IonPage,
@@ -45,9 +46,11 @@ const StudentGroups: FC<RouteComponentProps<StudentGroupsPageProps>> = ({
             <IonTitle>{student?.full_name?.split(" ")[0] ?? "Their"} Groups ({groups?.length ?? "-"})</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonList className="mx-[-15px]">
-          {groups?.map((group) => <GroupItem group={group} key={group.id} />)}
-        </IonList>
+        <IonGrid>
+          <IonList className="rounded-xl">
+            {groups?.map((group) => <GroupItem group={group} key={group.id} />)}
+          </IonList>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );

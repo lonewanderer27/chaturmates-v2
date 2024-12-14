@@ -44,10 +44,17 @@ const MeGroups: FC<RouteComponentProps> = ({ match }) => {
             <IonTitle>Your Groups ({groups?.length ?? "-"})</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonList className="mx-[-15px]">
-          {/* @ts-ignore */}
-          {groups?.map((group) => <GroupItem group={group} key={group.id} />)}
-        </IonList>
+        <IonGrid>
+          <IonList className="rounded-xl">
+            {/* @ts-ignore */}
+            {groups?.map((group) => 
+              <GroupItem 
+                group={group} 
+                key={group.id}
+              />
+            )}
+          </IonList>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );

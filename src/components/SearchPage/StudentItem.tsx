@@ -39,7 +39,7 @@ export default function StudentItem(props: {
   }
 
   return (
-    <IonItem lines="inset" onClick={handleClick} className="cursor-pointer">
+    <IonItem lines="full" onClick={handleClick} className="cursor-pointer">
       {props?.student.avatar_url && isValidUrl ? (
         <IonAvatar slot="start" className="mr-3 studentItemLogo">
           <img className="studentItemLogo" src={props!.student.avatar_url} />

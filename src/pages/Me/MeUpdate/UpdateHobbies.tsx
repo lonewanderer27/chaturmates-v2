@@ -12,6 +12,7 @@ import useSelfHobbies from '../../../hooks/student/useSelfHobbies';
 import client from '../../../client';
 import useSelfStudentLite from '../../../hooks/student/useSelfStudentLite';
 import { useToggleTheme } from '../../../hooks/useToggleTheme';
+import { useDebounceValue } from 'usehooks-ts';
 
 const UpdateHobbies = () => {
   useIonViewWillEnter(() => {
@@ -23,6 +24,7 @@ const UpdateHobbies = () => {
   const hqR = useHobbies();
 
   const [hobsSearch, setHobsSearch] = useState("");
+  const [debouncedHobsSearch] = useDebounceValue(hobsSearch, 300);
   const [filteredHobbies, setFilteredHobbies] = useState<HobbyType[]>(
     hqR.data ?? []
   );
@@ -38,7 +40,7 @@ const UpdateHobbies = () => {
       );
       // console.log("filtered hobbies", filteredHobbies);
     }
-  }, [hobsSearch, hqR.data]);
+  }, [debouncedHobsSearch, hqR.data]);
   const { handleSubmit, setValue } = useForm<NewStudentTypeSteps["step4"]>({
     resolver: yupResolver(hobbiesValidationSchema),
     defaultValues: async () => {

@@ -114,8 +114,7 @@ const SetupPdfUpload: FC<RouteComponentProps> = ({ match }) => {
     if (worker === null) {
       const initWorker = async () => {
         const wk = await createWorker('eng', 1, {
-          logger: m => console.log(m),
-          cacheMethod: "none"
+          logger: m => console.log(m)
         })
   
         setWorker(wk);

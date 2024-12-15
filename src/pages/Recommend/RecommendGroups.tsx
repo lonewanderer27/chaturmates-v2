@@ -157,8 +157,10 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
         <IonContent className="ion-padding overflow-y-hidden">
           <IonHeader collapse="condense">
             <IonToolbar>
-              <IonButtons slot="secondary" onClick={handleDone}>
-                <IonIcon icon={chevronBack} color="primary" slot="start" />
+              <IonButtons slot="secondary">
+                <IonButton onClick={handleDone}>
+                  <IonIcon icon={chevronBack} color="primary" slot="start" />
+                </IonButton>
               </IonButtons>
               <IonButtons slot="primary">
               </IonButtons>

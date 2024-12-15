@@ -30,7 +30,7 @@ import Picker from "react-mobile-picker";
 import useRecommendRealGroups from "../../hooks/recommend/useRecommendRealGroups";
 import RealGroupCard from "../../components/Recommend/RealGroupCard";
 import GroupCardLoader from "../../loaders/GroupCardLoader";
-import { funnelOutline, gridOutline, listOutline } from "ionicons/icons";
+import { chevronBack, funnelOutline, gridOutline, listOutline } from "ionicons/icons";
 import RealGroupListItem from "../../components/Recommend/RealGroupListItem";
 import GroupListItemLoader from "../../loaders/GroupListItemLoader";
 import "./TopKModal.css";
@@ -157,11 +157,8 @@ const RecommendGroups: FC<RouteComponentProps> = ({ match }) => {
         <IonContent className="ion-padding overflow-y-hidden">
           <IonHeader collapse="condense">
             <IonToolbar>
-              <IonButtons slot="secondary">
-                <IonBackButton
-                  defaultHref="/discover/me"
-                  text=""
-                />
+              <IonButtons slot="secondary" onClick={handleDone}>
+                <IonIcon icon={chevronBack} color="primary" slot="start" />
               </IonButtons>
               <IonButtons slot="primary">
               </IonButtons>

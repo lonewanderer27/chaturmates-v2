@@ -20,7 +20,7 @@ export default function useProfile() {
       console.log("profile response:", response);
       return response;
     },
-    enabled: session !== undefined && session !== null,
+    enabled: session !== undefined && session !== null && session.user !== null && session.user.id.length > 0,
   });
 
   return {

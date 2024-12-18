@@ -11,7 +11,7 @@ const useSelfFollowing = () => {
     queryFn: async () => {
       const res = await client
         .from("student_followers")
-        .select("*, student:students!student_followers_follower_id_fkey(*)")
+        .select("*, student:students!student_followers_following_id_fkey(*)")
         .eq("follower_id", student!.id);
 
       // extract the student profiles from the followings

@@ -1,4 +1,4 @@
-# Chaturmates
+# Chat-Ur-Meyts
 
 This is a React project that uses Supabase for backend services, and a custom backend for recommendation.
 

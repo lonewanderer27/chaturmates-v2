@@ -15,7 +15,7 @@ To run this project, follow these steps:
 1. Clone the repository
 
 ```
-git clone https://github.com/lonewanderer27/ChatUrMeyts-Backend
+git clone https://github.com/lonewanderer27/chaturmates-v2
 ```
 
 2. Install the dependencies:

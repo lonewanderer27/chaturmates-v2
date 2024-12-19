@@ -1,13 +1,12 @@
 # Chaturmates
 
-This is a React project that uses Supabase for backend services, EmailJS for email services, and Resend for some other services.
+This is a React project that uses Supabase for backend services, and a custom backend for recommendation.
 
 ### Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 - You have installed the latest version of Node.js and npm.
-- You can access services provided by Supabase, EmailJS, Resend on your network.
-- You are running on a Linux machine or WSL environment.
+- You can access services provided by Supabase on your network.
 
 ### Running the Project
 
@@ -16,34 +15,32 @@ To run this project, follow these steps:
 1. Clone the repository
 
 ```
-git clone https://github.com/lonewanderer27/chaturmates
+git clone https://github.com/lonewanderer27/ChatUrMeyts-Backend
 ```
 
 2. Install the dependencies:
 ```
 cd chaturmates
-npm install 
-// or bun install if you're using bun
+npm install
+// or bun install if you are using bun
 ```
 
 3. Create a .env file in the root directory of the project and add the following variables:
 ```
-VITE_SUPABASE_ANON_KEY=<your_supabase_anon_key>
-VITE_SUPABASE_API_URL=<your_supabase_api_url>
-VITE_RESEND_API_KEY=<your_resend_api_key>
-VITE_EMAILJS_SERVICE_ID=<your_emailjs_service_id>
-VITE_EMAILJS_TEMPLATE_ID=<your_emailjs_template_id>
-VITE_EMAILJS_PUBLIC_KEY=<your_emailjs_public_key>
+VITE_SUPABASE_ANON_KEY=<project_supabase_anon_key>
+VITE_SUPABASE_API_URL=<project_supabase_api_url>
+VITE_RECOMMEND_BACKEND=<project_recommend_backend_api_url>
 ```
 
-Replace <your_supabase_anon_key>, <your_supabase_api_url>, <your_resend_api_key>, <your_emailjs_service_id>, <your_emailjs_template_id>, and <your_emailjs_public_key> with our actual keys and IDs.
+Replace <your_supabase_anon_key>, <your_supabase_api_url>, <project_recommend_backend_api_url> with our actual keys and IDs.
 
 4. Start the development server:
 ```
 npm run dev
-// or bun dev
+// or bun dev if you are using bun
 ```
 The application should now be running at http://localhost:5173
+Please make sure that the recommend backend is running as well.
 
 
 ## Contributing to Chaturmates
@@ -59,4 +56,4 @@ To contribute, follow these steps:
 If you want to contact me you can reach me at adrianejames27@gmail.com
 
 ### License
-This project uses the MIT License.
+This project uses the GPL-v3 License.
